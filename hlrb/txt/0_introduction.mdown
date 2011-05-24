@@ -1,0 +1,106 @@
+# 0
+
+## What'chu talkin' 'bout, Mister?
+
+__Yes__ there is a Chapter 0. There is a little bit of introductory stuff we need to talk about before we set you loose on Ruby. You wouldn't want to get psyched about a new gadget, get it home, and then figure out you need batteries, a grapefruit, and the ability to speak three languages to even open the box would you? You would? Well then answer me this: How would Ruby react to large, elastic monsters taking over an estuary? You don't know the answer!? Well, plainly we need to take a good, hard look at a few things before we turn you loose.
+
+### What is Ruby Anyhow?
+
+Ruby is an open-source, multi-paradigm, interpreted programming language (a bit of a mouthful I know! I'm going to explain it, I promise!). Ruby was created by Yukihiro "Matz" Matsumoto, a very fine Japanese gentleman who currently resides in Shimane Prefecture, Japan; Matz's work on the language was started on February 24, 1993 (commonly considered the birthday of the language; I hear that over in Japan they roll out a two-story cake and sing) and released to the public in 1995. Ruby is often hailed as one the most expressive and concise languages available to developers today. In that spirit of expressiveness, let's look at exactly what it all means. Let us now eviscerate these verbal furbelows with conviction!
+
+__Open Source__ The official implementation of the language is free software distributed under the GPL and the Ruby open source license. If you're unaware of what "open source" means, then look at it this way: Matz programmed the entire Ruby interpreter and library, then gave away the code he used to do it. Since the source code is available, people can now take it and improve it. Many people take the code, improve it, and Matz (and his crack team of maintainers) integrate their changes back into the main source code. The benefit of open source is chiefly that you get a lot more minds working on a project than a proprietary project (and typically for free to boot!).
+
+__Multi-Paradigm__ Like to write code in a functional style a la Haskell or Scheme? That's cool; Ruby does that. Really dig object orientation like Java or Smalltalk? No problem; Ruby handles that, too. Prefer to use a procedural (a.k.a. imperative) style like Forth or Ada? Ruby can "get its procedure on" as good as any other language! Don't know what any of those mean but just really want to program? Excellent! Ruby is a multi-paradigm language because it doesn't constrain to a single programming mindset; you can use any of the aforementioned programming paradigms with no problems in Ruby. You can pick the one you prefer (or the easiest for you to learn) and go with it: Ruby doesn't mind. Unlike some other languages, it doesn't get jealous and give you "errors" if you break it off with objects and decide to go steady with closures instead.
+
+__Interpreted__ If you've used something like Assembly, Pascal, Fortran, or C/C++, you've used a compiled language. "Compiled" means that you've had to run your code through a little compiler and it spits out some sort of native code that will run without any sort of interpretation by the computer other than by the operating system itself. This can become time consuming as your project grows larger and larger, and sometimes can even be a severe hindrance to productivity. Oh, but there is another way! Ruby is an interpreted language, which means that there is an interpreter that reads your code and then emits native code to the operating system. Maybe this diagram will make more sense...
+
+![!Figure 1](../static/images/howrubyworks.jpg)  
+* _Figure 1: An overview of how Ruby handles programs._
+
+There is a bit more to it than that (e.g. you have to coax Jeff out of his box), but that's the general concept. Code goes in, Ruby plays around with it, program comes out. When running Ruby code, you have a few options. The first option you have is to create a file with your source code in it, and then tell Ruby to execute that file by giving it as a command line option to the ruby command. Your next option is that you can use your editor's Ruby runner (if it has one) by using their shortcut; for example, SciTE has this feature that you can use by pressing F5. The last option is to use an interactive shell like `irb` or `fxri`; these shells give you a "Ruby prompt" at which you can type in lines of Ruby code and have them immediately executed. I used `irb` extensively in writing this book because it allows speedier feedback than running from a file. These prompts are possible because Ruby is a dynamic language ran in an interpreter.
+The interpreted nature of Ruby allows it to have many of the features that make it so great. Compiled programs are not nearly as dynamic as interpreted ones because they don't (usually) allow for runtime change to code or the application itself. Because interpreted programs are simply, well, interpreted from their original source (or a slightly compiled bytecode), they can allow for more far-reaching runtime interaction. We'll discuss all of this a lot more later as these features reveal themselves; now we need to make sure you actually have Ruby. Otherwise, these features will be like chasing the wind when it's running faster than you: meaningless!
+
+### Installing Ruby
+
+Sometimes installing a programming environment can be a pain; if you've ever tried to install a GNU compiler on Windows you know what I mean. Fortunately, Ruby is relatively easy to install on most platforms.
+
+#### Windows
+
+Installing on Windows is a snap; simply navigate over to the web site at [http://www.ruby-lang.org](http://www.ruby-lang.org) and click on the "Ruby" link under the "Download" sidebar. Then click on the "Install Ruby under Windows" link. That page has a link to the installer that you need along with instructions on how to install it (basically, download, run, and you're done).
+
+![SciTE](../static/images/scite.png)
+
+To edit Ruby files, you simply need a text editor. This could be something as simple as Notepad or as fancy as UltraEdit. Ruby comes with a fine editor named SciTE which will properly highlight, open, and save Ruby files for you; it also has the nice feature of running your programs for you so you don't have to poke around the command line to get them going. There are other Ruby specific development environments (e.g. FreeRIDE, Arachno, Mondrian, etc.), but these environments are not necessary to do development (i.e. I don't use them).
+
+
+If you decide to simply use Notepad or something that doesn't have a feature that allows you to run your application from within it, then you need to find your programs using the command line and issue the Ruby command to run them. For example:
+
+    ruby mycodefile.rb
+
+I suggest simply using SciTE to avoid this, but sometimes this is a necessary evil (especially if you're already very comfortable with another editor).
+
+#### Mac OS X
+
+If you're rolling on Jaguar (10.2) or later, then you should already have some variant of Ruby on there. To find out which version you have (and to make sure it's compatible with this book which is based on the 1.8 versions), type the following in Terminal:
+
+    ruby -v
+
+That should give you a short message telling you which version you have installed. If you have a 1.8 version installed, great! If not, let's install one.
+
+The easiest way to install Ruby is going to be using DarwinPorts ([http://www.darwinports.org/](http://www.darwinports.org/)). Go to their website, then to their download page and download the proper .dmg file for your version (e.g., for Tiger/10.4 you would download something like DarwinPorts-1.2-__10.4__.dmg). Install that as you normally would. Then open Terminal and enter the following:
+
+    sudo port sync  
+    sudo port install ruby
+
+It will download some files, compile some things, calculate the airspeed velocity of an unladen swallow, and then finally you'll have a working Ruby distribution! Just run the above `ruby -v` command to make sure everything is in order. If that doesn't work, then go to the Darwin ports website and check their support and mailing list.
+
+![TextMate](../static/images/textmate.png)
+
+Editing Ruby files on Mac OSX can be done using something like Text Editor if you like to keep things simple. If you require a little more out of your environment, you can splurge on something like TextMate (my Mac IDE of choice). If you're a hardcore, UNIX-or-die, console-only kind of person, then vi or emacs works perfectly fine, and a lot of work has been done with these editors to actually make them pretty usable Ruby development environments if you are so inclined to use them.
+
+#### Linux
+
+To assess whether or not you have Ruby already installed (and you very well may), type `ruby -v` on the command line. If Linux can't find Ruby, then type `which ruby` on the command line. If you are again confronted with the horrible fact that Ruby is not on your system, prepare to install it. Fortunately, Ruby has widespread support on Linux, and depending on your variation of Linux/your environment, you will have to do one of the following.
+
+__Install from Administrator__ If you are not the administrator of your machine, you may have to throw yourself at the mercy of your systems administrator. Beg him or her to install it for you. Offer them pastries. Tell them that you will urinate on their desk if they don't install it. Whatever it takes, get Ruby installed!
+
+__Install from Package__ To install from a package, you will need to consult your distribution's documentation. Each distribution handles these sorts of things differently, but if your distribution simply doesn't have a package you have options. First, check unofficial repositories such as Dag's, Mind's, Shadoi's, or Debian-Unofficial (or the tons of others that Google will turn up if you ask it nicely). If you don't have any luck there...
+
+__Install from Source__ Installing from source is some people's first instinct. You do get a smidge better performance, for sure, but I'm hasty and like to get things done as quickly as possible. I'd rather just drop a package in and go. If you're a masochist or simply can't find a package, you can install from source. First, go to (http://www.ruby-lang.org)[http://www.ruby-lang.org] and download the source archive. Then, extract it and enter the source directory:
+
+    tar -xvzf ruby-1.8.4.tar.gz
+    cd ruby-1.8.4
+
+Poke around in there a bit; you might want to read the license or README to make sure that there aren't any gotchas for your distribution of Linux. Then, you need to configure, build, and install it:
+
+    ./configure
+    make
+    make install
+
+You should be good to go at this point. Type `ruby -v` to make sure that it's installed properly.
+
+Editing Ruby files on Linux is as simple as using a plain text editor like gEdit or your favorite console editor, such as vi, emacs, or nano, or one of their X Windows counterparts like xemacs. There are also more robust environments, such as jEdit and Arachno Ruby that you can acquire, but they are not required.
+
+### Let's Try Her Out!
+
+Let's give this whole Ruby thing a try. You can either use irb or fxri to get instant feedback or type the source code in a file and use Ruby to execute it. If you want to use the former, either type irb on the command line or find fxri in the program group for Ruby. If you want to simply type it in and execute it, then open your favorite editor and let's get cracking.
+
+    puts "Hello, world."
+
+This is, of course, the prequisite for any programming book. You should've seen "Hello, world." if you're using one of the interactive shells; if you're placing this in a file, save the file as something like hello.rb and then type `ruby hello.rb` to execute it. Now, let's make this a little more interesting.
+
+    puts "Hello, world. What is your name?"
+    myname = gets()
+    puts "Well, hello there " + myname + "."
+
+Save the file again and run this (or type it in your little interpreter); you should see a greeting, be asked for your name, and then greeted by name. If you didn't figure it out, `puts` makes text come up on the console and gets gets text from the user. Now that you've got a little Ruby under your belt, you're good to go on Chapter 1.
+
+## This Chapter
+
+You learned a little about Ruby and how to install it. You learned...
+
+* the history of Ruby and where it came from.
+* the gist of what Ruby is and how it works.
+* how to install Ruby.
+* a little bit of Ruby.
+
