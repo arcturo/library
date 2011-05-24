@@ -1,0 +1,896 @@
+# 3
+## Hustle and Flow (Control)
+
+Flow control is essential to every application (unless of course your application will always have one course of action and you don't mind copying and pasting a lot of code). Flow control constructs allow you to branch (i.e. execute a different flow of code) based on conditions, run the same branch numerous times, or bail when one of the conditions is wonky. There are two "general" flow control mechanisms: conditionals and loops. I'll address them separately lest they end up in some sort of extremely confusing mental *cesspool*.
+
+
+
+### Conditionals
+
+Conditional constructs are those constructs that give you and your users choices; they allow your program to branch and execute different code based on conditions within the application. They compare values to determine truth and based on that truth they determine which (if any) branch of code should execute. Think of them as the traffic lights of the Ruby programming world.
+
+
+#### The `if` statement
+
+The most fundamental conditional statement available in Ruby is the `if` statement: it simply compares values to determine truth or untruth. If it is true, then the code contained within the main branch is executed; if it is not true, either the code in the `else` clause is executed or, if no `else` block is present, no code in the block is executed and the application continues on.
+
+![Figure 7](http://humblelittlerubybook.com/book/html/images/if.jpg)  
+*Figure 7: If I were a fish in the sea, I&rsquo;d wiggle my tail and I&rsquo;d giggle with glee...*
+
+The result of all `if` statements is either true or false regardless of how many conditions they test. Let's look at an example:
+
+    
+    if not (true != false) && (true != true):
+    
+    puts "Whoa! Alternate dimension!"
+    
+    elsif (false === 'false') then
+    
+    puts "Type conversion? I think not..."
+    
+    elsif (true == 1) or (3 == false)
+    
+    puts "Booleans != Numbers"
+    
+    else
+    
+    puts "I guess we're still OK!"
+    
+    end
+    
+    
+    &rarr; I guess we're still OK!
+
+There's a lot to look at here, so let's take it a piece at a time. An `if` statement is constructed by placing the `if` keyword on a line followed by a conditional comparing values equality, inequality, etc. The `if` statement itself opens the conditional block (i.e. `if` is the initiator of a `begin/end` block); you can create an `if` block simply with the `if` statement, its block of code, and the `end` keyword if that's all you need. This example, though, demonstrates all of the possible constructs for an `if` statement. The `elsif` and `else` keywords allow you to branch if the conditions in the `if` statement are not met; `elsif` allows you to present another conditional test while `else` is simply a fail safe if none of the conditions are met. This means you don't need to create 10 `if` blocks when you can simply wrap them into 1 `if` block with a lot of `elsif` statements (with the safety net of the `else` statement to boot).
+
+The second thing to notice are the operators used in the conditionals. To test for equality, you should use the `==` operator (that's two equals signs, not one; if you use one it will usually result in `true` because you would be assigning a value rather than checking for equality). To test for inequality, use the `!=` operator. Rather than entering these into a big fat paragraph, here is a table of operators usable by Ruby in conditionals:
+
+<table>
+    <tr>
+        <td colspan="2">Conditional Operators in Ruby</td>
+    </tr>
+
+    <tr>
+        <td><code>a == b</code></td>
+        <td>Is true if the value of a to the value of b.</td>
+    </tr>
+
+    <tr>
+        <td><code>a === b</code></td>
+        <td>Is true if the value of a to the value of b and they are the same type.</td>
+    </tr>
+
+    <tr>
+        <td><code>a != b</code><br><code>a &lt;&gt; b</code></td>
+        <td>Is true if a is not equal to b.</td>
+    </tr>
+
+    <tr>
+        <td><code>a !== b</code></td>
+        <td>Is true if a is not equal to b or they are not the same type.</td>
+    </tr>
+
+    <tr>
+        <td><code>a &lt; b</code></td>
+        <td>Is true if a is less than b.</td>
+    </tr>
+
+    <tr>
+        <td><code>a &gt; b</code></td>
+        <td>Is true if a is greater than b.</td>
+    </tr>
+
+    <tr>
+        <td><code>a &lt;= b</code></td>
+        <td>Is true if a is less than or equal to b.</td>
+    </tr>
+
+    <tr>
+        <td><code>a &gt;= b</code></td>
+        <td>Is true if a is greater than or equal to b.</td>
+    </tr>
+</table>
+
+The third thing to notice about the example are the logical operators; these are special operators used to chain conditionals together or to evaluate special cases. Ruby supports two forms of the operators: C-style and stringified. The C-style operators are like the one in the first example; `&&` is the same as "`and`," the `||` operator means "`or`," and so on. The stringified operators are the same as their symbolic brethren except that they are strings: `and`, `or`, etc. Here is a table with these operators in both forms and their usage:
+
+<table>
+    <tr>
+        <td colspan="3">Conditional Link Operators in Ruby</td>
+    </tr>
+
+    <tr>
+        <td><code>&&</code></td>
+        <td>and</td>
+        <td>Conditional is true if linked statements are both true.</td>
+    </tr>
+
+    <tr>
+        <td><code>||</code></td>
+        <td>or</td>
+        <td>Conditional is true if either of the linked statements are true.</td>
+    </tr>
+
+    <tr>
+        <td><code>!</code></td>
+        <td>not</td>
+        <td>Conditional is true if attached statement is false (i.e. it works like `!=`).</td>
+    </tr>
+</table>
+
+
+#### The Ternary Operator
+
+Now that you know the long hand way to do `if` statements, I would like to show you a bit of a shortcut. The ternary operator (Random piece of trivia: the ternary operator is named simply for having three parts) allows you to execute an `if` statement without creating an entire `if` block. For example, here is an `if` block followed by its ternary equivalent:
+
+    if ('Yes' == 'No') then
+    
+    puts "Wrong!"
+
+    else
+    
+    puts "Yeah, baby!"
+
+    end
+    
+    
+    &rarr; Yeah baby!
+
+
+    ('Yes' == 'No') ? (puts "Wrong!") : puts ("Yeah, baby!")
+
+
+    &rarr; Yeah baby!
+
+The ternary operator consists of the question mark after a conditional (which uses the same operators as an `if` statement) and a colon between the two possible branches of code. The parentheses are not essential in every case, but do enhance readability and allow you to span the branches multiple lines (i.e. open the parentheses on one line enter each line of code and close the parentheses on another line). This multi-line behavior is not recommended because it slightly mangles the code and really doesn't save you any typing at all compared to an `if` statement.
+
+
+#### Unless 
+
+In Ruby the `unless` conditional statement operates as a "reverse" `if`. I say reverse because in an `if`, the main branch executes only if the conditional is true; in an `unless` statement, the main branch only executes if the provided condition is false. For example:
+
+    unless ("I am true." == "I am true."):
+    
+    puts "Something wonky!"
+    
+    else
+    
+    puts "All is alright!"
+    
+    end
+    
+    
+    &rarr; All is alright!
+
+Since "I am true." does indeed equal "I am true.", the main branch is not executed but the `else` branch is. This structure doesn't provide anything over an `if` statement except to enhance readability of the code (e.g. it's much easier and casual to say "Do this unless this" rather than "Do this unless this is not this" and to avoid writing a lot of negative `if`'s; keeping positive chi in your code is very important to the emotional health of Ruby).
+
+
+#### Statement Modifiers 
+
+The `if` statement also offers a nifty piece of syntactic sugar called a modifier; this construct allows you to tag an `if` statement on the end of a statement and have it decide whether or not the statement is attached to should be executed. For example:
+
+    thelma_louise = 13
+    
+    puts "She's less than 15 alright!" if thelma_louise < 15
+    
+    puts "She ain't more than 12, though!" if thelma_louise < 12
+    
+
+    &rarr; She's less than 15 alright!
+
+As you can see, if you simply tag on an `if` statement to end of a line, it will evaluate the `if` statement first and execute the code if it finds that the `if` statement is true. This construct replaces code like this:
+
+    if thelma_louise < 15:
+    
+    puts "She's less than 15 alright!"
+    
+    end
+
+with a far more concise and elegant solution. Rubylicious. This construct can be tagged on to `begin/end` blocks also. For example:
+
+    begin
+    
+    puts "It's so true!"
+    
+    end if (true == true)
+    
+    
+    &rarr; It's so true!
+
+This is a very elegant solution for controlling big blocks of code rather than having a huge, open if statement that spans 500 lines (especially if there's that one end keyword you forgot to drop in).
+
+
+#### The `case` Statement
+
+If you haven't noticed, I'm all about having the neatest code in the least strokes (who isn't nowadays?). It gets really irritating really fast when you are testing the same value over and over again in a series of `if` and `elsif` statements that quickly add up to a lot of sloppy looking code. It's a good thing that there is a way to put all those together into one syntactically sugarlicious block called a `case` statement. A `case` statement comes in two forms in Ruby. The first form is the "standard" way `case` statements operate: you have a "target" variable and each case is a test of values against that variable. For example:
+
+    the_tao = 1234
+    
+
+    case the_tao
+    
+    when 666: puts "That's such a lie!"
+    
+    when 1337
+    
+    puts "Liarrrr!"
+    
+    when 32767 then
+
+    puts "Whatevurrrr!"
+    
+    else
+    
+    puts "You are harmonized with the Tao."
+    
+    end
+    
+    
+    &rarr; You are harmonized with the Tao.
+
+This form of the `case` statement simply tests the target value against the values in the cases; cases are formed using the `when` keyword followed by the test which is followed either by the word `then` or a colon (both of which are non-essential if the case starts on the next line); the when keyword segments the cases so no "`end`" keyword is needed except to close the `case` block. Each case is tested starting from the top; when a match is found the proper branch is executed and the block exits. If nothing matches then the else clause is executed (just as in `if` blocks).
+
+The second form of the case statement adds more flexibility by allowing you to use conditionals like `if` statements and removing the target. Even though the target is removed, you can still use them in the same way you would the first form:
+
+    enlightenment = 42
+    
+    
+    case
+    
+    when enlightenment > 60:
+    
+    puts "You are too hasty, grasshopper."
+    
+    when enlightenment < 40 or enlightenment == nil:
+    
+    puts "You are like the sloth, my friend. Diligence is key!"
+    
+    when enlightenment == 42:
+    
+    puts "Hello, Enlightened One."
+    
+    else
+    
+    puts "Yeah, not quite, pal. Maybe next time."
+    
+    end
+
+
+    &rarr; Hello, Enlightened One.
+
+As you can see, this form can still be used to compare a single variable, but allows for more robust comparisons than the first form. Each comparison is checked, starting with the top case, first comparison, working to the right and down; when a case is matched (i.e. all conditions needed for a case to be true are met including chained conditions) that branch is executed and the block exits.
+
+A commonality between the two forms is their lack of "fall through"; in many programming languages, `case` blocks require some sort of keyword (usually `break` or something similar) which tells the application to keep checking the other conditionals after that block is finished. For example, look at this C-style syntax snippet:
+
+    int my_number = 42;
+    
+    
+    switch(my_number) {
+    
+    
+    case 41:
+    
+    printf("A little higher...");
+    
+    break;
+    
+    
+    case 42:
+    
+    printf("You have found the answer!\\n");
+    
+    
+    default:
+    
+    printf("And have fallen into a hole in the C compiler!\\n");
+    
+    break;
+
+    }
+    
+    
+    &rarr; You have found the answer!
+    &rarr; And have fallen into a hole in the C compiler!
+
+If it's not evident from the code, the `break` keyword will exit the `switch` block if it is encountered. This keyword is not needed in Ruby since it doesn't have fall through, but since C-style languages do, the `default` block (like Ruby's `else` in case statements) gets executed because there was no break in the block that evaluated to true (i.e. case 42). As helpful as the fall through mechanism is, it can really be quite annoying when the lack of one `break` statement causes your entire application to come to a screeching halt.
+
+
+
+### Loops
+
+Loops save your fingers and brain a lot of work by executing the same or slightly different code numerous times, responding to conditions as need be. Loops are essentially a sequence of statements which you enter once but which may be carried out several times in succession a finite number of times, maybe once for each member of a collection or until some condition is met. We'll cover both of these types in the coming sections.
+
+
+#### Conditional Loops
+
+Conditional loops execute based on a provided conditional statement (i.e. the same conditionals used in `case`, `if`, and `unless` blocks); these loops come in two forms: `while` and `until`. A `while` loop will execute only while a conditional is true:
+
+    x = 0
+    
+    while(x < 10):
+    
+    print x.to_s # print is like puts without a \\n at the end
+    
+    x += 1
+    
+    end
+    
+    
+    &rarr; 0123456789
+
+Each iteration, the conditional is checked; if it evaluates to `true`, the branch executes; otherwise, the block exits.
+
+
+![Figure 8](http://humblelittlerubybook.com/book/html/images/while.jpg)  
+*Figure 8: The while loop: setting the standard for looping since 1973.*
+
+In other words, it's as if you put an `if` statement at the top of the loop and the main branch is executed until the `if` statement becomes false. The `until` loop has the same relationship as that of the `unless` statement to the `if` statement:
+
+    x = 0
+    
+    until(x >= 10)
+    
+    print x.to_s
+    
+    x += 1
+    
+    end
+    
+    
+    &rarr; 0123456789
+
+Each iteration of the loop, the conditional is checked just like a `while` loop, except in an `until` loop, the branch is executed if the conditional evaluates to `false`.
+
+![Figure 9](http://humblelittlerubybook.com/book/html/images/until.jpg)  
+*Figure 9: I think the until loop gets jealous of all the attention that people give while.*
+
+Much like the `unless` statement, if the conditional provided is true then the main branch is skipped, and, in the case of the `until` loop, the block exits.
+
+These loops are great if you are doing some sequential operation (i.e. doing ten repetitions of the same task, outputting ordered data, or, like the examples, counting), but they have their pitfalls. If the conditional doesn't meet the requirements for the branch to be executed (i.e. true for `while` and false for `until`) before the first execution, the loop never runs; be aware of this possibility if you are manipulating variables in the loop that exist outside of the loop whose manipulated values are essential to your application's execution after the loop. This condition can and will cause problems, so make sure that you do a veritable assortment of verifications on your variables (more on this later).
+
+Another pitfall that may rear its ugly yet somehow mildly bearable head is that the conditional may never reach a state where the loop will break (i.e. the condition in your while loop may never reach false) and thus put your program into an infinite loop and lead it and all of Creation into oblivion. It's been said that the universe actually implodes and compresses to the size of a single Pocky if this happens, but I can't verify that. So, how do you prevent that from happening? For starters, make sure that you use as flexible conditionals as possible (e.g. the >= operator is probably a better idea than == if you're counting up simply because you never if by some freak accident it might go over your intended value; this isn't the best idea in all scenarios, but it should be considered) and make sure you interact with the conditional value (make sure you actually do something to affect the conditional; you'd be surprised how many people forget that).
+
+If you're a hardcore `&uuml;ber-1337` programmer, you may be saying to yourself, "Yo, fool! I ain't gots to be worrying about that because I be using those fo' loops fo' rizzle!" That may be true, and you'd be keeping it real in about any other language except Ruby. That's right: Ruby doesn't offer a "for loop" in the traditional sense, but it does offer one that uses the keyword `for`...
+
+
+#### Iterating Loops and Blocks
+
+In my life as a developer, I've seen some rather preposterous pieces of code; everything from text files used as high traffic databases all the way to people reinventing the wheel at least 17 times during the course of their application development (news flash to all developers, programmers, and hackers out there: most languages have date/time manipulation routines, which means you don't need to write your own for your application and/or module. Thank you.). These people are honestly just making it far more difficult for themselves and everyone else; that's sort of the way I feel when I see people using conditional loops to grok a collection in languages that plainly offer something better. For example,
+
+    my_array = [13, 1, 4, 5, 29]
+    
+    
+    i = 0
+    
+
+    while (i < my_array.length)
+    
+    print my_array[i].to_s + " "
+    
+    i += 1
+    
+    end
+    
+    
+    &rarr; 13 1 4 5 29
+
+would work, but is not the best answer (especially in Ruby). Ruby offers a couple of ways to iterate a collection safely, easily, and efficiently: iterating loops. The first of these is the `for` loop. The `for` loop in Ruby, as noted before, isn't like the `for` loop in, say, C or its derivatives, but I feel it's even infinitely more useful.
+
+The `for` loop in Ruby behaves very similarly (almost identically) to the `for` loop in Python: a collection is provided, and the `for` loop provides a local variable to hold each item as it iterates.
+
+![Figure 10](http://humblelittlerubybook.com/book/html/images/for.jpg)  
+*Figure 10: Iterators make things much easier and safer than conditional loops when using collections.*
+
+Let's look at a code example; we'll create an array of even numbers, and then print them out using an iterator.
+
+    my_evens = [2,4,6,8,10,12,14]
+    
+    
+    for my_int in my_evens
+    
+    print my_int.to_s + ", "
+    
+    end
+    
+    
+    &rarr; 2, 4, 5, 6, 8, 10, 12, 14,
+
+This is like saying, "I want to create a local variable `my_int` for each object in `my_evens` and do something with it." Every time the loop iterates, the next value in `my_evens` is copied into the variable `my_int`; this variable allows you to manipulate the item in the collection easily (and, since the original object is copied into that variable, you can manipulate it without risk of bit twiddling in the original collection).
+
+The `for` loop is really just salacious syntactic sugar for an iterator; an iterator is simply a block of code that iterates over a collection provided by the each method of a class. For example, let's look at the above example in the iterator form:
+
+    my_evens = [2,4,6,8,10,12,14]
+    
+    
+    my_evens.each do |my_int|
+    
+    print my_int.to_s + ", "
+    
+    end
+    
+    
+    &rarr; 2, 4, 5, 6, 8, 10, 12, 14
+
+An iterator is formed by creating a `begin/end` block (discussed above) but using `do/end` as the initiator; you are essentially creating a special type of `begin/end` block that will be iterated for each item in the collection. This type of loop naturally guards against the variable discord that you may encounter by incrementing an index using something like a `while` loop (i.e. you go over the value you want if using the `==` operator, your value never gets above the needed value if using a `&lt;` operator, etc.) while also providing a more natural way to access the value you wanted. Unfortunately this convenience comes at the price of flexibility. In a `while` or `until` loop you can alter how quickly your conditional reaches the state that allows the loop to break (also called step) by adding more than 1 to the value you're keeping track or something like that; this ability is severely limited in an iterator loop (i.e. it doesn't exist unless you want to use the `next` method somehow to make it happen). Keep this in mind when you decide which type of loop to use; it can greatly affect the performance and stability of your application.
+
+
+#### Statement Modifiers
+
+Loops offer a construct very similar to the `if` statement's modifier. Loops are great ways to save time and code, but they aren't very "natural"; I mean when repeating a task (such as banging your head into a mirror out of sheer frustration) you typically don't think in the form of a loop construct.
+
+    while(self.conscious == true)
+    
+    self.head_bang("mirror")
+    
+    end
+
+That's simply not how our mind usually works, and fortunately, Ruby, in all of its readable glory, has decided to bless us with the loop statement modifier construct. For example:
+
+    self.head_bang while self.conscious == true
+
+This construct is not only more natural to read and say, but it is also more concise; you still have all the same functionality but in much less code and hassle. This construct works with both `while` and `until` loops (but not any of the iterating loops); it also works with `begin/end` blocks which allows you to do post-test loops (i.e. loops that always execute at least once before checking the conditional as opposed to the pre-test loops that we've been using). For example, if you wanted to output the English translation of "Tora! Tora! Tora!" you could write:
+
+    counter = 0
+    
+    
+    begin
+    
+    print translate("Tora! ")
+    
+    counter += 1
+    
+    end until counter == 3
+    
+    
+    &rarr; Briefcase! Briefcase! Briefcase!
+
+In this setup, the block will always execute at least once regardless of the truth of the attached conditional (unlike if you simply use the `while` or `until` loop). Do keep in mind when using this construct that you are still, at its core, using the `while` and `until` loop, which means that it is still susceptible to the same pitfalls and problems with variables. Make sure to test your application thoroughly for any potential problems related to this.
+
+
+#### Controlling Loops
+
+Does it seem that loops have your application in a strangle hold? They do seem to be hulking, domineering, unstoppable behemoths that stop only when they darn well feel like it. Well, actually they probably just seem like really useful constructs that are hard to control without artificial bit twiddling in the conditional. For example:
+
+    my_x = 115
+    
+    my_y = 40
+    
+    temp = 0
+    
+    
+    while(my_x < 150)
+    
+    if (my_x % my_y) == 0: # if the quotient is even
+    
+    temp = my_x
+    
+    my_x = 151
+    
+    else
+    
+    my_x += 1
+    
+    end
+    
+    puts my_x
+    
+    end
+    
+    
+    my_x = temp
+    
+    puts my_x
+    
+    
+    &rarr; 120
+
+That's a bit dangerous if you ask me (and if you're reading this, you just might); artificially altering the conditional value can lead to some craziness in your application (i.e. accidentally skipped code, the variable being used outside of the loop without the temp value being stored back into it, etc.). In Ruby, there are various keywords that allow you control the flow of loops. The `next` keyword allows you to skip the current iteration, while the `break` keyword allows you to exit the current loop completely. Let's look at our previous example again:
+
+    my_x = 115
+    
+    my_y = 40
+    
+    
+    while(my_x < 150)
+    
+    my_x += 1
+    
+    puts my_x
+    
+    if (my_x % my_y) == 0: # if the quotient is even
+    
+    break
+    
+    else
+    
+    next
+    
+    end
+    
+    end
+    
+    
+    puts my_x
+    
+    
+    &rarr; 120
+
+The usage of the `next` keyword in this example is rather inordinate (i.e. I should have simply let the loop iterate again rather than forcing it), but I wanted to demonstrate how the `next` keyword works. This loop works just as before, except more concise and less bloated.
+
+![Figure 11](http://humblelittlerubybook.com/book/html/images/break.jpg)  
+*Figure 11: Break. I always get a great degree of satisfaction from breaking a loop. Take that sucker!*
+
+The `break` keyword breaks the loop and continues on to the code after the loop just as if the conditional had been met. The `next` keyword skips past all remaining code (which in this example wasn't much) to the end of the loop and continues on to the next iteration. But, wait! It gets fancier:
+
+    my_x = 115
+    
+    my_y = 40
+    
+    
+    while(my_x < 150)
+    
+    my_x += 1
+    
+    puts my_x
+    
+    break if (my_x % my_y) == 0
+    
+    next
+    
+    end
+    
+    
+    puts my_x
+    
+    
+    &rarr; 120
+
+You can use a conditional modifier with the `break` or `next` keywords! And, yes, the `next` keyword isn't necessary, but I wanted to demonstrate two things. Firstly, the keyword's usage (I know you probably understand it by now, but another example never hurt anybody!). Secondly, all code after `break` is skipped. The loop does not iterate again because the conditional attached to `break` was satisfied.
+
+
+
+### Exceptions
+
+OK, so you're zipping along on an application, but all of a sudden you get this crazy error and you don't know how to handle it. Maybe your users are 13 year old social rejects with more pimples than friends, and they feel the need to type in "YO d00D I"M 1337!!11" in a field in your application that is supposed to be all numeric, effectively crashing your application. Shall you just let your application crash and burn? Shall its cinders smolder forever? Shall you never see glory because of "TO01337ANdY" from Bumpkinville, IA? Never fear, young neophyte! Ruby has you covered!
+
+Exceptions provide a handy way to deal with errors and other problems in your application in a way that is uniform and easy to implement. All exceptions derive from the base class Exception; Ruby provides a number of built-in exceptions for you to use (or for your application to handle). Here is a table of the current available built-in exceptions:
+
+
+#### Handling Exceptions
+
+To handle an exception when one is raised, you must create a `rescue` block. Let's take a look at an example and then pick it apart like voracious vultures in search of delectable morsels of *delight* (or like some guys who just really want to know how to program in Ruby):
+
+    def method_of_doom
+    
+    my_string = "I sense impending doom."
+    
+    my_string.ah_ha_i_called_a_nonexistent_method
+    
+    end
+    
+    
+    method_of_doom
+    
+    
+    &rarr; ! NoMethodError
+
+Now, to handle this exception properly:
+
+    def method_of_doom
+    
+    my_string = "I sense impending doom."
+    
+    my_string.ah_ha_i_called_a_nonexistent_method
+    
+    rescue Exception:
+    
+    puts "Uhh...there's a problem with that there method."
+    
+    end
+    
+    
+    method_of_doom
+    
+    
+    &rarr; Uhh...there's a problem with that there method.
+
+To create a `rescue` block, you simply place the `rescue` keyword at the beginning of a line followed by the exception class you would like to handle (Ruby offers a number of built-in exceptions for you to use; check the Ruby documentation for a full list). I used `Exception` because it catches any and all exceptions, but you can specify numerous `rescue` blocks to handle different, more specific types of exceptions and/or numerous exception types can be handled by a single `rescue` block:
+
+    def method_of_doom
+    
+    my_string = "I sense impending doom."
+    
+    my_string.ah_ha_i_called_a_nonexistent_method
+    
+    rescue NoMethodError:
+    
+    puts "You're missing that method, fool!"
+    
+    rescue Exception:
+    
+    puts "Uhh...there's a problem with that there method."
+    
+    end
+    
+    
+    method_of_doom
+    
+    
+    &rarr; You're missing that method, fool!
+
+If you specify multiple `rescue` blocks, Ruby follows the first one it encounters that is able to handle an exception of same type as the raised exception. If we had specified the `Exception` block first as opposed to the `NoMethodError` block, we would have gotten the same output as the first example. If no usable `rescue` block is found in the current context (i.e. current block of code, current method, etc.), Ruby works its way up the call stack to see if it can find a suitable `rescue` block (i.e. it works its way from the offending method up to the method called it to the method that called it and so on). If no suitable rescue block is found before Ruby takes its search to the main application method, then the application thread exits and a message is shown that is something along the lines of, "I pity the fool that be missin' an exception handler!" followed by a series of loud crashes and breaking of wind.
+
+A `rescue` block can specify a variable name when it is created in order to hold a more detailed explanation of the error. Again using our previous example:
+
+    def method_of_doom
+    
+    my_string = "I sense impending doom."
+    
+    my_string.ah_ha_i_called_a_nonexistent_method
+    
+    rescue NoMethodError => e:
+    
+    puts "PROBLEM: " + e.to_s
+    
+    rescue Exception:
+    
+    puts "Uhh...there's a problem with that there method."
+    
+    end
+    
+    
+    method_of_doom
+    
+    
+    &rarr; PROBLEM: undefined method [and so on...]
+
+Leveraging this ability makes it far easier to know exactly what's going on, where, and sometimes how to fix it.
+
+A rescue block also provides a few other features that aid in making sure that even if your application does choke, it will still hopefully run as smoothly as possible. The first of these features is the else caluse that you can tag on to a rescue block. This block will execute if there are no exceptions raised. For example:
+
+    def no_problemo
+    
+    x = 0
+    
+    x += 19
+    
+    rescue Exception
+    
+    puts "Oh noes!"
+    
+    else
+    
+    puts "All clear!"
+    
+    end
+    
+    
+    no_problemo
+    
+    
+    &rarr; All clear!
+
+This is a useful feature, but be careful what you put in there. The `rescue` block in the enclosing code won't catch any exceptions raised in the `else` clause, so you may need to catch them later up the call stack or relegate the `else` block to menial tasks to avoid the risk of causing worse problems.
+
+The second feature offered by `rescue` blocks is the `ensure` clause; this clause holds code that is always executed (i.e. regardless of the presence exceptions or not). For example:
+
+    def dance_a_jig
+    
+    "I'm a dancin'!"
+    
+    "Do si do!"
+    
+    rebel_yell = "yee haw!".upcase!
+    
+    rescue Exception
+    
+    print "I fell down, dang it!"
+    
+    else
+    
+    print rebel_yell
+    
+    ensure
+    
+    print " That's all folks!"
+    
+    end
+    
+    
+    dance_a_jig
+    
+    
+    &rarr; YEE HAW! That's all folks!
+
+The `ensure` clause is always executed no matter what; this construct is very useful for closing files that you have been reading from or writing to, closing open network connections, or making sure all your resource handles have been cleaned up. If you put these sorts of things in `ensure` clauses, they will always get done and cut down on problems you may have with resource access if your application crashes.
+
+
+#### Rescue Statement Modifier 
+
+Much like conditionals and loops, `rescue` blocks can be used as statement modifiers. For example:
+
+    not_an_object.do_something rescue puts "Crash!"
+    
+    
+    &rarr; Crash!
+
+Note you can't specify what sort of exception to rescue from, but that is better left to "formal" `rescue` blocks anyhow. You can assign values using this construct also:
+
+    my_value = not_an_object.give_a_value rescue "Burn!"
+    
+    puts my_value
+    
+    
+    &rarr; Burn!
+
+This pitiful example doesn't show a real world case of course, but this construct is useful if a small adjustment in value can correct most any exception (a rare but possible case).
+
+
+#### Retry 
+
+Sometimes you just need a do-over. That loop didn't do well for you, or maybe that variable still wasn't clear on his motivation for this scene. Either way, you need to be able to redo part of your code in hopes that they will simply go better next time. This is where the `retry` keyword comes in; let's say you were building a fictional web browser:
+
+    def make_request
+
+    if (@http11)
+    
+    self.send('HTTP/1.1')
+    
+    else
+    
+    self.send('HTTP/1.0')
+    
+    end
+    
+    rescue ProtocolError
+    
+    @http11 = false
+    
+    retry
+    
+    end
+
+You send the HTTP 1.1 headers, but the server on the other end doesn't like that, so it vomits a `ProtocolError`. Instead of rolling over and dying, you disable HTTP 1.1, retry the block, and your application is smart enough to switch to HTTP 1.0 instead. Fancy. Using `rescue` and `retry`, you can make an attempt to fix any errors that may cause exceptions and retry the block again. Keep a close watch on this though; it can cause some serious problems if the problem is never fixed the same block of code is looped over again and again because your application is retrying it.
+
+
+#### Raising Exceptions
+
+So now that you know how to handle exceptions, I think it's a fine time to put you out to pasture with your own exceptions. Raising your own exceptions is important if there are problems that will arise that won't necessarily cause a problem with Ruby itself. For example, let's take a look at a method that may exist in class `Person`:
+
+    def define_gender(gender)
+    
+    if (gender.upcase != 'FEMALE') && (gender.upcase != 'MALE')
+    
+    raise "You specified something wonky for gender!"
+    
+    end
+    
+    end
+    
+    
+    my_guy = Person.new
+    
+    my_guy.define_gender("nobody knows")
+    
+    
+    &rarr; ! RuntimeError ("You specified something wonky for gender!")
+
+Even though it won't cause a problem with Ruby itself, you obviously don't want someone to specify something abnormal for gender (well, maybe you do, but that's just weird). If such a condition arises, you can drop the `raise` keyword on a line followed by a message and Ruby will raise a new `RuntimeError` and set its message to the one you provide. The `raise` keyword (or its uncouth cousin from Wales, the `fail` keyword) can be called a number of ways:
+
+    raise "I crashed! This message should be more informative!"
+    
+    raise
+    
+    raise NoMethodError, "That method ain\\'t here!", caller
+
+The first form you are already familiar with (i.e. provide a message to a new `RuntimeError`); the second form will re-raise the current exception so it can be passed further up the call stack or raise a new `RuntimeError` (with no message) if there is no exception. The last form is one you should use most constantly because it allows you to specify an exception type, a message, and a stack trace object (which is usually just `caller`, a reference to the `Kernel.caller` method). Good software practice says that you should be as specific as possible with your exceptions; instead of just throwing `RuntimeErrors` all the time, try to throw a `TypeError` if the provided object isn't the right type or your own exception type to match your needs (e.g. it would have been better to have raised an `GenderError` or some such in our example rather than a `RuntimeError`).
+
+
+#### My Own Exception
+
+So how do you create your own exception types? It's really quite simple in Ruby; let's use our example from before:
+
+    class GenderError < RuntimeError
+    
+    attr :what_they_put
+    
+    
+    def initialize(their_input)
+    
+    @what_they_put = their_input
+    
+    end
+    
+    end
+
+To create a new exception, you simply derive from any of the exception classes (e.g. I derived from `RuntimeError`, but you can derive from `TypeError`, `NoMethodError`, or even `Exception`). So, let's update our code above to use our new, more practical exception:
+
+    class Person
+    
+    def define_gender(gender)
+    
+    if (gender.upcase != 'FEMALE') && (gender.upcase != 'MALE')
+    
+    raise GenderError.new(gender), "Invalid input!"
+    
+    end
+    
+    end
+    
+    
+    def initialize(gender)
+    
+    self.define_gender(gender)
+    
+    rescue GenderError => bad
+    
+    puts "You gave me some bad input: " + bad.what_they_put
+    
+    raise
+    
+    end
+    
+    end
+    
+    
+    my_guy = Person.new("Who knows?")
+    
+    
+    &rarr; You gave me some bad input: Who knows?  
+    &rarr; ! GenderError ("Invalid input!")
+
+Notice that we raise the exception in `define_gender`, we handle it in `initialize`, and then pass it up the stack. In initialize, we output an attribute held in our new exception class; since exceptions are objects and thus have classes behind them, when you create your own you can add methods and attributes to it as I did to hold the value of the user's input. This is useful if you would like to provide more data to exception handlers or if you would like to provide help in recovering from exceptions by providing methods in the exception.
+
+
+#### Throw and Catch
+
+If you're a C# or Java programmer, you might have just gotten excited by the prospect of some familiarity in this area, but don't count your proverbial eggs before they hatch. In Ruby, a `catch` block is given an identifier as an argument; you can then "throw" this identifier in the ensuing code. Ruby will then look up the stack to see where the matching catch is, and if it's found, Ruby will break normal processing and exit the `catch` block. This sounds more confusing than it is, so let's look at an example:
+
+    princess = DamselInDistress.new
+    
+    
+    catch :hes_a_failure do
+    
+    # YAY! Someone's here to save her...
+    
+    print "My prince is here! "
+    
+    
+    # OH NO! The villain has eaten his liver! He dies!
+    
+    princess.is_saved = false
+    
+    
+    if (princess.is_saved == true)
+    
+    puts "Hooray!"
+    
+    else
+    
+    puts "Poo! Not again!"
+    
+    throw :hes_a_failure
+    
+    end
+
+    
+    puts "I'm going to sleep until the next guy..."
+    
+
+    # Nap...
+    
+    end
+    
+    
+    &rarr; My prince is here! Poo! Not again!
+
+A `catch` block is started by placing the `catch` keyword, an identifier, then the `do` keyword on a line; the identifier is used with the `throw` keyword and can either be a symbol or a string. The code is run until a matching `throw` statement (i.e. the throw's identifier matches the catch's identifier) is encountered (if one is encountered) in which case the `catch` block exits without executing any code after the `throw` statement. In the example, you can see this happen in that "My prince is here!" and "Poo! Not again!" are output but "I'm going to sleep until the next guy..." is not; the block exited after the matching throw statement (i.e. `throw :hes_a_failure`) was found. This construct is extremely useful if you need to simply exit the code block if an error occurs or if your code is buried in deeply nested loops and you want to break out of them quickly and easily.
+
+
+
+### This Chapter
+
+You learned about Ruby's flow control mechanisms. You learned...
+
+* about if/unless statements and conditional operators.  
+* about loops, both conditional and iterating, and how to use the most effectively.  
+* about exceptions and their usage.  
