@@ -2,8 +2,6 @@
 ## Hustle and Flow (Control)
 
 Flow control is essential to every application (unless of course your application will always have one course of action and you don't mind copying and pasting a lot of code). Flow control constructs allow you to branch (i.e. execute a different flow of code) based on conditions, run the same branch numerous times, or bail when one of the conditions is wonky. There are two "general" flow control mechanisms: conditionals and loops. I'll address them separately lest they end up in some sort of extremely confusing mental *cesspool*.
-a
-
 
 ### Conditionals
 

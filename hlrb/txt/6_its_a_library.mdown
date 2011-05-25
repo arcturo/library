@@ -1,0 +1,188 @@
+# 6 #
+
+## It's a Library! ##
+
+As you've seen, Ruby provides a number of built-in classes for you to access; it has a huge library of functions to cover anything from simple text input and output to networking to multimedia (not counting the boat load of third party libraries floating about). We've taken a look at some of the more "targeted" classes (i.e., win32, networking, and so on), but I want to take some time to devote a really quick overview to a few classes that are more miscellaneous in nature.
+
+### String Manipulation ###
+
+Ruby's string support easily rivals that of Perl and other "power" languages. As a matter of fact, I've heard that when Larry Wall goes home at night he secretly moon lights as a Ruby programmer. Don't tell anyone I told you. There are two ways to manipulate strings: instance methods on string objects and regular expressions.
+
+#### Instance Methods ####
+
+Ruby strings are, of course, objects, and as such, offer methods to manipulate themselves in a variety of ways. First we will look at the simplest manipulation of a string: the splice. The first way I'd like to show splicing is the splice operator; this operator is used just like the array operator (i.e. it uses the object[index] form to reference and set the value of elements) with a few little string specific extras. For example:
+
+    the_alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    puts the_alphabet[0..2]
+    # => ABC
+     
+    puts the_alphabet["HIJ"]
+    # => HIJ
+     
+    puts the_alphabet[1,2]
+    # => BC
+     
+    the_alphabet[1] = "!"
+    puts the_alphabet
+    # => A!CDEFGHIJKLMNOPQRSTUVWXYZ
+
+As an alternative, you can use the *slice* method to grab elements in a similar manner:
+
+    puts the_alphabet.slice(0, 3)
+    # => ABC
+     
+    puts the_alphabet.slice(0..5)
+    # => ABCDEF
+
+Once you have your string data sliced and diced just the way you want it, you can manipulate it in a number of ways; these methods include ways to change case, edit certain content, or generally finagle with the string. Here are some examples:
+
+    a_str = "I likE To MesS with STRINGS!"
+     
+    a_str.downcase
+    # => i like to mess with strings!
+     
+    a_str.upcase
+    # => I LIKE TO MESS WITH STRINGS!
+     
+    a_str.swapcase
+    # => i LIKe tO mESs WITH strings!
+     
+    a_str.capitalize
+    # => I like to mess with strings!
+     
+    a_str.capitalize!
+    puts a_str
+    # => I like to mess with strings!
+     
+    a_str.squeeze
+    # => I like to mes with strings!
+
+The names of these methods should make their usage obvious, with the exception of squeeze which will remove sets of the same character and replace them with a single instance of that character (i.e. "*mess*" is now "*mes*"); each of these methods also offers an "in place" version as demonstrated by *capitalize!*.
+
+The *insert* method allows you to insert a string at a given index; be careful because this method will modify the string in place (I'm not sure why this method lacks a *!*, but it does):
+
+    into = "12345"
+    into.insert(2, "LETTERS!")
+    puts into
+    # => 12LETTERS!345
+
+On the other hand, you can use the *delete* method to remove characters or a range of characters from a string:
+
+    gone = "got gone fool!"
+    gone.delete("o", "r-v")
+    puts gone
+    # => g gne fl!
+
+Placing a hyphen between two letters will tell Ruby to create an inclusive (i.e. also include the lower and upper limit characters, such as *r* and *v* in the example) range of characters. You can use this technique with a number of methods, but it is exceptionally useful with delete.
+
+Removing the last character from a string can be really annoying and much longer that it should be in some languages (I'm looking right at you PHP); fortunately, like any good language that has strings, Ruby offers *chomp* and *chop*:
+
+    eat_me = "A lot of letters\n"
+     
+    eat_me.chomp
+    # => A lot of letters
+     
+    eat_me.chop
+    # => A lot of letter
+     
+    eat_me.chomp("ter")
+    # => A lot of let
+
+The *chomp* method will remove the record separator (stored in the global object *$/*) from the end of a string; if *$/* hasn't been changed from the default, this means it will remove *\n*, *\r\n*, and *\r* (essentially any sort of newline character). You can also specify what to chomp by passing it in as a parameter as in the last example. The *chop* method will simply chop off the last character regardless of what it is (note: it will treat *\r\n* as one character).
+
+If you simply need to remove the whitespace from the beginning and/or end of a string, then use one of the strip methods: *lstrip*, *rstrip*, or simply *strip*. For example:
+
+    stripper = " La di da! \t"
+     
+    puts "[" + stripper.lstrip + "]"
+    # => [La di da! ]
+     
+    puts "[" + stripper.rstrip + "]"
+    # => [ La di da!]
+     
+    puts "[" + stripper.strip + "]"
+    # => [La di da!]
+
+If it isn't obvious from the examples, the *lstrip* and *rstrip* methods strip off any sort of whitespace (i.e. spaces, tabs, newlines, etc.) from a string on the left or right side, respectively. The *strip* method strips whitespace from both sides.
+
+The *split* method will probably be one of your most often used string methods; it breaks a string into substrings based on a specified delimiter. That's a bit of a mouth full, so let me show you an example:
+
+    breakable = "break,it,down,fool!"
+    breakable.split(",")
+    # => ["break", "it", "down", "fool!"]
+
+The *split* method breaks a string into pieces; these pieces are formed by breaking the string at a delimiter, removing that delimiter, and placing the remaining pieces into an array. This allows you to then use an iterating loop to go over the collection and do various operations on the data within.
+
+But what if you need to do an operation that isn't allowed on a string? For example, you want to do some arithmetic on some numbers you read in from a text file, but text from files is always read in as strings. Ruby offers the *to_f* and *to_i* methods to allow just that:
+
+    numerical_string = "1234"
+     
+    numerical_string + 6
+    # => ! TypeError
+     
+    numerical_string.to_f + 6.7
+    # => 1240.7
+
+It's important to remember that all data read from sockets, files, and users will be strings; if you plan on doing any sort of math with this data, you must run it through one of these methods first.
+
+#### Regular Expressions ####
+
+I mentioned regular expressions in passing earlier so the appearance of the syntax wouldn't confuse you if you were looking at Ruby examples elsewhere; now I'd like to take some time to discuss what regular expressions are and how incredibly useful they can be.
+
+Firstly, let me say that I am not going to give you a grand tour of regular expressions, nor will I bore you with a biography of his third cousin, Samuel del Fuega IV. I will, however, provide some very rudimentary examples whereby I can show the usage of these methods *and*, for the special price of *nothing at all*, I am providing an appendix with URLs of pages to visit if you'd like to find out more about the dark craft of regular expressions (it's in Appendix A). Aren't you excited? Let's proceed.
+
+A regular expression (sometimes called a regexp or regex) is a string that describes or matches a set of other strings, according to a set of syntax rules. Their uses range from simple searches to full string transformation involving searching, replacing, and shifting of data. They're a delightful addition to any programming language, a useful tool for string manipulation, and make a delectable topping for any dessert.
+
+Regular expressions have a rich syntax which allows you to do a number of things, but for the sake of brevity and sanity of scope, I will use very simple regular expressions. You will need to go and read an introduction to regular expressions to fully and easily understand what is going on, but perhaps you can gather what's going on without it.
+
+Let's begin by looking at the simplest use of regular expressions: matching. You can search within a string using regular expressions easily; let's say you were wanting to see if a string was a substring of another string. You could do this:
+
+    matchmaker = "I'm a cowboy, baby!"
+     
+    matchmaker =~ /cow/
+    # => 6
+     
+    matchmaker.match("cow")
+    # => #<MatchData:0x61d3120>
+
+Using the *=~* will return the index of the first match of the pattern, but using the *match* method of a string, you can get a *MatchData* object which gives you a number of options for accessing the matches. For example:
+
+    my_message = "Hello there!"
+    my_message.match(/(..)(..)/).captures
+    # => ["He", "ll"]
+
+Using the captures method, you can grab the matches for each expression; the to_a method will offer you similar output but will also tag on the fully matched string. That was sort of a silly example, so let's look at a more plausible example. Say you wanted to grab the text between two delimiters; here is one way to do it:
+
+    html_element = "<html>"
+    my_element_text = html_element.match("(<)(.*)(>)").captures
+    puts my_element_text[1]
+    # => html
+
+If you're the curious type, you can look in the Ruby API Documentation for more information on the *MatchData* class.
+
+If you'd like to kick out the middle man and simply get an array of matches back from the method, you can use the *scan* method:
+
+    my_message = "Hello there!"
+    my_message.scan(/(..)(..)/)
+    # => [["He", "ll"], ["o ", "th"], ["er", "e!"]]
+
+Other than the difference in return type between the two methods, *match* and *scan* also differ in "greediness." A "greedy" regular expression or method will match every occurrence of a pattern rather than just matching one. The *scan* method is greedy; it will match every occurrence of a pattern in a string (note: you can make *match* greedy using a certain kind of regular expression).
+
+Another usage of regular expressions is substitution; substitution using regular expressions is very flexible if you use the right combination of potent regular expressions. Again, because I do not discuss advanced regular expressions, the true usefulness of this technique won't really register, but I hope that you will take a serious look at regular expressions and use them to your advantage. To substitute using a regular expression, you use the *sub* or *gsub* method of a string instance:
+
+    go_away = "My name is Freak Nasty!"
+     
+    go_away.sub("y", "o")
+    # => Mo name is Freak Nasty!
+     
+    go_away.gsub("y", "o")
+    # => Mo name is Freak Nasto!
+     
+    go_away.sub("Freak Nasty", "Fred Jones")
+    # => My name is Fred Jones!
+
+The *sub* method will only replace the first match for the pattern, but the *gsub* method is greedy (I'm sure the g didn't give it away) and will replace every match. Again, the greediness of each method can be gaged by the usage of certain regular expression constructs. The more powerful regular expressions you learn, the more you can do with them; remember to check out Appendix A for more information.
+
+### Date/Time ###
+
+
