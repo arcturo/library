@@ -1,0 +1,14 @@
+# 1
+## Upgrading Rails apps
+
+Unfortunately, I'm sure that you're not starting a new Rails app
+tomorrow. You probably have a lot of code that's already written in an
+earlier version of Rails. So when you upgrade, you'll want to take a few
+things into consideration to make the most of this new feature. Here's
+how.
+
+### Making some structure
+
+### Moving all your files
+
+### Conversion tools

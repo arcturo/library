@@ -1,0 +1,11 @@
+# 0
+### Introduction
+
+One of the coolest new features in Rails 3.1 is the way that it handles
+static assets. This new chunk of hotness is called the "asset pipeline,"
+and it is a much needed and welcome change from the way things were
+before. This short little eBook will walk you through what this means
+for your new greenfield Rails apps, how to upgrade apps from Rails 3.0,
+and even how to implement this functionality in Sinatra.
+
+Go forth and shove all your assets into /public no more.

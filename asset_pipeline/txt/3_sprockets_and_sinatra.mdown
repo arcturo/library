@@ -1,0 +1,14 @@
+# 1
+## Sprockets and Sinatra
+
+It's sort of a secret, but there are other web development frameworks
+out there for Ruby. You might occasionally do development in some of
+them, too. Don't worry, we won't tell. If you happen to get curious and
+try one of them out, you don't have to give up this sweet feature. It's
+pretty easy to use Sprockets with other Rack-based frameworks too.
+
+### Setting Up Sprockets
+
+### Mounting Multiple Apps
+
+### Production Considerations

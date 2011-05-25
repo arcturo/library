@@ -1,0 +1,17 @@
+# 1
+## What is the asset pipeline?
+
+To understand why this feature was needed in Rails, let's take a look at
+how assets were handled under older versions.
+
+### The 'junk drawer' of /public
+
+An asset is blah blah blah.
+
+### Movin' on up (to the /app side)
+
+### From folder to file
+
+### Hit that code with an Uglifier stick
+
+### Yo dawg, I heard you like templates...
