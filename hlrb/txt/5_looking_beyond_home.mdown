@@ -1,0 +1,1029 @@
+5
+
+# Looking Beyond Home
+
+In this day and age, the rage
+with all the kids seems to be those &quot;networked&quot; computers.
+Well, whatever that means, those young'uns don't need to look any
+further than Ruby for their network fix, whether it be getting
+cracked out on HTTP or hopped up on databases.  One of my favorite
+thrills in high school was hitting an Ethernet line and then
+listening to Link Void's &quot;Darkfiber Line to the Room&quot; and
+watching &quot;The Wizard of Oz&quot; at the same time.  Fun times.
+
+## Networking and the Web
+
+
+Ruby's networking abilities
+have been favorably compared to languages such as Python and Perl;
+while Ruby doesn't have huge libraries such as CPAN or tightly
+integrated suites like Twisted (yet), it does present a nice suite of
+networking capabilities built right in.
+
+### Socket Programming
+
+
+![graphics19](images/sockets.jpg)
+Ruby
+offers a number of socket types that you can use to connect to
+different transport and network protocols.  Both connection- and
+connectionless-oriented transports are offered, along with classes
+that offers client and server support.  All sockets hail from the
+Genesis of all socket classes: `BasicSocket`.
+The `Socket`
+class provides you with a very C-ish interface to sockets; it is much
+more complex and a generally pain in the bum compared to the other
+classes such as `IPSocket`,
+`UDPSocket`,
+or `TCPSocket`.
+
+The rest of this section
+(i.e., the part dealing with actually networking an application) will
+concentrate on the `TCPSocket`
+and `TCPServer`
+class, since these classes will be the most common classes you will
+use and are easier than using the same functionality using the `Socket`
+class.  There is a lot of information available on using the other
+classes, so if you need to use something like a UDP socket, then
+consult one of the links in Appendix A or use your favorite search
+engine to find what you need.
+
+**Server** The `TCPServer`
+class offers a simple way to get socket server functionality up and
+going in your application with minimal fuss when dealing with
+accepting connections and the like.  There's not much background
+other than what's already been discussed with regard to sockets in
+general, so let's get right into some code and construct the de facto
+standard example socket server example program: the echo server.
+
+    require "socket"
+
+    myserver = TCPserver.new('localhost', 0)
+    sockaddr = myserver.addr
+
+    puts "Echo server running on #{sockaddr.join(':')}"
+
+    while true
+        Thread.start(myserver.accept) do |sock|
+            puts("#{sock} connected at #{Time.now}")
+
+            while sock.gets
+                sock.write($_)
+                puts "User entered: #{$_}"
+            end
+
+            puts("#{sock} disconnected at #{Time.now}")
+            s.close
+        end
+    end
+
+Let's take this apart.  First,
+you must include the socket module, which will give you access to
+`TCPServer`
+and all its related modules and classes.  Next, you must create a
+`TCPServer`
+instance using the either the `new`
+method or its synonym, the `open`
+method.  The first parameter is the interface to bind to; if this is
+left blank, then Ruby binds to all available interfaces on the host.
+The second parameter is the port number; if this is `0`
+like in the example, then the system automatically selects an
+available port.  Then upon entering the loop, we tell the application
+to wait until a new socket is connected (which fires
+myserver.accept); when the socket connects, a new `Thread`
+object is created and the enclosed block is executed.  I use a `Thread`
+here simply because this setup allows you to connect more than one
+client to this particular server instance.  You could do it
+&quot;blocking&quot; using a while loop or some such, but it's
+generally better practice to do it like this.  The `Thread`'s
+block has logic to output a message upon connect and disconnect of a
+host and output user data entry on the console and back to the
+socket.  Upon running this, you should have a simple socket server
+that will echo back any input given to it.
+
+    Echo server running on AF_INET:3160:localhost:127.0.0.1
+
+
+When the server starts, you
+should see a little bit of information about it, including the port
+number (which is highlighted above).  Now if you open up a telnet
+client and telnet to localhost on the given port number, you should
+be able to enter some text and have it echoed back to you.
+
+    myhost> telnet localhost 3160
+
+    some more text!!
+    some more text!!
+    the pandas are livid!!
+    the pandas are livid!!
+    Pancakes are a far better source of Omega-3.
+    Pancakes are a far better source of Omega-3.
+
+After you close the telnet
+window, flip over to the Ruby console that your application has been
+running in and look at the output.
+
+    Echo server running on AF_INET:3160:localhost:127.0.0.1
+    #<TCPSocket:0x27ebefc> connected at Wed Sep 13 19:44:28 Eastern
+    Daylight Time 2006
+    User entered: some more text!!
+    User entered: pandthe pandas are livid!!
+    User entered: Pancakes are a far better source of Omega-3.
+    #<TCPSocket:0x27ebefc> disconnected at Sat Sep 13 19:45:48
+    Eastern Daylight Time 2006
+
+
+When the application started,
+you were given a nice little startup message, which is followed by
+messages indicating the various events going on in the application.
+Now let's take a look at TCP client services.
+
+
+**Client**  TCP client
+services are offered by the `TCPSocket`
+class; this class allows you to make a TCP connection to various
+services, such as finger, ftp, your own service on a random port, or
+even a telnet server.  Let's connect to the BOFH Excuse telnet server
+on blinkenlights.nl as an example; this way, when your boss asks you
+why you're reading this book instead or working, you can provide him
+or her with a proper excuse.
+
+    require "socket"
+
+    print("Connecting...")
+    clientsock = TCPsocket.open("towel.blinkenlights.nl", 666)
+    print(" done\n")
+
+    puts("Connected from #{clientsock.addr[2]}
+    to #{clientsock.peeraddr[2]}")
+
+    while (excuse = clientsock.gets)
+        print(excuse)
+    end
+
+    clientsock.close
+
+
+First, you need to import the
+socket library, of course.  Next, you open a TCPSocket much like you
+open a file stream.  The first parameter is the hostname or network
+address to connect to, and the second is the port to connect on.  Now
+that you have a socket, you can treat it just like a stream that you
+would get from a file or something similar, hence why you can use
+`gets`
+to get data from it.  You can also use `read`,
+`readline`,
+`write`,
+`writeline`,
+and any other stream reading/writing command.  Sockets also have
+their own methods, such as `recv`
+to receive data from the socket and `send`
+to send data over the socket, but it is not necessary to use these.
+It's simply a matter or preference and style.  When you run this
+code, you should get output similar to the following.
+
+    Connecting... done
+    Connected from host.domain.com to towel.blinkenlights.nl
+
+    === The BOFH Excuse Server ===
+    Your excuse is: It's not plugged in.
+
+First, you're given a few
+messages about the connection that is made, followed by the output
+returned from the server.  We've basically telnetted (is that a
+verb?) into the server and received the output,
+which means that we could point a TCPSocket at a TCPServer and have
+them talk to each other.  Let's create a client for our echo server.
+
+    require "socket"
+
+    print("Connecting...")
+    clientsock = TCPsocket.open("localhost", 1390)
+    print(" done\n")
+
+    while (gets()) clientsock.write($_)
+        puts(clientsock.gets)
+    end
+
+    clientsock.close
+
+Notice this code is very
+similar to our previous code, with the exception of a few things.
+First, we changed the hostname and port number (which you will need
+to get from the echo server beforehand or take as a command line
+parameter to your Ruby script).  Secondly, the main loop now operates
+on user input rather than socket output, and in this loop, take user
+input and write it to the socket.  The socket's output is then
+written to the console.  When you run this and enter some data, you
+should get something like the following.
+
+    Connecting... done
+    localhost to localhost
+    Chicken livers and potbellies!
+    Chicken livers and potbellies!
+    My bowler is dusty from my superfluous emissions.
+    My bowler is dusty from my superfluous emissions.
+
+Now, if you flip over to the
+server's console window, you should see something very similar to the
+following.
+
+    Echo server running on AF_INET:1390:localhost:127.0.0.1
+    #<TCPSocket:0x27ebefc> connected at Sat Sep 16 17:34:07 Eastern
+    Daylight Time 2006
+    User entered: Chicken livers and potbellies!
+    User entered: My bowler is dusty from my superfluous emissions.
+    #<TCPSocket:0x27ebefc> disconnected at Sat Sep 16 17:41:51
+    Eastern Daylight Time 2006
+
+Congratulations!  You've
+successfully written a fully networked Ruby application.  This
+example is frivalous and useless of course, but it should illustrate
+the basic concept enough to build off of.  Before you know it, you'll
+be porting Apache to Ruby or telling your boss that you don't need no
+stinkin' web browser if you've got Ruby.
+
+### HTTP Networking
+
+Speaking of the web, HTTP
+networking is also a very important component of today's network
+programming landscape.  HTTP, or HyperText Transfer Protocol, is the
+standard for Internet communication these days.  I'm still not sure
+why the world ever got away from ALOHA, but then again I'm not sure
+why 640K of memory isn't enough for everyone nowadays either.  In any
+case, Ruby provides a robust library of HTTP functionality built
+right in to the standard library.
+
+**Server**  HTTP serving
+with Ruby is incredibly easy.  You could build a server based off of
+TCPServer, meticulously implementing each part of the HTTP protocol,
+solving concurrency and blocking issues as they came up, and figure
+out a way to reliably send binary data.  Then again, you could just
+use WEBrick, the full-Ruby web server that is included in the
+standard library.
+
+    require 'webrick'
+    include WEBrick
+
+    myserver = HTTPServer.new(:Port => 8080,
+        :DocumentRoot => Dir::pwd + "/temp")
+
+    myserver.start
+
+Using the above four line
+snippet, you now have a fully operational HTTP server running on the
+port your specify that will serve HTML documents out of the path you
+specify as the DocumentRoot option (e.g., in the example it's the
+folder the script is launched from and &quot;temp&quot; like
+&quot;/home/yourname/temp&quot;).  To start the server, simply give
+create a new instance and call the `start`
+method.  The parameters shown for the constructor are the most
+commonly used, but there are a lot you can assign.  If you're really
+interested in finding out more, you can see all of them in the
+WEBrick documentation at
+[http://www.ruby-doc.org/stdlib/libdoc/webrick/rdoc/index.html](http://www.ruby-doc.org/stdlib/libdoc/webrick/rdoc/index.html).
+
+
+Back to the example, if you
+have an HTML file named index.html dropped into the path you
+specified, you should be able to navigate to http://localhost:8080
+and see it.
+
+![graphics2](images/webscreen.jpg)
+Figure 13: Scotty O'Laddie's Fun Site!  Pretty much the best website in the
+	world.
+
+If you don't have an index.html
+file, it will show you an index of the files that are in there; you
+can then request one of those either by clicking the link or
+navigating to it directly.  Now that you have a working HTTP server,
+let's take a look at Ruby's HTTP client facilities.
+
+**Client**  Ruby's HTTP
+client library is the `Net::HTTP`
+class.  This class provides a simple interface to making HTTP
+requests to local and remote servers for any type of file.  Possible
+uses include periodically downloading something like logs or new
+feeds or if downloading a large number of files without making a
+request for each one through a web browser or something like `wget`
+ As an example, let's say you wanted to download Digg's RSS feed so
+you could parse it into a Ruby on Rails website or your own homegrown
+RSS reader; you could do so by making a request with the `Net::HTTP`
+class.
+
+    require 'net/http'
+
+    Net::HTTP.get_print 'www.digg.com', '/rss/index.xml'
+
+First, you need to make include
+the net/http library using require.  In this instance, I used the
+`get_print`
+method to print out the file to the console., which takes a hostname
+and a file to retrieve.  This is the best way to do do this if you
+want to get the same file from a number of servers (i.e., you could
+leave the file as a constant string and have the hostname be a
+variable) or a lot of files from the same host (i.e., you could leave
+the hostname as a constant string and the file variable), but if you
+are generally fetching files from different servers and of different
+filenames, there is a more intuitive way to do so.
+
+    require 'net/http'
+    require 'uri'
+
+    Net::HTTP.get_print URI.parse('http://www.ruby-lang.org')
+
+The above snippet will grab the
+Ruby Language home page's source code and print it on the console.
+If you notice, rather than feeding the get_print method two separate
+parameters (i.e., the hostname and the filename), I used the
+URI.parse method from the uri library; this method allows you to take
+a normal URL (e.g., http://www.bn.com/, http://www.ruby-lang.org/,
+http://rubyonrails.org/index.php, and so on) and parse it for use
+with any of the Net::HTTP methods.  I show this early in this section
+because it is the easiest way to give URLs to these methods; speaking
+of those methods, let's take a look at some of the other methods in
+this library.
+
+So far I've been using the
+`get_print`
+method to get and print the contents of a request.  This method is
+great if that's all you're doing, but what if you need to get the
+contents and store in a variable?  Or what if you want to manipulate
+the HTML some way?  That's where the `get`
+method comes in; this method will execute a request and then return
+the results for you to have your way with.
+
+    require 'net/http'
+    require 'uri'
+
+    src = Net::HTTP.get(URI.parse('http://www.cnn.com/'))
+    puts src
+
+As you can see, the same basic
+process is followed as before with `get_print`,
+except this time the results are first stored in the `src`
+variable.
+
+The Net::HTTP library also
+allows you to post form data to a URL.  You can do this over GET by
+appending the form data to the end of the URL (e.g.,
+http://your-host.com/index.php?underpants=secured&sandpaper=finegrain&lotion=yes),
+but a little more effort is required to make a POST request.  A POST
+request are the sorts of form posts that don't append anything to the
+URL, but rather submit the form data as part of the HTTP request.
+You can use the post_form method to make this kind of request with
+Net::HTTP.
+
+    require 'net/http'
+    require 'uri'
+
+    postit =
+    Net::HTTP.post_form(URI.parse('http://zip4.usps.com/zip4/zcl_3_ results.jsp'), {'zip5'=>'37998'})
+
+    puts postit.body
+
+The above snippet will use the
+USPS ZIP code lookup to find out what city a ZIP code is from; using
+the `post_form`
+method, you can post a form by providing the form keys and values in
+a hash as the second parameter (i.e., in this case, `zip5`
+was a text field on the normal page which was for the ZIP code you
+wish to look up).  The results are returned just like a normal GET
+request.
+
+The final portion of this
+library I would like to cover is the `Net::HTTP.Proxy`
+class, which allows you to connect through a proxy.  Instances of
+HTTP.Proxy have the same methods as a normal Net::HTTP instances, so
+you can use it almost the same way.
+
+    require 'net/http'
+    require 'uri'
+
+    src = Net::HTTP::Proxy('myproxyhost', 8080, 'username', 'password').get(URI.parse('http://www.cnn.com/'))
+
+    puts src
+
+When creating an instance of
+the `HTTP::Proxy`
+class, you must give it a proxy address and port; the last two
+parameters for a username and password are optional (but, of course,
+required if your proxy requires authentication).  Now any request you
+make using that instance will go through the provided proxy.
+
+I didn't cover everything
+about `Net::HTTP`
+here.  Think of this as a mere brushing of the surface, uncovering a
+mere snippet of what can be seen at
+[http://www.ruby-doc.org/stdlib/libdoc/net/http/rdoc/index.html](http://www.ruby-doc.org/stdlib/libdoc/net/http/rdoc/index.html).
+I encourage you to go there and look over the documentation, as we
+have only uncovered &quot;te wolechla&quot; of the the whole
+enchillada.
+
+### Other Network Services
+
+Though I've covered the two
+most popular protocols, that doesn't mean the little guys won't get
+any love.  Since when is it that only the popular kids matter?  Well,
+probably since about 1944, but that's beside the point.  I'm going to
+cover the nerds and geeks of the network protocol community because I
+want to (that and the Commission for Equal Treatment of Network
+Protocols and Their Ugly Cousins That Suck at File Transfers might
+yell at me if I don't).
+
+**FTP**  The File Transfer
+Protocol (FTP) is a fairly popular method for transferring and
+storing files, particularly in open source circles.  As such, being
+able to grab these files (or upload them, whatever thc case may be)
+with a Ruby script may prove to be incredibly handy.  Fortunately,
+Ruby provides a built-in library to handle all of your FTP needs.
+
+    require 'net/ftp'
+
+    ftp = Net::FTP.new('ftp.gnu.org')
+    ftp.login('anonymous', 'me@mrneigborly.com')
+
+    ftp.chdir('gnu/readline/')
+    files = ftp.list('r*')
+    puts files
+
+    ftp.getbinaryfile('readline-5.1.tar.gz', 'rline.tar.gz')
+
+    ftp.close
+
+The above snippet will login to
+the GNU FTP server and download the readline library.  Ruby's FTP
+library, just like every other library, must first be included using
+`require`.
+ Next, you need to create a new `Net::FTP`
+instance, providing the constructor with a hostname to connect to.
+The `login`
+method will then log you into the FTP server; if you are logging in
+anonymously (i.e., like in the example) it's not completely necessary
+to provide a username and password.  If left blank, Ruby will
+substitute `anonymous`
+in as the username and `anonymous@yourhostname`
+as the password.  Next, you need to navigate to the proper directory;
+here, I used the `chdir`
+method to change directories to the `gnu/readline/`
+folder and the `list`
+method to get a list of the files in that directory, which is then
+printed to the console.  Once you're where you want to be, you can
+use `gettextfile`
+or `getbinaryfile`
+(as I have here) to get files or `puttextfile`
+or `putbinaryfile`
+to upload local files to the server (if you're allowed to).  The get
+methods require two parameters: the remote file to get, the local
+filename to copy it to.  The put methods require two parameters also:
+the local file to copy, and the remote filename to copy to.  If you'd
+like to see more examples, go to
+[http://www.ruby-doc.org/stdlib/libdoc/net/ftp/rdoc/index.html](http://www.ruby-doc.org/stdlib/libdoc/net/ftp/rdoc/index.html)
+to view this library's documentation.
+
+**SMTP  The SMTP Protocol,
+or Simple Mail Transfer Protocol...er...Protocol, is the de facto
+standard for sending e-mail.  Thanks to this protocol and it's
+usually crappy implementation, you and I get thousands of spam
+e-mails every day.  Thanks Jon Postel, Eric Allman, Dave Crocker, Ned
+Freed, Randall Gellens, John Klensin, and Keith Moore for inflating
+my inbox (and thanks Wikipedia for telling me who worked on SMTP)!
+So, anyhow, using SMTP in Ruby is actually quite painless.
+
+    require 'net/smtp'
+
+    message = <<MESSAGE
+    From: Your Name <you@you.com>
+    To: That Guy <him@him.com>
+    Subject: My fine hat is misplaced
+    Date: Sat, 15 Sep 2006 16:26:43 +0900
+    Message-Id: <thisisunique@you.com>
+
+    Where is my fedora?
+    MESSAGE
+
+    smtp = Net::SMTP.start('me.com', 25)
+    smtp.send_message msgstr,'you@you.com','him@him.com', 'you.com'
+    smtp.finish
+
+
+First, tell Ruby to require the
+`net/smtp`
+library (I know it seems redundant, but you'd be surprised how many
+times even I forget this).  Next, I constructed a message in a
+string.  Message construction would probably be handled differently
+in a &quot;real&quot; application, but this method works for this
+example.  Next, create a new `Net::SMTP`
+instance by calling the start method, giving the constructor a
+hostname and port for your SMTP server.  Next, call the `send_message`
+method, giving it the message, the sender's e-mail address, and the
+recipient's e-mail address, and HELO domain as parameters.  The HELO
+domain is used by some mail servers and spam filters to make sure
+that the e-mail is legitimate.  Finally, call the `finish`
+method to end the SMTP session.  If your SMTP server requires
+authentication, you need to make the start method call like the
+following.
+
+    Net::SMTP.start('me.com', 25, 'you.com', 'you', 'mypw', :plain)
+
+The three additional parameters
+handle your authentication.  The first of these is the username and
+password combination; the last parameter indicates which
+authentication scheme will be used.  In this case, I used the evil
+and much maligned `plain`
+scheme, but there are the `login`
+scheme and the slightly more secure `cram_md5`
+scheme which you can use.  Check with your server's administrator to
+make your server supports these methods before trying to use them as
+some crappier mail servers don't support them.
+
+**POP**  The POP protocol,
+or Post Office Protocol...protocol, is (obviously) used to retrieve
+e-mail.  It has largely fallen out of favor in recent years since
+more people have discovered IMAP (which is covered in the next
+section) but is still in widespread use.  Ruby's POP library is an
+easy to use interface to a POP server, and quite honestly one of the
+more natural POP interfaces I've used.  Other interfaces can be
+compared to a McDonald's worker that speaks Engrish.  You know what
+you want them to do, but either they don't understand or they do it
+in a way that may make sense but only to someone who is either stupid
+or simply strange.  Fortunately, Ruby's POP interface is natural and
+readable.
+
+    require 'net/pop'
+
+    pop = Net::POP3.new('mymailserver.com')
+    pop.start('myaccount', 'salacious')
+
+    if pop.mails.empty?
+        puts 'No mail to grab.'
+    else
+        pop.each_mail do |msg|
+            puts msg.pop
+            # msg.delete
+        end
+    end
+
+    pop.finish
+
+This code snippet will open a
+new connection to a POP server and log you in by creating a Net::POP3
+instance and calling the `start`
+method with login credentials as parameters.  Next, it checks whether
+or not the mailbox is empty by using the `empty?`
+method on the `mails`
+attribute of the Net::POP3 instance.  If they mailbox is empty a
+message is displayed indicating its emptiness, but otherwise the
+`each_mail`
+method is used to iterate the mail messages and print them out.  The
+commented out code would delete the message, but I didn't want to put
+destructive code in something that you're likely to copy and paste
+without regards to content.  Since the `mails`
+attribute is simply an array of mail messages, you could also use the
+`each`
+method to iterate the message, but it's probably a better idea to use
+the `each_mail`
+method since it is specialized (not that it makes a difference, but
+it's probable that the other one will become deprecated eventually).
+
+I didn't cover all the
+features in the section; one reason is that I don't have a server
+that supports them all (i.e., APOP).  Another reason is that they're
+not common enough to warrant anymore documentation than you can find
+on the documentation page at
+[http://www.ruby-doc.org/stdlib/libdoc/net/pop/rdoc/](http://www.ruby-doc.org/stdlib/libdoc/net/pop/rdoc/).
+ Let's move along to a superior mail retrieval method: IMAP.
+
+**IMAP**  IMAP (Internet
+Message Access Protocol) is the e-mail flavor du jour currently since
+it's a little more efficient than POP.  It allows you to have many
+logical mailboxes rather than a single inbox, multiple client access
+to one mailbox, and much more.  Put simply, it's a natural evolution
+of POP.  Ruby's IMAP  interface is surprisingly robust;  it gives you
+a natural interface to all of IMAP's commands.  Let's take a look at
+an example from the Ruby documentation that will grab all mail
+messages and print out their sender and subject.
+
+    require 'net/imap'
+
+    imap = Net::IMAP.new('mail.example.com')
+    imap.authenticate('LOGIN', 'joe_user', 'joes_password')
+
+    imap.examine('INBOX')
+
+    imap.search(["RECENT"]).each do |msg_id|
+        envelope = imap.fetch(msg_id,"ENVELOPE")[0].attr["ENVELOPE"]
+        puts "#{envelope.from[0].name}: \t#{envelope.subject}"
+    end
+
+This example works much like
+the POP example in the first few lines: create a new instance
+parametrized with the hostname and call a method to authenticate).
+The two authentication schemes supported by IMAP are `LOGIN`
+(used here) and `CRAM-MD5`.
+ After these lines though, IMAP's architecture really starts showing.
+ The `examine`
+method gives you read-only access to a mailbox or folder (the `select`
+method, which is used the same way, allows editing access); you can
+then use the `search`
+method to grab a list of mails to operate on.  You can use the `fetch`
+method to get a mail object, which you can get information from (as
+in the example) or use methods like `copy`
+or `store`.
+ To get more information, check out the IMAP library's documentation
+at [http://www.ruby-doc.org/stdlib/libdoc/net/imap/rdoc/index.html](http://www.ruby-doc.org/stdlib/libdoc/net/imap/rdoc/index.html)
+
+### Web Services
+
+Web Services are growing in
+popuarity these days, and as such I thought it was pretty important
+that I at least mention them.  I'm only going to cover a very basic
+client side example, as this could honestly be a book on its own if
+anyone wanted to write it.  There are a few links in Appendix A that
+talk about using Ruby and web services together if you're interested;
+otherwise let us march on towards our web service laden Promised
+Land.  We have yet to cross the Red Sea, but, brothers and sisters,
+it is in sight!
+
+**XML-RPC** Consuming an
+XML-RPC (XML Remote Procedure Call) web service in Ruby is as simple
+as fetching a web page, except instead of giving you a rather
+unusable raw return value, Ruby gives your beautifully and
+transparently converted values that you can use right away.  Let's
+look at a slightly edited example from the documentation.
+
+    require 'xmlrpc/client'
+
+    server = XMLRPC::Client.new2("http://xmlrpc- c.sourceforge.net/api/sample.php")
+
+    result = server.call("sample.sumAndDifference", 5, 3)
+
+    puts "#{result['difference']} and #{result['sum']}"
+
+    # => 2 and 8
+
+First, you need to include the
+library and create a new instance using the `new2`
+method (or `new`
+with a lot of parameters or `new3`
+with a hash of every parameter needed; it's sort of up to you).  Then
+use the `call`
+method to make an XML-RPC call to the server; the call method takes
+the remote method as the first parameter and the method's parameters
+as the remaining parameters.  The results are then returned to you as
+a usable hash (i.e., result[difference]) rather than a random,
+annoying, unparsed XML string.  If you are interested at looking at
+the documentation for the XML-RPC client, look at
+[http://www.ruby-doc.org/stdlib/libdoc/xmlrpc/rdoc/index.html](http://www.ruby-doc.org/stdlib/libdoc/xmlrpc/rdoc/index.html);
+if you want to implement an XML-RPC server, look in Appendix A for
+links to some information.
+
+**SOAP**  SOAP (which used
+to stand for Simple Object Access Protocol, but now it apparently
+stands for SOAP) is the supposed successor to XML-RPC.  It was
+supposed to be a way to share objects over a network, but somewhere
+along the way everything went awry, the FCC got involved, and SOAP
+doesn't do what it was meant to do.  In any event, it's a fairly
+common and powerful way to do web services.  Here is an example from
+the documentation for soap4r, the standard way to do SOAP in Ruby,
+which will translate from English to German using a SOAP interface
+for Babelfish.
+
+    text = 'Here I lie in a sweater poorly knit.'
+    lang = 'en_de'
+
+    require 'soap/rpc/driver'
+
+    server = 'http://services.xmethods.net/perl/soaplite.cgi'
+    InterfaceNS = 'urn:xmethodsBabelFish'
+    wireDumpDev = nil
+
+    drv = SOAP::RPC::Driver.new(server, InterfaceNS)
+    drv.wiredump_dev = wireDumpDev
+    drv.add_method_with_soapaction('BabelFish', InterfaceNS + "#BabelFish", 'translationmode', 'sourcedata')
+
+    puts drv.BabelFish(lang, text)
+    # => hier liege ich in einer Strickjacke stricke schlecht
+
+This looks complex, but it's
+mostly just setting up the SOAP parameters.  First, I put in some
+seed data to work with, which is basically a sentence that will be
+translated from English to German.  Next, you can see that I included
+the library and then put some SOAP parameters into variables.  The
+first value, `server`,
+is the location of the service to connect to;  the second,
+`InterfaceNS`,
+is the namespace that the method you wish to call is located in.  The
+last one is the &quot;dump&quot; handler for errors, that if set to
+`nil`
+becomes the standard error channel.  Next, a new `SOAP::RPC::Driver`
+is created that points to the service and namespace specified earlier
+and is told to dump to stderr (standard error).  The next little bit
+of code demonstrates an interesting feature of soap4r, which is
+probably what sets it apart from most other SOAP wrappers.  The
+`add_method_with_soapaction`
+uses Ruby's dynamic nature to add a method to the `Driver`
+object.  This means that rather than marshalling and calling and
+doing a lot of other random stuff, you can now call the method on the
+`Driver`
+object like any other method (which we do at the end of this
+snippet).
+
+Once again, I'm not covering
+nearly all of this library.  There are so many features in there that
+I couldn't dream of trying to do it justice in one little section;if
+you're really curious and want to find out more, you can check out
+the soap4r website at [http://dev.ctor.org/soap4r/](http://dev.ctor.org/soap4r/)
+or the other links Appendix A for more information.
+
+## It's Like Distributed or Something...
+
+In today's world of enterprise
+software, loosely coupled systems, and kosher beef franks made by
+Jews, distributed computing is becoming increasingly more important.
+Perhaps you need to expose an interface to the world for usage of
+your resources; maybe you need to distribute heavy computing across a
+grid of computers; maybe you want to calculate something in a number
+of environments with minimal effort.  The DRb (Distributed Ruby)
+package provides a simple way to handle distributed computing in
+Ruby.
+
+![graphics14](images/drb.jpg)
+Figure 14: A typical DRb setup: server and client.
+
+Every DRb application has two
+components: a server and clients.  The server will start a TCP
+server, which will expose objects, accept connections, and respond to
+actions requested over those connections.  Clients will establish
+connections to a DRb server, bind to objects, and send messages to
+those objects similar to messages that are sent to local objects when
+calling methods and attributes.  Let's build an example to get a feel
+for how this works; let's say you needed to keep track of your log
+sizes on a remote server and wanted to keep that figure on your
+desktop for easy monitoring.
+
+**Server** Setting
+up a DRb server is simple if you have the class you want to expose
+already constructed.  In this case, I'm exposing a rather trivial
+class that simply takes one value as a parameter (the log file to
+watch) returns one value (the size of the log file).
+
+    class FSWatcherService
+
+        def initialize(filename)
+            @file = filename
+        end
+
+        def getspace
+            return File.size(@file)
+        end
+
+    end
+
+Now that you have a class to
+work with, you need to wrap it in a DRb server.  This is done by
+simply calling the `start_service`
+method from the drb module and giving it a few parameters.
+
+    require 'drb/drb'
+    require 'thread'
+
+    class SizeService
+
+        def initialize(filename)
+            @file = filename
+        end
+
+        def getspace
+            return File.size(@file)
+        end
+
+    end
+
+    DRb.start_service("druby://:9876", SizeService.new('cats.log'))
+    puts DRb.uri
+
+    DRb.thread.join
+
+First you need to include both
+the DRb module (`drb/drb`)
+and the `thread`
+module so you can join the DRb server's thread into the main one.
+Next you see the class we made earlier.  Then you need to call the
+`start_service`
+method from the DRb class; this will start a DRb server on the
+specified URI and expose the indicated object.  The DRb URI is then
+printed to the console (for reference and for your benefit when
+trying to connect to it).  The DRb server's thread is then joined to
+the main thread, and the server idles until connected to.
+
+**Client**
+DRb makes constructing a client dirt simple.  The basic process is
+that you call start_service, bind to the remote object, and then use
+it just like a remote object.
+
+    require 'drb/drb'
+
+    Drb.start_service
+    remoteobj = DRbObject.new(nil, 'druby://domo:9876')
+    puts "Log file usage is #{remoteobj.getspace()} bytes."
+
+As you can see, you simply
+create a new `DRbObject`
+and give it a DRb URI as a parameter, and voila!  You've got a remote
+object you can use just like a local object; in this example, I
+called the `getspace()`
+method on the remote object and printed its value to the console.
+
+I didn't cover every nook and
+cranny of DRb here (and I didn't intend to; it's a robust package);
+it also offers ways to make your application thread safe (so that
+when you have a lot of clients connecting and disconnecting that your
+data stays kosher for all of them) and a host of security measures.
+Check the links in Appendix A to find out about all that stuff and
+more.
+
+## Data my base, please!
+
+Database driven applications
+are incredibly common nowadays; everyone's got one.  Your wife, your
+mom, your son, the creepy guy at work with a nasty mustache and
+halitosis.  If you don't get your butt in gear and get one, your boss
+is going to fire you for being the only square who isn't rolling on
+dubs, RDBMS style.
+
+**DBI**  Ruby's DBI package,
+much like the Perl package, is a database vendor-independent database
+connection suite.  Its robust support for database features and
+vendors is nearly unparalelled.  As an illustration, here is a table
+of supported database vendors and connection types.
+
+<table>
+  <tbody>
+    <tr>
+      <td>`ADO` (requires Win32)</td>
+      <td>`DB2`</td>
+      <td>`Frontbase`</td>
+      <td>`InterBase`</td>
+    </tr>
+    <tr>
+      <td>`mSQL`</td>
+      <td>`MySQL`</td>
+      <td>`ODBC`</td>
+      <td>`Oracle`</td>
+    </tr>
+    <tr>
+      <td>`OCI8`</td>
+      <td>`PostgresSQL (pg)`</td>
+      <td>`SQLite`</td>
+      <td>`SQLRelay`</td>
+    </tr>
+  </tbody>
+</table>
+
+It supports more connection
+types, such as a Proxy through DRb, and even more vendors through
+interfaces like ADO and ODBC.  Let's take a look at how to connect to
+one of these databases.
+
+The basic process for making
+DBI work is to connect to the server, providing a host and
+credentials, execute or prepare and execute SQL statements, fetch the
+results, and, when you're done, disconnect from the server.  Let's
+build a quick example that will show off most of the functionality of
+DBI; let's say you needed to keep a database of all of the specimens
+that are in your exotic slug collection.
+
+    require 'dbi'
+
+    DBI.connect('DBI:Mysql:mydb', 'myuser', 'mypass') do | dbh |
+
+        dbh.do('CREATE TABLE slugs(name, age);')
+
+        sql = "INSERT INTO slugs (name, age) VALUES (?, ?)"
+
+        dbh.prepare(sql) do |sth|
+            1.upto(43) { |i| sth.execute("Slug #{i}", "#{i*3}") }
+        end
+
+        dbh.select_all('SELECT * FROM slugs;') do |row|
+            puts "Hello, #{row[0]!"
+        end
+
+        sth = dbh.prepare("SELECT * FROM slugs WHERE name='Slug 1';")
+        sth.execute
+
+        while row = sth.fetch do
+            puts row
+        end
+
+    end
+
+To start up DBI, call `connect`,
+feeding it the database driver, database, and host to use, and open a
+block.  This block is provided the database handle as a parameter
+(`dbh`),
+which it can then operate on.  First, we create a table to work with
+using the `do`
+method; the do method immediately executes a SQL statement.  Next, we
+build a SQL statement and prepare it using the obviously named
+`prepare`
+statement.  This will allow us to execute the same SQL statement over
+and over again quickly, easily, and efficiently using the `execute`
+method (as I've done here when inserting the data); another upside is
+that you can have it use placeholders as I've done here using
+question marks.  This lets you substitute values in each time the
+statement is executed; for example, here I substitute in the slug's
+`name`
+and `age`,
+which changes each time the statement is called.  Next, you can see
+the `select_all`
+method being used, which will return every row from a `SELECT`
+statement and feed it to a block; there is also a `select_one`
+method for those times when you really just need one row.  You can
+also prepare, execute, and fetch results if that's your flavor; that
+method is shown here using the `prepare`
+and `execute`
+combination with a `while`
+loop to fetch the results.  Finally, when the block exits, the client
+disconnects.  If you opt to not use the block form of this code, you
+will need to call `disconnect`
+to disconnect from the server.
+
+**ActiveRecord**  If you
+have any experience with Ruby on Rails at all, you've surely heard of
+its great ORM (Object Relational Mapping) package ActiveRecord, but
+did you know you can use ActiveRecord without Rails?  It's really
+quite simple once you see it in action.  You first need to make sure
+you have it installed typing the following in a Ruby file and running
+it.
+
+    require 'rubygems'
+    require 'activerecord'
+
+If you get an error, then make
+sure you have installed RubyGems.  If you don't, install it.  If you
+do have RubyGems installed and lack ActiveRecord, then enter `gem
+install activerecord`  in a console to install
+ActiveRecord.
+
+To get ActiveRecord going in
+your application, you essentially you import the gems library and
+ActiveRecord, construct a configuration that would normally live in a
+Rails database configuration file (i.e., config/database.yml), define
+your ActiveRecord classes, then call methods on them.  For example,
+let's create a database in your favorite database server (e.g.,
+mySQL, PostgreSQL, and so on) and a table named people that has three
+fields: name, job, and location.  Insert a few rows and let's map
+that into an ActiveRecord application.
+
+    require 'rubygems'
+    require_gem 'activerecord'
+
+    ActiveRecord::Base.establish_connection(
+        :adapter => "mysql",
+        :host => "localhost",
+        :database => "test",
+        :username => "root",
+        :password => ""
+    )
+
+    class Person < ActiveRecord::Base
+    end
+
+    mypeople = Person.find(:all)
+    puts "Total length: #{mypeople.length}"
+
+    # => Total length: 14
+
+    mypeople.each do |personobj|
+        puts "Hello #{personobj.name}, #{personobj.job}."
+    end
+
+    # => Hello Imogen, child psychiatrist and superhero.
+
+
+As you can see, rather than
+having a pre-constructed configuration, the `establish_connection`
+method is fed a longer set of parameters.  Then, a class that
+inherits from `ActiveRecord::Base`
+is created that is the singular form of the
+table name we made earlier, hence `Person`
+for the table `people`
+(this is part of the magic of ActiveRecord); this maps the table to a
+class that you can instantiate and use to  manipulate rows in the
+database (check out the ActiveRecord documentation at
+[http://api.rubyonrails.org/](http://api.rubyonrails.org/)
+for more information on what you can do with ActiveRecord objects).
+
+## This Chapter
+
+You learned about Ruby's
+networking faculties.  You learned...
+
+* about Ruby's basic networking capabilities with TCPSocket/TCPServer.
+* how to use HTTP networking with Ruby.
+* consume web services with Ruby.
+* about DRb and Ruby's distributed computing capabilities.
+* how to connect to a database with Ruby.
+
