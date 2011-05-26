@@ -1,0 +1,1260 @@
+# 2
+
+## Break it down now!
+
+Now that you are familiar with some basic objects and how to manipulate
+them a little bit, we should probably move on to segmenting your code;
+surely you didn't think that applications ran in one huge chunk of code!
+It would be silly if you had to repeat every piece of code you wanted to
+use again or worry constantly about if you were stomping on a variable
+you used 30,000 lines ago, so the language geniuses have created a few
+ways to segment your code.
+
+The most fundamental of these is a block; blocks are just pieces of code
+segmented away from their context by an initiator and the end keyword.
+The initiator could be the <code>begin</code> keyword (which I will use
+as an example here) or something like <code>if</code> or
+<code>for</code> (which you will learn about in the next section).  To
+create a block of code, you simply place the initiator on a line
+followed by any needed requirements (which are nothing for the
+<code>begin</code> keyword), followed by the code you wish to place in
+the block, and ended by the <code>end</code> keyword (I'm sure that one
+will be hard to remember...).  Here's an example:
+
+    begin
+      puts "I'm in a block."
+      puts "Still there..."
+      puts "Stillllll in here..."
+      puts "OK, I'm done."
+    end
+
+Using a <code>begin/end</code> block by itself really doesn't afford you
+anything except to show that it is separate from its context, but they
+can paired with and meshed into various constructs to achieve different
+results. I'll touch on a lot of these constructs in this section and
+later on when I talk about using blocks more effectively (it's a
+hootnanny trust me!).
+
+### Methods
+
+In the examples above, I've been rather liberal in my usage of methods
+without much explanation. If objects/variables are the nouns of
+programming, then we could describe methods as the verbs; methods "do
+stuff."  In more technical language, methods are pieces of code that are
+called from within other code using variables called parameters (also
+known as arguments or options) fed to them from the calling code.  Think
+of them as <code>begin/end</code> blocks that can be called arbitrarily.
+When I say arbitrarily, I mean that they can be called anywhere,
+anytime.  There isn't a set "method" block that all method calls live
+in.  I realize this business with parameters and such sounds a little
+confusing, but we've already sent parameters to methods when we've sent
+text to <code>puts</code> or a string to <code>chop!</code>. We've
+already been doing it without ever saying we were!  I slipped it right
+in there on you; I'm a smooth criminal, I know.
+
+![graphics6](http://www.humblelittlerubybook.com/book/html/images/methods.jpg)
+
+*Figure 5: Calling of methods.  It's much like pig calling, only electronic.*
+
+> When methods are called in Ruby, you aren't technically "calling" a
+> method (even though that terminology is often used to describe it).
+> You are actually sending a message to an object saying, "Hey! Do you
+> have this method?"  If they do, the method is executed; if they do
+> not, a NoMethodError is thrown and there is much weeping and gnashing
+> of teeth. "Great, " you say.  "But what are methods for?  Sure, you
+> can use them to 'do stuff,' but is there a 'bigger' purpose for them?"
+> Of course.
+
+Methods are used to, firstly, remove redundancy.  For example, it would
+be silly to type the same 15 lines of code over and over again if you
+were going to be using them all through your application.  You can just
+create a method and call it wherever you need it.  Methods, secondly,
+allow you to segment your code better.  Maintaining a 550 line piece of
+code is never fun for anyone (except extremely self-deprecating,
+abusive, masochistic crazy guys, but those guys work over in accounting
+right?); methods allow you to split up all the logic in that huge mess
+into smaller, more manageable chunks.
+
+#### Defining Methods
+
+I'm sure you are growing rather anxious in anticipation of being able to
+create your own shiny new methods.  Well, wait no longer my impetuous
+friend!  Here is that which you desire:
+
+    def my_new_method(name)
+      puts "hey, " + name + ", this is my new method..."
+    end
+
+
+    my_new_method('magnus')
+    # => hey, magnus, this is my new method...
+
+A method is defined by entering <code>def</code> followed by the method
+name and parameters (i.e. variables passed into a method to be used
+within that method, remember?); the following lines should contain the
+desired method code ended by the <code>end</code> keyword.  That's it;
+simple enough, right?
+
+Well, there's a bit more to methods than that.  First, your method name
+should (by convention, of course) start with a lowercase letter (and
+preferably be all lowercase).  The reason for this is that Ruby thinks
+that things that start with an uppercase letter are constants and
+classes rather than methods; this could cause some rather rascally
+behavior from your application.  While we are on the subject of
+convention, there are other conventions that pertain to the name of
+methods.  Firstly, if it is querying an attribute, it should end in a
+question mark; for example, if you were to write a method to get the
+number of French military victories, you could do something like
+<code>France.has\_military\_victories?</code>. This would, of course,
+return <code>false</code>. Another convention to follow is that if the
+method modifies its receiver in place (i.e. the method modifies the
+object that called it), then it should end in an exclamation point; for
+example, let's say you were replacing the existing  cyborg software that
+all those robot celebrities run with a new snazzy Ruby-based system.  To
+execute another facelift and make them look 40 years younger, you could
+do <code>Dolly\_Parton.facelift!</code>, or to set their age to an
+arbitrary value, you could call <code>Bob\_Barker.set_age!(30)</code>.
+
+The next thing we should probably discuss about methods are the
+parameters (or arguments or whatever) that are passed in.  These
+variables are passed into the method as local variables, which means
+they are local and usable only in the context of that block of code (the
+method).  This means that the variables that created in that block of
+code and its parameters are not usable outside of that block of code.
+The language to explain it is a little dense, so let's look at an
+example:
+
+    def my_method(first, second)
+      puts first
+      third = second
+      puts second
+    end
+
+
+    my_method("yes.", "no.")
+    # => yes.    # => no.
+
+    puts first
+    # => ! NameError: undefined local variable or method
+
+    puts third
+    # => ! NameError: undefined local variable or method
+
+Notice that neither the parameters nor the created local variable are
+accessible outside the method unless they are returned or passed outside
+of it otherwise. This concept is known as scoping and will come up many,
+many times while programming in Ruby; I will highlight when scoping will
+be an issue with a new concept.  Variables can be scoped globally,
+locally, class scoped, etc.; any block (including conditional blocks
+like <code>if</code>'s and loops) can have variables that are local to
+it.  There will be more coverage of this as we progress, but it's
+important to remember scoping when working with methods; it can cause
+severe headaches if you aren't careful.
+
+So now that you understand what parameters are and do, let's get fancy.
+What if you don't want to require a certain parameter?  Or maybe you
+want a parameter to be able to take many parameters.  Well, Ruby can
+deliver on  both of those. Ruby offers optional parameters for methods;
+they aren't really optional so much as you can assign a default value to
+them. For example:
+
+    def
+      new_method(a = "This", b = "is", c = "fun")
+      puts a + ' ' + b + ' ' + c + '.'
+    end
+
+
+    new_method('Rails')
+    # => Rails is fun.
+
+This technique is helpful if 99% of the time you'll be using the method
+with a certain value (either a parameter or local variable) but you want
+to be able to change that value every once in a while.  You could pass
+in <code>nil</code> to the method every time you wanted to use the
+default value and filter it through a check or some hogwash like that,
+but that wouldn't save any typing nor would it make any sense.  This
+language feature allows you simply specify the parameters you need and
+leave the rest as they as are; do note, though, when using this feature
+that the parameters must be in the same order and you can not skip any
+parameters in the list (i.e. it's best to place the ones you won't be
+explicitly defining that often at the end of the list).
+
+Parameter lists can also be variable length; let's say that you wanted
+to create a rather contrived method that outputs your relations based on
+parameters you provide.  The method could look like this:
+
+    def print_relation(relation, *names)
+      puts "My #{relation}
+      include: #{names.join(', ')}."
+    end
+
+    print_relation("cousins", "Morgan", "Miles", "Lindsey")
+    # => My cousins include: Morgan, Miles, Lindsey.
+
+I could have provided any number of names in the list; by placing an
+asterisk before the identifier for the last parameter, you can turn it
+into a variable length list (which is actually just an
+<code>Array</code> created from the objects you provide, which is why we
+can use the <code>join</code> method with it).  This technique is
+helpful when dealing with lists of objects or maximizing the flexibility
+of the method (i.e. using a method to process one or more objects in one
+fell swoop rather than calling the method several times).
+
+#### Using Methods
+
+Now that you know how to create methods, you would probably like to know
+how to use them more effectively (or simply at all).  As you have seen
+in previous code examples, calling a method is as simple as putting the
+method name followed by the required parameters (if there are any). 
+There are many ways to format a method call; sometimes a method may not
+require any parameters so the parentheses and parameters are not needed.
+Many times you can call a method without using the parentheses, but this
+is generally not good practice (it's silly to sacrifice readability just
+to save two keystrokes unless you're only passing one parameter).  Let's
+look at some examples:
+
+    puts "Look ma!  No parentheses!"
+    puts("Look ma!  Parentheses!")
+    puts
+    puts()
+
+All of the above examples are valid calls of <code>puts</code>. The
+first two examples demonstrate the optional parentheses usage; the
+second set merely demonstrates that not all methods need parameters.  Do
+note that most methods do require parameters and will throw an
+<code>ArgumentError</code> if they don't get the correct number.
+
+So methods are great, right? But how do we do anything with them?  What
+good are they if the variables used in them are useless outside of them?
+This is where a method return value comes into play; a method allows you
+to return one or more values from within the method to be used outside
+of it. Methods always return a value, but if no value is explicitly
+specified, the value returned is <code>nil</code> (e.g. when a method is
+defined, Ruby returns <code>nil</code>) or the last value used inside
+the method (if that exists).  For example:
+
+    def return_me(value)
+      scoped_value = value
+    end
+
+    def echo_me(value)
+      value
+    end
+
+    def multi_return
+      return 'more', 'than', 'one'
+    end
+
+
+    my_value = return_me('this is fun!')
+    puts my_value
+    # => this is fun!
+
+    one, two, three = multi_return
+    puts one + three
+    # =>  more one
+
+If no return statement is placed inside the method, the last value used
+in the method is returned; this value can be either a variable that has
+been assigned (as in the first example), an object that is created (e.g.
+placing a string literal on a line by itself because that creates a
+<code>String</code> object), or any other object that is referenced in
+the last line of the method (as in the second example).  This means that
+a <code>return</code> command or final reference isn't required if the
+last value used is the value you would like to return (as in the first
+example); if this is not the case, the second example demonstrates the
+usage of the final reference method of returning a value and the last
+example demonstrates usage of the return statement.  The last example
+demonstrates using return and how you can assign variables in parallel
+(like discussed in the section on variable assignment) with method
+returns; since it is simply populating an array that is collected from
+the lvalues you specify, you can also use this method to populate
+arrays.
+
+### Blocks and <code>Proc</code> Objects
+
+I mentioned blocks early in this chapter, but I'd like to cover them
+more in depth now.  Blocks are a very powerful concept in Ruby, but very
+confusing for the newcomer, so some discussion is in order.  In Ruby, a
+block is an object that contains some Ruby code along with the context
+neccesary to execute it.  It doesn't make sense to say that a code block
+is an object, but remember that everything in Ruby is an object.
+
+#### Block Basics
+
+I said earlier that blocks are simply code wrapped in a do/end
+construct, but they go a little further than that.  Blocks can be
+constructed in a number of ways, and in doing so, create an object that
+holds code that can be passed to methods or held in variables.  Put
+simply, a Ruby code block is much like a method without a name tagged on
+it.  Perhaps this will make a little more sense if you think of them as
+being very similar to C's function pointers, C++'s function objects,
+Python's lambdas and list comprehensions, Perl's anonymous functions,
+Java's anonymous inner classes, or even closer, Smalltalk's or Lisp's
+blocks. If you've used any of these languages and none of those sound
+familiar to you, this isn't very uncommon: typically they are shunned by
+all but experts in the language.  Fortunately for you, I'm going to make
+you learn about them (they're an important concept in any language!),
+and even if you don't want to learn about them, too bad: you can't write
+Ruby without them.
+
+Let's take a look at a simple usage of blocks: method parameters.  A lot
+of methods take blocks as parameters, so let's look at one of those now.
+
+    myarray = %w{one two three four}
+    myarray.each {|element| print "[" + element + "]... " }
+
+    # =>  [one]... [two]... [three]... [four]...
+
+This snippet simply iterates an array using the <code>each</code> method
+and passes in each element to the code block; the code block can then
+treat that element as an "argument" and operate it much like you would a
+method argument. The code block in this case is formed using braces;
+this is another way other than the <code>do</code>/<code>end</code>
+combination that you can form a code block.  Although it looks like
+you're using the <code>each</code> method to "open" a code block, you're
+actually passing that block of code in as a parameter to the
+<code>each</code> method.  If you're completely lost, perhaps breaking
+down this example will clarify this example a little more.  If you get
+the concept, skip the next paragraph; it'll just be redundant.
+
+Let's take the following line of code apart and look at each part of
+this call separately.
+
+    myarray.each {|element| print "[" + element + "]... " }
+
+We first call the <code>each</code> method on the array object
+<code>myarray</code>. This method takes a block as a parameter; that is
+to say that it takes a parameter which is a block of code that it will
+execute. This block is very similar to the
+<code>begin</code>/<code>end</code> blocks we saw earlier; we could
+rewrite the above code as follows if we wanted to.
+
+    myarray.each do |element|
+      print "[" + element + "]... "
+    end
+
+Notice that the braces are simply replaced by
+<code>do</code>/<code>end</code>. Both notations do the same thing, but
+the brace notation (i.e., <code>{}</code>) is more concise and makes
+more sense if you only have a line or two of code.  At a certain point
+in this method (which will be discussed later when we talk about how to
+use blocks in your own methods), the code tells Ruby to pass a parameter
+to the block and run the block.  Ruby does so and returns the value of
+the block code (if there is one) much like it returns the value of a
+method. Let's visualize this flow of control just to drive the concept
+home.
+
+If you still don't get it, you need to.  Go visit some of the links in
+Appendix A under the Documentation section; search on Google; visit some
+of the blogs on the aggregators under the Ruby Language section of
+Appendix A. Someone, somewhere has explained this concept in a way that
+you can understand if I haven't; I wouldn't drive this concept home as
+much, except that it's a very cool, useful, powerful, and essential
+concept in Ruby.  If you do grasp blocks, then let's move on to how to
+use them in your own code.
+
+#### Procs and Blocks
+
+Think of <code>Proc</code> objects as blocks that are pushed into
+variables. The difference between them is there, but not important
+enough to worry about until you need to (and you'll know when you do). 
+The primary difference is performance, but that will be discussed when
+we reach the other end of the problem.
+
+<code>Proc</code> objects are simply instances of the <code>Proc</code>
+class that hold a block of code that is executable.
+
+    myproc = Proc.new {|animal| puts "I love #{animal}!"}
+
+    myproc.call("pandas")
+    # => I love pandas!
+
+As you can see, a <code>Proc</code> is created when the constructor is
+called and given a block as a parameter.  The code in the block is then
+stashed away in a <code>Proc</code> instance and can be called at any
+time.  <code>Proc</code> objects are especially useful when you want to
+create a block of code and pass it around or generate new blocks from
+that one.  To call the code in the <code>Proc</code> object, simply use
+the obviously named <code>call</code> method and it will call the code
+inside the block you gave it.  For example, let's say that The Big T.V.
+Network has commissioned you to write a Ruby script that will display
+the mastheads for their new lineup of shows (which includes Banjo Bill's
+Bridge Brigade, Cucina Italiana with Rafael Ramirez Rodriguez de Jesus,
+and PANDA!monium). You simply need to display the text for the show on
+the console and their fancy graphics backend will do the rest (yeah,
+their technology is *that* awesome).  The only problem is that because
+their hosts change so often (i.e. Mr. Rafael just replaced Ho Chi Minh
+as the chef on Cucina Italiana just a minute and a half after he
+started), there needs to be a way to specify a show name separately from
+the host name and be able to change the host name on the fly.  You say,
+"Hey!  Blocks could possibly do that!"
+
+    def make_show_name(show)
+      Proc.new {|host| show + " with " + host}
+    end
+
+
+    show1 = make_show_name("Practical Cannibalism")
+    show2 = make_show_name("Cotillions in the Amazon")
+
+    show1.call("H.Annabellector")
+    # => Practical Cannibalism with H.Annabellector
+
+    show2.call("Jack Hannah")
+    # => Cotillions in the Amazon with Jack Hannah
+
+    show1.call("Kirstie Alley")
+    # => Practical Cannibalism with Kirstie Alley
+
+This looks like a typical <code>Proc</code> call like we looked at
+before, but notice something that's going on here.  We fed it the show
+name when the <code>Proc</code> was created, but we never mentioned it
+after that.  How is that possible?  When the <code>show</code> parameter
+for the <code>make\_show\_name</code> method passed out of scope (i.e.
+the method exited), it should have been destroyed.  Ah, but this is one
+of the beauties of a <code>Proc</code> object: it preserves the context
+in which it was created and can access that context at any time.  This
+is why our show name was preserved without any further effort on our
+part.
+
+Another way to create a Proc object is to bind a block of code using the
+lambda method; calling this method is essentially equivalent to calling
+<code>Proc.new</code>.
+
+    myproc = lambda {|x| puts "Argument: #{x}"}
+
+    myproc.call("Texas forever!")
+    # => Argument: Texas forever!
+
+As you can see, the lambda function will take a block of code and bind
+it to a Proc, just like Proc.new.  What can't be seen from this example
+are some of the differences that exist.  First of all, Proc objects
+created with lambda have stricter argument checking than those created
+with Proc.new.
+
+    lproc = lambda {|a,b| puts "#{a + b} <- the sum"}
+    nproc = Proc.new {|a,b| puts "#{a + b} <- the sum"}
+
+
+    nproc.call(1, 2, 3)
+    # => 3
+
+    lproc.call(1, 2, 3)
+    # => !ArgumentError (wrong number of arguments (3 for 2))
+
+The <code>Proc</code> object created with <code>Proc.new</code>
+functioned fine when given too many arguments, but the
+<code>lamba</code> <code>Proc</code> with its Nazi-like argument
+checking threw an <code>ArgumentError</code>. What a jerk...jeez. 
+Crashing the whole application just because he got *too many* arguments?
+Lame.  So, anyhow, another distinction between the two is how they
+control the flow of your application.  Objects created with
+<code>lambda</code> don't affect the flow of the application outside of
+the block when returning a value; <code>Proc</code> objects created with
+<code>Proc.new</code> on the other hand, will exit their enclosing
+method when returning.
+
+    def procnew
+      new_proc = Proc.new { return "I got here..." }
+      new_proc.call
+      return "...but not here."
+    end
+
+    def lambdaproc
+      new_proc = lambda { return "You get here..." }
+      new_proc.call
+      return "And I got here!"
+    end
+
+
+    puts lambdaproc
+    # => And I got here!
+
+    puts procnew
+    # => I got here!
+
+Note that in the case of <code>procnew</code>, the value returned is the
+value returned from the block.  The <code>lamba</code>-created
+<code>Proc</code> object simply returns its value to its parent method,
+which can then stash the value in a variable or return it if it wants
+to. This is an important distinction to remember, because it can cause
+you a lot of headache if you are using <code>Proc</code> objects in a
+method and you can't figure out why the method keeps breaking (I speak
+from experience!).  Now that you understand how to work blocks into your
+code using <code>Proc</code> objects, let's look at how to integrate
+them in tighter with your methods.
+
+#### Building Blocks
+
+There are a few ways to get blocks to work for you in your methods; the
+first way is that you can pass a <code>Proc</code> object in as a
+parameter just like you would any other object.  This can get tedious,
+however, and, from what I hear, it also hits your performance pretty
+hard (I would put the hit on a level somewhere between being slapped
+with a greasy piece of bacon and the rapture). Fortunately, Ruby gives
+you a few ways you can put blocks to work with minimal fuss and
+performance degradation.  Integrating blocks into your everyday code
+usage is quite simple; just combine in a sprinkle of determination, a
+dash of <code>yield</code>, and a liberal application of closures in a
+small integrated development dish and bake at 400&#730; for 15 minutes
+or until crisp.
+
+#### Implicit Block Usage
+
+Outside of taking a Proc parameter, Ruby offers only one other way to
+use blocks as parameters, but this way is not only more intuitive, it
+performs better.  I call this implicit block usage because you don't
+tell your method, "Hey, I'm using this block here," and then call it in
+the method.  You simply yield control of the code over to the block;
+this won't really make sense without an example, so let me just show you
+a simple snippet.
+
+    def yieldme
+      print "1. Enter method. "
+      yield
+      print "3. Exit method."
+    end
+
+    yieldme { print "2. Enter block. "}
+    # => 1. Enter method. 2. Enter block. 3. Exit method.
+
+Notice what happens here. First, we enter the method and print out our
+first statement. Second, the yield method is called, and our block is
+executed.  The thread yields control over to the block temporarily; when
+the block exits, the control is restored to the block's caller.  Lastly,
+the rest of the method is executed.  This is how the <code>each</code>
+method on arrays that we used earlier works.  Let's say we wanted to
+rewrite that method for some reason (perhaps your pet raccoon who
+fancies bowlers convinced you to rewrite it); you could use
+<code>yield</code> to execute the block.
+
+    def myeach(myarray)
+      iter = 0
+      while (iter < myarray.length):
+        yield(myarray[iter])
+        iter += 1
+      end
+    end
+
+
+    testarray = [1,2,3,4,5]
+    myeach(testarray) {|item| print "#{item}:"}
+    # => 1:2:3:4:5:
+
+I realize this snippet might be a little over your head (especially that
+while line!), but bear with me because this is a simple enough snippet
+to understand. The while block creates a loop, which means that we
+execute the code inside the block a number of times (learn more about
+loops on page 53).  Even though it may look complicated, the same
+concept applies here as before: the method yields control to the block. 
+The difference here is that we passed a parameter to the block each time
+we looped over the code; this allows us to use variables from within the
+calling method within the block for processing.  Using yield is an
+excellent way to implement an iterator like this for your own
+collections.
+
+##### The Ampersand (&amp;) Parameter
+
+If you prepend the name of the last parameter of a method with an
+ampersand, then the block that is passed to the method will become a
+<code>Proc</code> just as if you had passed it as a parameter normally. 
+Well, not completely normally; it does a few tricks.
+
+    def ampersand(&block)
+      block.call
+      yield
+    end
+
+
+    ampersand { print "I'm gettin' called! " }
+    # => I'm gettin' called! I'm gettin' called!
+
+I said it would become a <code>Proc</code>, so you can use
+<code>call</code> on it, but notice also that <code>yield</code> works. 
+This is an interesting and helpful trick, since you may want to use
+<code>call</code> or <code>yield</code> in different cases.
+
+### Your objects lack class!
+
+As stated (many times) before, everything in Ruby is an object; Ruby, of
+course, allows you to create your own objects through the creation of
+classes to describe them.  If you've programmed in an object oriented
+language before (like C#, C++, Python, or Java), then the concepts of
+classes and objects should not be foreign to you, but there are some
+distinctions between those languages' implementation of object
+orientation and Ruby's implementation.
+
+One thing that may seem rather foreign is the way that Ruby handles
+typing of objects.  Languages like C++ or Java operate solely on static
+(or explicit) typing; this sort of typing requires that each object have
+its type explicitly defined at compile time (or the compiler will throw
+an error).  I realize that most modern languages that use static typing
+also implement a sort of reflection or some such module that allows you
+to dynamically load types, but Ruby uses a completely different approach
+to typing.  If you've used Python, you're familiar with the concept of
+dynamic typing; Ruby uses this same idea but calls it "duck typing"
+(which makes it much easier to explain).
+
+![graphics7](http://www.humblelittlerubybook.com/book/html/images/duck.jpg)
+
+*Figure 6: Both classes implement a method named sayhello, so they can
+both respond to the message.  I would like to add that your class
+smells.*
+
+The idea is that if an object walks like a duck and talks like a duck
+(and I would add smells like a duck, because that's a very identifiable
+smell, but I digress) then it's a duck.  For example, let's say you were
+writing a class to access the serial port to send and receive data from
+a piece of hardware.  Your serial library uses the method
+<code>readlines</code> to get all of the data from the serial port's
+buffer, but you would like to be able to point that towards a file for
+testing so you didn't always have to have access to the hardware to work
+on the application.  In C# or the like, you could have to write a
+completely new module altogether or do some crazy conditional stuff in
+the module (if you even have access to the code) to be able to use a
+file for testing; this problem pikes up because a pointer to a file is
+probably a different type from a pointer to the serial port and as we
+now know, static typing doesn't like it when things aren't the same
+type.  In Ruby, though, you could simply point your application towards
+a File object which will implement the <code>readlines</code> method
+just like your serial library.  Because the <code>File</code> object
+implements the <code>readlines</code> method (walks like a duck) and can
+respond to the message calling that method (talks like a duck), Ruby
+assumes that object is the correct (more accurately, *a *correct) type
+(is a duck).
+
+Another concept that may seem foreign to C++ or PHP programmers (but not
+Java or C# programmers) is the concept of a language-wide object
+hierarchy.  In Ruby, every class is actually an object which is an
+instance of the <code>Class</code> class which is in turn derived from
+the <code>Object</code> class.  We can demonstrate this with code:
+
+    puts File.class
+    # => Class
+
+    puts File.superclass
+    # => Object
+
+    puts Object.superclass
+    # => nil
+
+The super class of a class is the class which it is derived from; in
+Ruby, we can say that classes can "inherit" from another class all of
+its methods and variables.  As a result, if a class is derived from
+another class (i.e. it inherits from another class), it has access to
+all of the super class's methods and variables.  The catch in Ruby is
+that unlike some other languages, a class can only inherit from one
+class at a time (i.e. a class can inherit from a class that inherits
+from another class which inherits from another class, but a single class
+can not inherit from many classes at once).  As we can see, the
+<code>File</code> class is just an instance of the <code>Class</code>
+class which inherits from the <code>Object</code> class which inherits
+from nothing. This means that the <code>File</code> class has access to
+all of <code>Object</code>'s methods and variables (just like every
+other class).  This also means that the <code>Object</code> class is the
+origin of all other objects; it is the Adam and the Eve, the Creator,
+the Architect, the Mother of all Objects and Classes!
+
+I'm sure this talk of classes being an instance of something is somewhat
+confusing, but keep in mind: everything in Ruby is an object. 
+Everything.  So when you define a class, you're really creating an
+instance of the <code>Class</code> class.  When you create a new object
+from a class, you're calling <code>(class name).new</code> which is a
+method that returns a new object instance of the class it describes. 
+Everything in Ruby is an object!
+
+#### Defining Classes
+
+So let's get to it.  To define a class, you place the <code>class</code>
+keyword at the beginning of a line, followed by a <code><</code> and the
+class it inherits from (if it inherits from a class).  For
+example:</SPAN>
+
+    class MyFirstClass < Object
+    end
+
+That's it; we've just defined our first class.  Granted, that was the
+most contrived example ever put into print and it represents a
+completely useless class, we still defined a class.  Notice that I
+indicated it inherits from <code>Object</code>, but this is completely
+unnecessary; Ruby will assume that if you define a class with no other
+inheritances that you wish to inherit from <code>Object</code>.
+
+#### Methods and Variables
+
+Classes can contain variables and methods; the first thing you would
+most likely want to add would be a method so you can make your class do
+some work.  The first method we should add is the
+<code>initialize</code> method, which is the method that Ruby calls when
+you call <code>(class name).new</code>.  When you call the
+<code>new</code> method, a new object is created and the
+<code>initialize</code> method (with parameters passed from
+<code>new</code>) is called to setup the object's state (i.e. variables,
+flags, etc.); this is very similar to (albeit identical to) other
+language's constructors.  For example, let's say that the Boogeyman has
+decided to give up on trying to freak out every kid in the world (he's
+rather old, you know) and instead build a robot army (running software
+written in Ruby no less) to do his nefarious bidding.  The initial class
+definition and initialize method might look like this:
+
+    class Boogeyman
+      def initialize
+        puts "Yes, master?"
+      end
+    end
+
+
+    monster1 = Boogeyman.new
+    # => Yes, master?
+
+This method, of course, does no real work other than to demonstrate that
+when you create a new object, the initialize method is called.  Let's
+make it do some work now:
+
+    class Boogeyman
+      def initialize(name, location)
+        @name = name
+        @location = location
+        puts "Yes, master?"
+      end
+    end
+
+
+    monster1 = Boogeyman.new("Mister Creepy", "New York, NY")
+    # => Yes, master?
+
+This new initialize method sets some instance variables (i.e. variables
+that are used within an object to retain its state); to set an instance
+variable, prefix the lvalue with an at symbol (<code>@</code>). Unlike
+other languages, you don't have to include these variables inside the
+class definition.
+
+Variables set this way are unique to that particular  instance; we could
+say that they are instance scoped (i.e. they are not usable outside of
+that instance unless they are passed outside of it; remember scoping?). 
+Notice that since <code>@name</code> and <code>name</code> are scoped
+differently, we can use duplicate names without ambiguity (though this
+is usually not a good idea). Let's create a few methods to work with an
+object's state:
+
+    class Boogeyman
+      def change_location(newlocation)
+        @location = newlocation
+        puts "I moved to #{newlocation}!"
+
+        self.get_info
+      end
+
+      def change_name(newname)
+        @name = newname
+        puts "I shall be called #{newname} from now on!"
+        self.get_info
+      end
+
+      def get_info
+        puts "I am #{@name} in #{@location}."
+      end
+    end
+
+
+    monster1 = Boogeyman.new("Loopy Lou", "Albuquerque, NM")
+    # => Yes, master?
+
+
+    monster1.change_location("Wyoming")
+    # => I moved to Wyoming!
+    # => I am Loopy Lou in Wyoming.
+
+
+    monster1.change_name("Beezlebub")
+    # => I shall be called Beezlebub from now on!
+    # => I am Beezlebub in Wyoming.
+
+This example demonstrates two important concepts.  First, notice that I
+did not enter the entire class listing again.  This wasn't laziness
+(well, not completely at least); in Ruby, classes are never closed. 
+This means you can always add methods to or redefine (or in proper
+terminology, override) any method for a class simply by opening a class
+definition and adding or redefining a method.  This can be dangerous at
+times, but overall it's one of the most useful aspects of Ruby's object
+implementation. Let's look at an example:
+
+    class String
+      def writesize
+        puts self.size
+      end
+    end
+
+    size_writer = "Tell me my size!"
+    size_writer.writesize
+    # => 16
+
+As I said before, while it's possible to override a class's methods
+(even built-in classes!), it can be dangerous (i.e. modifying some of
+<code>Object</code>'s methods or modifying certain operators can make
+everything go nuts), but at the same time, it can also be useful.  The
+Ruby web framework Rails makes extensive use of this concept, especially
+in its ActiveSupport package; if you're looking for something a little
+more complicated and interesting, I suggest looking at their extensions
+to various classes in that package.
+
+The second concept shown in these examples is the use of the
+<code>self</code> object.  The <code>self</code> object always points to
+the current instance; it allows you to call methods from within the
+current instance (like <code>size</code> in the <code>String</code>
+class or <code>get_info</code> in our class).  Though <code>self</code>
+isn't required in most cases (i.e. if no receiver is specified for a
+method, Ruby assumes you meant <code>self</code>), it is important to be
+aware of it in case you are in a context where you will need it (e.g.
+you have implemented a method named <code>puts</code> in your class and
+you want to call it and not the built-in one).
+
+#### Attributes
+
+While instance variables are useful in their own way, they aren't
+visible to the outside world. It may seem like a dandy situation at
+first: all your objects' states are completely hidden and unchangeable
+by the outside world.  But after a while, you might just want to
+retrieve or change a value within an object.  How are we to do this?! 
+Well, it's really quite simple:
+
+    class Boogeyman
+      def scare_factor
+        @scare_factor
+      end
+
+      def hiding_place
+        @hiding_place
+      end 
+
+      def scare_factor=(factor)
+        @scare_factor = factor
+      end
+
+      def hiding_place=(place)
+        @hiding_place = place
+      end
+    end
+
+
+    monster1 = Boogeyman.new("Crazy Cal", "Nashville, TN")
+    monster1.scare_factor = 6000
+    puts monster1.scare_factor
+    # => 6000
+
+As the example shows, to create a readable attribute, you simply create
+a method and place the instance value to return in it (the last value
+used in a method is returned remember?).  Attributes are simply methods
+that are used to retrieve or set values.  To create a writable attribute
+(i.e. an attribute you can set), you simply append an equals sign (=)
+after the name of the attribute method; you can either do like I did and
+write straight to an instance variable or do some other work before you
+do so (i.e. make sure the value provided is the proper type/format,
+convert formatting to a more usable form, etc.).  This seems like an
+awful lot of work just to write to a value in a class doesn't it?  I
+mean, in C# or something similar all I have to do is put
+"<code>public</code>" before the variable in the class and it's visible
+to the outside! Well, since attributes are such a common construct, Ruby
+has a really simple facility for them:
+
+    class Boogeyman
+      attr_reader :scare_factor, :hiding_place
+      attr_writer :scare_factor, :hiding_place
+    end
+
+Now you can read and write attributes just as before; these faculties
+are a pretty way to create methods that behave identically to the ones
+we created before.  This technique is easier than writing out methods,
+but you lose the flexibility you may gain by making your readers or
+writers explicit methods that you write.  For example, let's say that
+the scare factor is supposed to be displayed in Freak-o-grams (Fg); you
+could write a reader to display it as such:
+
+    class Boogeyman
+      attr_writer :scare_factor
+
+      def scare_factor
+        return str(@scare_factor / 1000) + "Fg"
+      end
+    end
+
+
+    monster1 = Boogeyman.new("Psycho Sally", "Los Angeles, CA")
+    monster1.scare_factor = 6000
+    puts monster1.scare_factor
+    # => 6Fg
+
+Some would call these virtual attributes, but I really think they need a
+special name.  It really doesn't matter what you call them, but they are
+a great way to mask the implementation of your class.  To the outside
+world, it looks like a normal attribute, but you know the truth!  It's
+your little way of sticking it to the man.
+
+#### Access Control
+
+So far our methods and attributes have been wide open to the world, but
+now let's take a look at ways we can control access to parts of our
+class.  Up until now, all of our methods (except
+<code>initialize</code>, which is always private) have been what we call
+public (i.e. accessible from within the class and the outside world). 
+Since that is the default behavior of Ruby, let's add a method to our
+class as an example:
+
+    class Boogeyman
+      def scare(who)
+        puts "I just scared the bejezus out of #{who}!"
+      end
+    end
+
+The method we just created is public because we didn't specify any
+access controls; we could create protected methods (i.e. a method that
+accessible by any instance of a class or its derived classes) by placing
+<code>protected</code> on a line and then entering subsequent methods
+which will be protected.  For example:
+
+    class Boogeyman
+      protected
+        def are_you_a_monster?(whosasking)
+          puts "Yes, #{whosasking}, I am a monster!"
+          return true
+        end
+      end
+    end
+
+Now the only objects which have access to this method are those that are
+instances of <code>Boogeyman</code> and any class that is derived from
+<code>Boogeyman</code>. This is useful if you have a method like the one
+above that needs to provide information to classes of the same or
+similar type, but no one else.  On the other hand, if you have a method
+that only the current object instance should have access to, then you
+should declare it private.  The difference between protected and private
+is only slight: protected allows any instance of the same or derived
+class to access it but private allows only the current instance to have
+access.  Let's add a method to phone home to the Boogeyman himself and
+redefine our <code>scare</code> method to use it.
+
+    class Boogeyman
+      private
+      def phone_home(message)
+        # TODO: Actually make this phone home
+        # For now, we'll just write to the console
+        puts message
+      end
+
+      public
+      def scare(who)
+        phone_home("I just scared the living poop out of #{who}!"
+      end
+    end
+
+Now only the current instance will have access to the
+<code>phone_home</code> method; we wouldn't want just anyone phoning
+home and making it look like this monster would you?  Notice that you
+can use the <code>public</code> keyword in the same way to make methods
+explicitly public or in this case to change the mode back to public
+after defining a private method.
+
+#### Class Scoped Objects
+
+So far we've been working with instances: instance variables, instance
+methods, et cetera, but many times a class (rather than an instance of
+that class) needs to maintain a state or provide a method that is not
+tied to an instance. This is where class constants, variables, and
+methods enter the ball game.
+
+Class constants are handy little mechanisms that allow you to place
+values into the class scope that will not be changed (unlike variables
+which may and probably will change).  To  create a class constant, you
+simply place the constant name and value into the class definition:
+
+    class Boogeyman
+      MY_BOSS = 'Mr. Boogeyman'
+    end
+
+Now every method in class <code>Boogeyman</code> (both instance and
+class scoped) has access to the value <code>MY_BOSS</code>.
+
+To create class variables, place two at symbols (<code>@@</code>) before
+the name of a variable; they operate nearly identical to instance
+variables except their state lives in the class rather than a particular
+object.  For example, the Boogeyman has asked that we have a way to get
+the name of the newest denizen he has released and where he is.  We can
+provide this with a class variable:
+
+    class Boogeyman
+      # We'll redefine initialize
+      def initialize(name, location)
+        @name = name
+        @location = location
+
+        @@latest = @name
+        @@location = @location
+        puts "Yes, master?"
+      end
+    end
+
+
+    monster1 = Boogeyman.new("Macabre Mac", "Seattle, WA")
+    # => Yes, master?
+
+
+    monster2 = Boogeyman.new("Gory Gary", "Reston, WV")
+    # => Yes, master?
+
+
+    puts Boogeyman.latest
+    # => Gory Gary
+
+As the example shows, you access a class variable by using the class
+name followed by a dot and the variable name; much like class constants,
+you can access this value from either class scoped or instance scoped
+methods.  Notice that because <code>@@location</code>,
+<code>@location</code>, and <code>location</code> are all scoped
+differently, they can all use the same name without causing a problem. 
+While this isn't recommended (having three variables with the same name
+is likely to drive you batty in less contrived, more real world
+situations), it is possible (and occasionally useful).
+
+Class methods are methods that are provided by a class (not an instance)
+that may not particularly need to be to an instance.  This feature is
+useful if, for example, you wanted to provide a prefabricated instance
+of a class (e.g. a method named <code>man</code> for a class named
+<code>Person</code> might provide an instance with the
+<code>gender</code> field set).  The Boogeyman has requested that we
+have a class method to output the latest robot's name since he's way too
+lazy to delve into the code or use a Ruby console to find out for
+himself (he is retired, you know).  So let's provide:
+
+    class Boogeyman
+      def Boogeyman.latest_monster
+        puts "The latest monster is #{@@latest}."
+        puts "He is in #{@@location}."
+      end
+    end
+
+
+    Boogeyman.latest_monster
+    # => The latest monster is Gory Gary.
+    # => He is in Reston, WV.
+
+Because <code>latest\_monster</code> is a class method, it only has
+access to variables within its scope (i.e. class variables);  this means
+it cannot access instance variables at any time unless they are passed
+into the method as a parameter or referenced in a class variable. 
+Unlike other class scoped variables, class methods are not visible to
+instance scoped objects and methods; this means that you must call a
+class method using its full call (i.e. you wouldn't be able to simply
+type <code>latest\_monster</code> like you can <code>MY\_BOSS</code> or
+<code>@@latest</code>; you would be required to call it using
+<code>Boogeyman.latest_monster</code>).
+
+### Modules
+
+Perhaps sometime you'll need to organize a lot of code.  I mean a* lot. 
+*Like the population of China a lot.  Maybe that code isn't simply one
+class or it isn't necessarily all perfectly related; maybe it's got some
+issues; maybe it's still angry about that argument it had with
+grumpy\_butt.rb last week; in any event, you have been charged to group
+it together for the sake of reuse and organization.   Normally in
+something like C or PHP you might simply stick this code in a file and
+include it wherever you need it, but what if you have two methods or
+constants that are named the same? Let's say you were creating a panda
+fighting game. You have a constant <code>DEATH</code> in
+<code>const\_values.rb</code> to represent the amount of life that would
+constitute a death in the game, but you also have a constant
+<code>DEATH</code> in <code>fighter\_values.rb</code> to hold an array
+of values dealing with the player character named Death.  Both pieces
+need to be included, but there's a name conflict. You would rather
+maintain a simple naming scheme for constants rather than concocting
+some silly name like
+<code>DEATH\_VALUES\_BECAUSE\_I\_CANT\_INCLUDE\_IT\_WITHOUT\_A\_HUGE\_NAME</code>.
+This is where modules are rather handy; they allow you to group
+constants and methods together logically into groups called namespaces,
+groups which organize modules and the like in such a way as to avoid
+ambiguity and promote logical organization of code. Namespaces allow you
+to write larger groups of reusable code without the danger of stomping
+on other code outside of the namespace. This means there could be a
+namespace <code>FighterValues</code> and a namespace
+<code>ConstantValues</code> to maintain their respective values.
+
+#### Creating Modules
+
+The syntax for creating a module is very similar to the syntax for
+creating a class; you place the keyword <code>module</code> followed by
+the module name; then on the subsequent lines you enter the methods and
+classes which should resign in this module followed by the
+<code>end</code> keyword.  Let's look at our example from before:
+
+    module
+      FighterValues
+      BAMBOO_HEAD = { 'life' => 120, 'hit' => 9 }
+      DEATH = { 'life' => 90, 'hit' => 13 }
+      KOALA = { 'life' => 100, 'hit' => 10 }
+      CHUCK_NORRIS = { 'life' => 60000, 'hit' => 99999999 }
+    
+      def chuck_fact
+        puts "Chuck Norris' tears can cure cancer..."
+        puts "Too bad he never cries."
+      end
+    end
+
+    module ConstantValues
+      DEATH = -5  # Pandas can live PAST DEATH.
+
+      EASY_HANDICAP = 10
+      MEDIUM_HANDICAP = 25
+      HARD_HANDICAP = 50
+    end
+
+
+    puts FighterValues::DEATH
+    # => {'life'=>90,'hit'=>13}
+
+    puts ConstantValues::DEATH
+    # => -5
+
+Now both values can be used and co-exist in a friendly environment.  I'm
+sure you're thinking, "Why not just use a class?"  I asked myself that
+when I first saw this construct;  the only reason I saw was that, for
+the sake of design and proper software engineering, you shouldn't put
+things in a class that don't really go together so the module was a good
+excuse to break that rule without breaking it.
+
+But then I saw the coolest part.
+
+Modules have a mechanism that allow for what's called a mixin, code that
+is "mixed into" a class as if it is part of its original code.  Think of
+it as inheritance, except better.  As noted earlier, a class in Ruby can
+only inherit from one class at a time.  To inherit from another class
+you would have to create some sort of chain of inheritance that would
+allow you to do "multiple inheritance" (not really but that's as close
+as you can get in Ruby).  Mixins eliminate the need for that.  You could
+create a class, inherit from another class, and mix in as many modules
+as you need.  This feature is especially great if the code that you need
+to mixin needs to only be mixed in (i.e. it won't ever be used by
+itself).  Let's look at a contrived example:
+
+    module Movement
+      def run
+        puts "I'm running!"
+      end
+
+      def walk
+        puts "I'm walking a bit briskly!"
+      end
+
+      def crawl
+        puts "I'm so slowwww!"
+      end
+    end
+
+    class Man
+      include Movement
+
+      def jump
+        puts "I'm bipedal and I can jump like a fool!"
+      end
+    end
+
+    class Sloth
+      include Movement
+
+      def flop
+        puts "It's all a lie...all I can do is flop around."
+      end
+    end
+
+
+    mister_man = Man.new
+    mister_man.run
+    # =>  I'm running!
+
+
+    mister_slothy = Sloth.new
+    mister_slothy.flop
+    # => It's all a lie...all I can do is flop around.  
+
+As you can see, this mechanism is very similar to inheritance in that
+you can use all of the mixin's code.  To use a mixin, simply define a
+module and then use the <code>include</code> keyword followed by the
+module's name (note I said *module*; the include keyword has nothing to
+do with files or libraries like in PHP or C++); from then on the class
+has access to all of that module's constants and methods.    It's
+obvious that this example doesn't do this mechanism justice (i.e. it
+doesn't demonstrate the usage of module constants in a mixin, it doesn't
+do much with the host class, etc.), but this is merely meant to be an
+introductory example in hopes that you will experiment and read further.
+ As you will learn, the magic really happens when the class actually
+interacts with the mixin (as with some of the Ruby built-in mixins such
+as <code>Singleton</code> or <code>Comparable</code> which greatly
+extend the functionality of your class or some of the Rails mixins), but
+that's for a more advanced look at the subject.
+
+You may be thinking that this sounds great now, but do be careful. 
+Mixins are awesome as long as they are written well, but if the
+developer doesn't pay attention and be careful about naming they can
+create havoc in your application. For example, let's say you have a
+constant called <code>PI</code> which holds Pi to the 72nd digit (which
+you typed out manually because that's the amount of precision you need),
+but you mix in a trigonometry library written by Billy McDoofus which
+has a constant named <code>PI</code> which is only Pi to the 5th digit. 
+You need that precision, but since Billy McDoofus is an idiot, the mixed
+in library's constant will override your constant.  It's best to be sure
+that your naming scheme is unique (possibly even including the module
+name or your name) so as to not stomp on others' code.
+
+You may be thinking right now, "That jerk left out methods in modules! 
+What about methods!? I'm going to kill his cat and take my money back! 
+Are my methods simply going to suffer the same terrible fate?"  You
+would be justified in your furor, but relent, good friend, for methods
+do not suffer the same fate. When you call a method, Ruby will first
+look to the host class (that is, the class being mixed into) and then to
+its mixins (and then to its superclasses and its mixins and so on); this
+behavior is the exact opposite of constants (and no I don't know why
+that is).  This could be a blessing or a  curse (i.e. you  may *want*
+the method to override yours), but generally this is the safest
+functionality for it.
+
+### Files
+
+As your application gets bigger and bigger, you surely won't want all of
+your code living in one huge 5MB file.  Chopping code up into files is
+one of the oldest and easiest ways to segment your code.  I saved it for
+last because I don't want your answer to code segmentation to always be
+"Stick it in a file!" when Ruby offers more (and better suited) options
+than that.  I think PHP programmers especially get stuck in this rut of
+including code all over the place, creating a jungle of files that only
+the machete of the delete command can navigate, but I digress. To
+include a file in Ruby, you have two options: <code>load</code> and and
+its more elegant cousin <code>require</code>. The difference is that the
+<code>load</code> keyword includes a source code file unconditionally
+while <code>require</code> will only include it once (which means no
+duplication of variables and methods):
+
+    load "libraries/myfile.rb"
+    require "/home/myaccount/code/libraries/myotherfile.rb"
+
+Both keywords accept either relative or absolute paths; if Ruby
+identifies it as a relative path, it will search for the file in the
+current path (stored in <code>$:</code> for those who are curious).  The
+require statement is also great in that you can use it in conditionals,
+loops, and other constructs or use variables in its paths (you can not
+with load).  Keep in mind though that local variables in included files
+do not trickle into the context they are included in (this is contrary
+to PHP's and C/C++'s behavior); these variables are locked into the
+context that they are written in.
+
+### This Chapter
+
+You learned how to break up your code into more logical and usable
+pieces.  You learned...
+
+- how to segment your code using blocks, methods, classes, modules, and
+  files.
+- how variable scoping works and how it can benefit you.
+- how to make your own classes and objects and how to make changes to
+  others.
+- that modules allow you to mix in code to classes and extend them.
+
+----
