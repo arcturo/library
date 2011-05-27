@@ -21,11 +21,11 @@ Just because everything is an object in Ruby does not mean that everything is ge
 
 The first of these types that we will look at are strings, which are simply sequences of bytes that represent a sequence of characters. Strings can be formed a number of ways, but the most common is likely to be using a string literal. A string literal is a constant string that is created by enclosing it in single or double quotes. For example:
 
-    puts 'Hello, Darling.' # => Hello, Darling.
+    puts 'Hello, Darling.' #=> Hello, Darling.
     
-    puts 'What\\'s up?' # => What's up?
+    puts 'What\\'s up?' #=> What's up?
     
-    puts "A\\tTab." # => A tab.
+    puts "A\\tTab." #=> A tab.
 
 Wait a minute! What are those backslashes? Those are escape sequences, a backslash followed by a character to create normally unprintable characters (i.e. in this example I used \\t to create a tab character but you can also use others to create things like new lines and vertical tabs). I said unprintable because in the other example, I used \\' to create a single quote character; this character would normally be unprintable because it is contained in a set of single quotes and would effectively close the set of quotes causing an error.
 
@@ -95,17 +95,17 @@ Now, if you noticed, I used single quotes for some of the strings and double quo
 
 Looking at that table, you may have noticed that double quoted strings also offer another interesting feature: expression interpolation. As fancy as that sounds, it simply means this: you can insert the value of pieces of Ruby code into strings directly. Remember that everything in Ruby is an object, even the results of expressions. That means you can do this:
 
-    "Inches/yard: #{12*3}"    # => Inches/yard: 36
+    "Inches/yard: #{12*3}"    #=> Inches/yard: 36
     
-    "#{"Tora! "*3}"           # => Tora! Tora! Tora!
+    "#{"Tora! "*3}"           #=> Tora! Tora! Tora!
 
 The second example is confusing, unless you remember that everything is an object in Ruby (yes, even string literals! They are of class `String`.). Since the string literal creates a String object, you can act on it just like any other object. In this case, multiplying a string by 3 simply does what you would think: makes three copies of the string.
 
 Another, less awesome method of creating strings is using a special delimiter: `%Q` or `%q`. The way this constructor works is to follow `%Q` or `%q` with any non-alphanumeric, non-multibyte character. For example:
 
-    %q{Hoagies & grinders!}    # => Hoagies and grinders!
+    %q{Hoagies & grinders!}    #=> Hoagies and grinders!
     
-    %Q;#{"Navy beans! "*3};    # => Navy beans! Navy beans! Navy beans!
+    %Q;#{"Navy beans! "*3};    #=> Navy beans! Navy beans! Navy beans!
 
 Note that `%q` acts like a single quoted string and `%Q` acts like a double quoted string. Just associate them by size: little q, one quote but big Q, two quotes.
 
@@ -128,45 +128,45 @@ The second type we will look at is Ruby's built-in classes for numbers: `Fixnum`
 
 Integers are created by entering the number you wish to use without quotes (lest it become a string). The particular format depends on which numerical base you plan on using. Ruby supports standard decimal (base-10) operations but it also support operations on octal (base-8), hexadecimal (base-16), and binary (base-2) numbers. For example:
 
-    -123456789       # => -123456789 # Fixnum
+    -123456789    #=> -123456789 # Fixnum
     
-    0d123456789      # => 1234567890 # Fixnum
+    0d123456789    #=> 1234567890 # Fixnum
     
-    1234323424231    # => 1234323424231	# Bignum
+    1234323424231    #=> 1234323424231	# Bignum
     
-    0x5C1            # => 1473 # Hex
+    0x5C1    #=> 1473 # Hex
     
-    01411            # => 777 # Octal
+    01411    #=> 777 # Octal
     
-    1_90_33          # => 19033 # Fixnum
+    1_90_33    #=> 19033 # Fixnum
 
 Notice that Ruby ignores underscores in numbers (some people choose to use them in place of commas for larger numbers to enhance readability). The examples also illustrate the various base notations. To create a binary number (base-2), prefix the number with 0b; to create an octal number (base-8), prefix the number with 0; to create a hexadecimal number (base-16), prefix the number with 0x. To create a standard, base-10 integer, either simply type the number as normal (i.e. 1678) or prefix it with 0d (i.e. 0d1678).
 
 In addition to integer types, Ruby also has support for a `Float` type. Float numbers hold numbers that are fractional (i.e. they have a partial value that is expressed in decimal form). For example:
 
-    1.5      # => 1.5
+    1.5    #=> 1.5
     
-    1.0e5    # => 100000.0
+    1.0e5    #=> 100000.0
     
-    1.e5     # => !NoMethodError
+    1.e5    #=> !NoMethodError
 
 Each side of the decimal point must contain a number. When notating floats using scientific (or condensed) notation, you must place a 0 next to the decimal point or Ruby in its silliness will try to execute a method named (for example) e5 on class `Fixnum`.
 
 Since numbers are objects (i.e. since everything is an object in Ruby) they also contain methods that can act on them. You can get a number's size with the size method, convert a number to a string using the `to_s` method, and many others:
 
-    -4.abs     # => 4
+    -4.abs    #=> 4
     
-    6.zero?    # => false
+    6.zero?    #=> false
 
 The above methods are obviously named (the `abs` method gets the absolute value and the `zero?` returns `true` if the number is zero), but they are not the only methods that are offered. Check the Ruby API Documentation for more information.
 
 Numbers also offer methods that may not seem like methods at first glance: the arithmetic operators. Here are some examples:
 
-    2 + 2     # => 4 
+    2 + 2    #=> 4 
     
-    6 / 3     # => 2
+    6 / 3    #=> 2
     
-    -4 * 2    # => -8
+    -4 * 2    #=> -8
 
 A full listing of these operators and their function is available below. A quick tip: if you've ever programmed in another language, chances are they are the same (unless you've been programming in some sort of willy nilly non-mathological language).
 
@@ -242,11 +242,11 @@ Now that you can get the right values in a range, you may want to actually do so
     burnt_cookies = 1..3
     
     
-    puts(good_cookies == bad_cookies)         # => false
+    puts(good_cookies == bad_cookies)    #=> false
     
-    puts(good_cookies.eql?(burnt_cookies))    # => false
+    puts(good_cookies.eql?(burnt_cookies))    #=> false
     
-    puts(bad_cookies == burnt_cookies)        # => true
+    puts(bad_cookies == burnt_cookies)    #=> true
 
 Ranges are considered equal if their beginning and end values are the same, but note that even though the `good_cookies` and `bad_cookies` shared the same beginning and end value in code, the values differed. The values were changed by the value of the inclusive flag (remember the two dot-three dot thing?). The values for `good_cookies` are `[1,2]` while `bad_cookies` holds `[1,2,3]`.
 
@@ -257,11 +257,11 @@ Ranges also offer a way to test whether or not a value is contained within a ran
     his_guess = 19
     
     
-    puts(good_cookies === my_guess)          # => true
+    puts(good_cookies === my_guess)    #=> true
     
-    puts(good_cookies.include?(my_guess))    # => true
+    puts(good_cookies.include?(my_guess))    #=> true
 
-    puts(good_cookies === his_guess)         # => false
+    puts(good_cookies === his_guess)    #=> false
 
 The `include?` method will return any value that is contained with the range of values in the range (i.e. it would return `true` if you tested 2.44564 against `bad_cookies`); if you're feeling a little alternative, you can also try `include?`'s alias `member?`.
 
@@ -286,107 +286,107 @@ In Ruby, literal arrays can be created and stuffed with values in a variety of f
 An array can be initialized with values of any type, even variables, values returned from methods, literals such as quoted strings, or nothing (to create an empty array). This is handy mostly for literal values, but Ruby offers a few more methods for creating arrays that are more convenient and certainly more *Rubyrific*. Strings offer a special way to create arrays from their contents. Let's say you were writing haikus and wanted to make sure each line (which is conveniently filled with one syllable words) matches the ol' "5-7-5" paradigm by splitting the line into an array so you can count the elements:
 
     my_haiku = %w( my dog digs it here\\n )  
-    # => ["my", "dog", "digs", "it", "here" ]
+    #=> ["my", "dog", "digs", "it", "here" ]
     
     my_haiku = %w( he is nice to me & cats\\n )  
-    # => ["he", "is", "nice", "to", "me", "&", "cats"]
+    #=> ["he", "is", "nice", "to", "me", "&", "cats"]
     
     my_haiku = %W( but he ate #{(2*3)/6} once )  
-    # => ["but", "he", "ate", "1", "once"]
+    #=> ["but", "he", "ate", "1", "once"]
 
     my_haiku = %w( but he ate #{(2*3)/6} once )  
-    # => ["but", "he", "ate", "#{(2*3)/6}", "once"]
+    #=> ["but", "he", "ate", "#{(2*3)/6}", "once"]
 
 Oops! A string wrapped in the `%W` delimiter acts like a double quoted string: it performs string interpolation and extended escape sequence substitution, but `%w` delimiter acts just like a single quoted string: it only allows a subset of the escape sequences to be used and does not facilitate interpolation. Some are confused by all of this poppycock, but it's very easy to remember: Bigger is better (unless you don't need all the fancy features or you have some sort of religious convictions against double quotes and/or capital W's).
 
 The last way to form arrays that I would like to mention is the `to_a` method of some objects. This method converts an object or (rarely) one of its members to an array. For example, ranges support this method:
 
     my_range = 1..10  
-    # => 1..10
+    #=> 1..10
     
     my_dazzling_array = my_range.to_a  
-    # => [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    #=> [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
 Many objects implement this method; it is a convenient way to get an easily manipulatable data structure from some silly classes that are difficult to work with. You may consider peeking in the Ruby API documentation to see if the object you wish to use this method with does indeed implement it.
 
 Now that you have an array, maybe you want to add to it. Elements can easily be added to an array by simply assigning a value to a non-existent index; for example:
 
     my_dazzling_array[10] = 11  
-    # => [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+    #=> [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
     
     my_dazzling_array[12] = 12  
-    # => [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, nil, 12]
+    #=> [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, nil, 12]
 
 If a gap exists between indexes of the last element in the array and the newest added element, Ruby places `nil` (i.e. the equivalent of `null` in other programming languages; it represents a complete lack of value) in the gap elements (look at `my_dazzling_array[11]` above). If you simply want to add an element to end of an array, then you can use the `<<` operator, the `push` method or certain forms of the `insert` method. For example:
 
     my_dazzling_array.push(15, 16)  
-    # => [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 16]
+    #=> [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 16]
     
     my_dazzling_array.insert(-1, 17)  
-    # => [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 17]
+    #=> [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 17]
     
     my_dazzling_array << 14  
-    # => [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 14]
+    #=> [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 14]
 
 The `push` method allows you to push one or more elements onto the end of an array; each element should be provided as a parameter to the method. The `insert` method allows you to insert elements at (the specified index + 1); in the example, I used -1 to add elements to the end of the array (i.e. -1 moves from the end of the array back one element to the last element. Adding an element after the last element would effectively add it to the end.). This method probably is not the best, but it can be used when the same method needs to insert elements at various places in the array (including the end). The `<<` operator allows you to push specified elements on to the end of an existing array; I pluralized element because several of these "appends" can be chained together to add numerous elements to the end of an array. For example:
 
     my_dazzling_array << 20 << 21 << 22  
-    # => [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 20, 21, 22]
+    #=> [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 20, 21, 22]
 
 Now that you have data in your array, what are you to do with it? I personally like to admire my data, pride myself on my ability to harness all that is the array, and thrust my fist into the air yelling, "I AM SPARTACUS, LORD OF THE ARRAY!" Then my wife looks at me like I am crazy, it gets all weird, and I get back to work. I suppose that may or may not work for you; most people opt to simply use their array to hold stuff and call it when they need it (which is not nearly as fun). To make use of an array element's value, you simply reference the desired element by index in the form `array_name[index]`. For example:
 
     puts my_dazzling_array[0]  
-    # => 1
+    #=> 1
     
     index = 2
 
     my_dazzling_array[index]
-    # => 3
+    #=> 3
 
     my_dazzling_array[0..2]
-    # => [1, 2, 3]
+    #=> [1, 2, 3]
 
 Notice that when referencing array elements, you can reference a single element with an integer or use a range to reference a number of elements. Remember, because array indexing is zero based, referencing index `0` is actually referencing the first element. Also, be sure that when you pass an index, that it is an integer or range; if you do not, Ruby will throw a `TypeError` (which will in turn crush your soul). This seems like a silly problem (and an even sillier consequence!), but it could show up if you were (for some reason) reading indexes from sockets or files (which reads everything in as strings so you would have to convert them which you'll learn how to do later). This method for referencing array elements operates just like the `at` method:
 
     puts my_dazzling_array.at(0)  
-    # => 1
+    #=> 1
 
 Another method, `fetch`, can also operate in this manner, but `fetch` can also specify a default value to return if the specified index is not found.
 
     puts my_dazzling_array.fetch(999, "Not found!!")  
-    # => Not found!!
+    #=> Not found!!
 
 Yet another method, `values_at`, can also operate just like `at`, `fetch`, and the `[]` operator, except this method can take a number of indexes to fetch and return as an array.
 
     puts my_dazzling_array.values_at(0, 1, 2)  
-    # => [1, 2, 3]
+    #=> [1, 2, 3]
 
 The last ways that I would like to share to retrieve elements are the methods `pop` and `shift`. The `pop` method grabs the last element in the array and removes it from the array; the `shift` method grabs the first element from the array and removes it shifting all other elements back one index.
 
     my_dazzling_array.pop  
-    # => [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    #=> [1, 2, 3, 4, 5, 6, 7, 8, 9]
     
     my_dazzling_array.shift  
-    # => [2, 3, 4, 5, 6, 7, 8, 9, 10]
+    #=> [2, 3, 4, 5, 6, 7, 8, 9, 10]
 
 So now you have an array, you have data in it, but maybe you are sick of that third element. He just keeps giving you crazy looks or eying your wife and you just want to take him out or possibly *extirpated*. Well, fortunately Ruby can take care of that little problem, and let's just say it ain't pretty. The `delete_at` method deletes the element at the index specified as a parameter and returns the value of that element. For example:
 
     puts my_dazzling_array.delete_at(1)  
-    # => 2
+    #=> 2
     
     my_dazzling_array  
-    # => [1, 3, 4, 5, 6, 7, 8, 9, 10]
+    #=> [1, 3, 4, 5, 6, 7, 8, 9, 10]
 
 Another method that arrays offer to delete items is the `delete` method (big surprise, huh?). This method deletes and returns the value that is referenced as a parameter rather than the index like `delete_at`. For example:
 
     puts my_dazzling_array.delete(4)  
-    # => 4
+    #=> 4
     
     my_dazzling_array  
-    # => [1, 2, 3, 5, 6, 7, 8, 9, 10]
+    #=> [1, 2, 3, 5, 6, 7, 8, 9, 10]
     
     puts my_dazzling_array.delete(1337) { "Wrong!" }  
-    # => Wrong!
+    #=> Wrong!
 
 Note that the item with the value of 4 was deleted rather than the index 4. Also note that the `delete` method offers the option for a "default" value to return if the specified value does not exist in the array; the last example is a demonstration of this feature. The value returned by the block of code between the braces will be the value returned if the item is not found (I talk more about these kinds of code blocks later on; if you're confused, curious, and impatient, look at page 31).
 
@@ -414,7 +414,7 @@ Ruby also offers the `new` method for creating hashes; the `new` method for hash
     new_hash = Hash.new("Not here!")
     
     new_hash['non-existent key']
-    # => Not here!
+    #=> Not here!
 
 Keys can be added to a hash by simply defining them; continuing from the above example, let us assume that you met a new wombat at the supermarket:
 
@@ -425,32 +425,32 @@ Note you don't redefine the hash or enclose anything in brackets or braces; you 
 So now that you have this fine hash o' wombats, what can you do with it? To reference a hash value, you can use the `fetch` method with the key as a parameter (lame!) or simply reference it similar in an array-like form: `hash_name[key]`. For example, if you were throwing a wombat party and wanted to invite all your wombat friends, but you couldn't remember Wally Wombat's address, you could print the value of his address like this:
 
     puts my_wombats['Wally Wombat']  
-    # => The Jungle St.
+    #=> The Jungle St.
 
 Hashes also offer the `values_at` method, which allows you to provide numerous keys and receive their values in an array. Values in hashes have to be called using these methods (`fetch`, `[key]`, or `values_at`); hashes do not offer methods like `pop` in arrays. Hashes offer `shift`, but it simply returns the first element as an array which contains the key in one element and the value in another; this method and a couple of others are not very useful if you simply want the value of elements. Oh sure, hashes offer a myriad of methods which allow you to do different things with the elements of a hash (i.e. the `to_a` method which changes the hash to an array, `merge` to merge two hashes, `replace` to replace one hash's values with another's values, etc.), but there are not a whole of options when it comes to grabbing elements from a hash. Hashes lack a lot of *bling* to be honest.
 
 Ruby also offers a few methods that test elements in a hash; these are helpful to grab information about the hash without traversing the whole hash. For example:
 
     my_wombats.has_key?('Wilma Wombat')  
-    # => true
+    #=> true
     
     my_wombats.has_value?('Lamps and pandas')  
-    # => false
+    #=> false
     
     my_wombats.empty?  
-    # => false
+    #=> false
 
 The method names obviously explain what they do, but I will explain them a little bit anyhow. The `empty?` method checks whether or not any elements exist in the hash; this does not check the values of the hash, so if there is an element which is empty it returns false. The `has_key?` method checks the hash to see if the key passed as a parameter exists; this is probably more safe than checking they key for the default value or nil. The `has_value?` method checks the values of the hash to see if it exists in one of the elements. This method is not particularly useful (since it does tell you which key has the value), but it can be useful if you want to make sure that any key has this value. There are a lot of synonyms for `has_key?` (`member?`, `key?`, etc.) and `has_value?` (`value?`, etc.); check the Ruby documentation for a full list of these methods; maybe one of the synonyms will be easier for you to remember.
 
 Hashes also, of course, offer methods to delete elements. To delete an element, simply call the `delete` method and provide the key you wish to delete as a parameter. Let's say that you had a falling out with Wilma Wombat (she got a little tipsy at the Wombat New Year party and vomited on your new eel skin Prada shoes) and you now want to delete her from your list of friendly wombats; you could do so like this:
 
     my_wombats.delete['Wilma Wombat']  
-    # => The House on the Corner
+    #=> The House on the Corner
 
 When an element is deleted, its value is returned. This works great if you know exactly which keys you want to delete, but let's say that you get tired of how wombats smell (the smell of stale gin and guava juice can be rather unwelcome in the morning). You want to completely blow away the whole hash, but it seems silly to go through each key and call `delete`. Well, fortunately Ruby delivers:
 
-    my_wombats.clear     # => {}
-    my_wombats.empty?    # => true
+    my_wombats.clear    #=> {}
+    my_wombats.empty?    #=> true
 
 When the `clear` method is called, the newly emptied hash is returned; aren't you glad that you don't have to deal with those darn wombats anymore?
 
@@ -468,77 +468,77 @@ In the examples for working with the standard Ruby types, I often demonstrated v
 If you don't really get it, perhaps an example will work a little better to illustrate what references mean in practice:
 
     first_var = "i hold a reference"  
-    # => i hold a reference
+    #=> i hold a reference
     
     second_var = first_var  
-    # => i hold a reference
+    #=> i hold a reference
     
     second_var.chop! # Chops off the last character of the string  
-    # => i hold a referenc
+    #=> i hold a referenc
     
     first_var  
-    # => i hold a referenc
+    #=> i hold a referenc
 
 Wait a second! I modified `second_var`! Why is `first_var` different now? This the where the idea of a reference comes into play: variables are not objects but references (or pointers) to objects which live in the magical ether beyond (or the heap; whatever you kids call it nowadays). References (and, in turn, variables) merely point to objects; they do not hold the actual objects themselves. When you reference a reference, it does not duplicate the object: both references point to the same object. If you want to duplicate the object (i.e. create another copy of the object in another object rather than simply referencing it), you can use the `clone` or `dup` method on objects which offer it.
 
 While assignment of the rvalue-into-lvalue sort is simple enough to understand due to its readability, there are other forms of assignment and all manners of bit twiddling and binary bruhaha you can pull on variables. One such ruckus you can stir up is chaining assignment. In a normal assignment, there is one lvalue and rvalue; after the assignment the lvalue equals the rvalue. When you chain assignments though, magic happens (well, not really). For example:
 
-    left = 5    # => 5
-    left = middle = 7    # => 7
-    left    # => 7
-    middle    # => 7
+    left = 5    #=> 5
+    left = middle = 7    #=> 7
+    left    #=> 7
+    middle    #=> 7
 
 In this example, the chaining results in two lvalues and one rvalue. This seems tame and practical enough; if you need to assign two variables the same value, you just place them as lvalues to the desired rvalue. Where it can get crazy is using something like this statement:
 
     t = h = i = s = i = s = c = r = a = z = y = 100
-    # => 100
+    #=> 100
 
 Now every variable to the left of the final rvalue (`t`, `h`, `i`, `s`, `i`, `s`, `c`, `r`, `a`, `z`, & `y`) is set to the final rvalue (`100`). Though it seems like all the variables are being set in parallel, in actuality Ruby assigns them working from right to left (i.e. `y` is set to 100, `z` is set to `y`, and so on). Ruby does offer setting variables in parallel, but it is accomplished using a slightly different form:
 
-    p1, p2 = 1, 2    # => [1, 2]
+    p1, p2 = 1, 2    #=> [1, 2]
     
-    p1    # => 1
+    p1    #=> 1
     
-    p2    # => 2  
+    p2    #=> 2  
 
 Note that Ruby returns an array of the assigned values. This form is a great method for swapping the values of variables (since they are actually set in parallel). You can also make use of this form with an array:
 
-    rvalue = 0    # => 0
+    rvalue = 0    #=> 0
     
-    a, b = rvalue    # => 0
+    a, b = rvalue    #=> 0
 
-    a    # => 0
+    a    #=> 0
     
     b    # => nil	
     
-    rvalue = [1, 2, 3, 4, 5]    # =>  [1, 2, 3, 4, 5]
+    rvalue = [1, 2, 3, 4, 5]    #=>  [1, 2, 3, 4, 5]
     
-    a, b = rvalue    # =>  [1, 2, 3, 4, 5]
+    a, b = rvalue    #=>  [1, 2, 3, 4, 5]
     
-    a    # => 1
+    a    #=> 1
     
-    b    # => 2
+    b    #=> 2
 
 Any array can be assigned to a list of variables; as shown in the example, Ruby ignores any extra elements in the array past the number of variables specified to assign to. This is useful if a method returns an array but you don't necessarily need anything past the first few elements. Notice that earlier in the example that any lvalues without corresponding rvalues are simply set to `nil`. Arrays can also be assigned in parallel in nested assignments ; Ruby is smart enough to pick apart your expressions into individual objects and try to assign them (which is a big step up from languages like C++ and C#). For example:
 
     a, (b, c), d = 10, 11, 12, 13  
-    # => a == 10, b == 11, c == nil, d == 12
+    #=> a == 10, b == 11, c == nil, d == 12
     
     a, (b, c), d = 10, [11, 12], 13  
-    # => a == 10, b == 11, c == 12, d == 13
+    #=> a == 10, b == 11, c == 12, d == 13
 
 Much like the other form of parallel assignment, Ruby substitutes `nil` for lvalues which do not have a corresponding rvalue. The first example's `c` does not get assigned because it is in an array with b and the corresponding rvalue is not an array. In this case, Ruby assigns the first element the value.
 
 Another form of ridiculous rvalue rigormoralitry is the additive assignment operator (`+=`) and the subtractive assignment operator (`-=`). These forms are somewhat similar to (but also replace) the `++` and `--` operators seen in many programming languages. The `+=` and `-=` operators are delightful pieces of syntactic sugar that make adding and subtracting objects and assigning the returned value to the initial object a breeze. For example:
 
     lumps += 2 # lumps = lumps + 2  
-    # => 2
+    #=> 2
     
     pie += lumps # pie = pie + lumps  
-    # => 2
+    #=> 2
 
     lumps -= pie # lumps = lumps – pie  
-    # => 0
+    #=> 0
 
 As you can see, these shortcuts allow you to accomplish the same thing in a whole lot less typing (every programmer's dream, right?). Also note that these operators work on more than numbers; anything that uses the `+` and `-` operators can use them since these syntactic sugar lumps merely wrap these operators. This means that anything that happens during normal use of these operators (i.e. certain objects perform extra work when adding or subtracting that is built in or that you specify) will still happen.
 
@@ -555,7 +555,7 @@ What if you don't want to be able to assign to an object? It's a rare case indee
     
     my_crazy_object = abnormal_value
     
-    # => TypeError! can't modify frozen object
+    #=> TypeError! can't modify frozen object
 
 This seems like a cool trick you'd use often, but it's really not. I suggest not using it unless you absolutely need to and you have permission from your mom and dad first.
 
@@ -567,11 +567,11 @@ What's that tilde for?! And what's with the slashes and the literal and the esca
 
     my_string = "my string is looooong"
     
-    my_string =~ /\sstring\s/    # => 2
+    my_string =~ /\sstring\s/    #=> 2
     
-    my_string =~ /\s/    # => 2
+    my_string =~ /\s/    #=> 2
     
-    my_string =~ /my/    # => 0
+    my_string =~ /my/    #=> 0
 
 The pattern enclosed in the slashes is matched to the string using the `=~`; using that pattern, the index of the first match (i.e. an occurrence of a string matching that pattern) is returned. I realize this is a rather cursory rundown of what regular expressions can do. I will discuss this more in detail later on in this chapter, but for now I thought it beneficial for you to be familiar with that if you see it somewhere before you get there.
 
