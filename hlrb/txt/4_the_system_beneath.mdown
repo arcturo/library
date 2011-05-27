@@ -1,0 +1,698 @@
+4
+
+# The System Beneath
+
+Recent advances in language libraries have had people ditching Perl and Bash scripts in favor of a more friendly solution like Python or Ruby.  This is mostly because you can accomplish the same tasks with less effort and more robustness with these languages (it's also probably because Perl and Bash suck).  Thanks to its libraries, Ruby can interact with the system just as well as these more esoteric solutions.  Let's take a look at some of the system libraries and functions built into Ruby. You'll be trading in your copy of Perl Cookbook within the hour!
+
+## Filesystem Interaction
+
+The `File` class in Ruby is very rich compared to other similarly featured languages (i.e. Python).  It not only has more methods, but the methods which are comparable are more logically named (e.g. what does `unlink` do in Python?  Oh, it deletes?  Why not call it that!?).  Ruby's `File` class's general power and ease of use compared to many other languages should bring comfort to your heart, much like a warm bowl of soup and classical music can do on a snowy day.
+
+First, let's look at what you can find out about a file.  Does it exist?  What kind of file is it? Is it a file?  Here are a few examples (these assume there is a file named "`textfile.txt`" in the current directory):
+
+	File.directory?("textfile.txt")		# => false
+	File.file?("textfile.txt")			# => true
+	File.exists?("textfile.txt")		# => true
+	File.size?("textfile.txt")			# => 2063
+	File.extname("textfile.txt")		# => ".txt"
+	File.extname("igotnoextension")		# => ""
+
+I won't insult your intelligence by explaining what each of these mean, but I would like to note two things.   First, the `size?` method returns  the size in bytes, not kilobytes.  It seems silly, I know, but that frustrated the piss out of me when I first started using it (mostly because I'm dumb, I know, but I'm trying to save you some frustration here!).  Second, the `size?` method will return `nil` if the file size is zero (another gotcha that bothered me until I figured it out).
+
+You can also use the `File` class to find information about metadata such as ownership and permissions:
+
+	File.executable?("textfile.txt")	# => false
+	File.readable?("textfile.txt")		# => true
+	File.writable?("textfile.txt")		# => true
+	File.owned?("textfile.txt")			# => true
+	File.grpowned?("textfile.txt")		# => false
+	File.setgid?("textfile.txt")		# => false
+	File.setuid?("textfile.txt")		# => false
+
+The `executable?` (which determines if the user has the ability to execute a file according to filesystem permissions, not whether or not the file is an executable), `readable?`, and `writable?` methods have companion methods called `executable_real?`, `readable_real?`, and `writable_real?` (respectively, obviously) which make sure that the owner of the process has that ability with that file.  Of course, if you own the file it probably doesn't matter.  You can find out if you own it using the `owned?` method, which will return `true` if the process owner indeed owns the specified file.  Normally the `grpowned?`, `setgid?`, and `setuid?` are very helpful in finding out certain metadata about a file, but these methods don't apply to and will always return `false` on operating systems that don't support them (I'm looking right at *you* Windows!).  For those not in the know, on UNIX filesystems a file is owned by a user in a group rather than "just" a user; the `grpowned?` gains you access to this data.  The `setgid?` and `setuid?` check for a bit that is set on a file's filsystem entry that allows you to change the user and/or the group when accessing that file (this helps when a user needs elevated privileges for a certain task).  Again, these methods allow you to see if these bits are set, but if you're on Windows or something else that doesn't support them then they always return `false`.
+
+### Reading from a file
+
+I can hear you saying, "Who cares about that crap?!  I need to *read* a file.  I made the file.  I know all that crap about it!  Tell me how to read it or I challenge you to a knife fight, right now, behind the Waffle House!  You and me, pal!  *We're taking it to the matresses!*"  I would like to now kindly respond to your anger with this little tidbit:
+
+	myfile = File.open("textfile.txt","r")
+	myfile.each_line {|line| puts line }
+	myfile.close
+
+Using the `File#open` method, you can open a file and create a new `File` instance.  The first parameter for open is the file path (either relative or absolute), and the second parameter is the file mode. You can view the table of options you have for this parameter in the table at the end of this section; this parameter defaults to reading if you don't specify.  After you call open, you can use the `each_line` method to grab each line and print it out, play around with it, whatever you want to do inside the block.  You can optionally feed `each_line` a parameter that will act as the line ending in place of "`\n`"; if you, like me, tend to end each line of text with the word "pastry" you can respect this feature.  Always be sure to call the `close` method if you are opening files this way.
+
+"But, Dad!" you whine.  "I don't wanna call close!"  Well, Son/Daughter/Androgynous Offspring, Ruby can help you cure your incessant moaning:
+
+	File.open("textfile.txt") do |myfile|
+	myfile.each_line {|line| puts line }
+	end
+
+This does the same thing, but now the file stream is automatically closed when the enclosing block exits.  "Wow!" you exclaim.  I'm glad you're amazed, but it gets better:
+
+	IO.foreach("textfile.txt") {|line| puts line }
+
+Using the `IO#foreach` method does the same thing as the previous two examples, just simpler, more compact, and far more beautifully.  It opens the file specified, feeds it line by line into a block, then closes it. Mmm...now that's *Rubylicious*.
+
+### Writing to a file
+
+Your options for writing to a file are numerous; they all accomplish essentially the same objective but in slightly different ways.  The first (and most obviously named) way I'd like to cover is the `write` method.  It goes something like this:
+
+	File.open("textfile.txt", "w") do |myfile|
+	myfile.write("Howdy!")
+	end
+
+You open a file with the `File#open` method, create an enclosing block, and simply call the `write` method on the file instance created by the block.  You can do writing the same way I showed you reading the first time (i.e. without  a block at all and calling `close`), but I thought that would be needlessly redundant to include it here. You can write any sort of data to a file as long as it can be converted to a string (i.e. it has a `to_s` method); if it can't be converted to a string Ruby will simply issue it a string representation to the effect of "`#&lt;ClassName:SomeData&gt;`". Other methods such as `print` and `puts` can easily be  plugged into where `write` is; they take the same number of parameters and behave essentially the same way (except that puts will tag a new line on the end of the string when it is written).
+
+Another way of writing to a file is utilizing the `&lt;&lt;` operator; if you've ever used `IOStream` in C++ then you should feel right at home with this:
+
+	File.open("textfile.txt", "w") do |myfile|
+	myfile << "Howdy!\n" << "There are " << count << "pandas!"
+	end
+
+Opening the file is the same as always, but now instead of calling a method and feeding in parameters (at least in the traditional sense) you are now using the `&lt;&lt;` operator.  It behaves the same as the other methods (i.e. it converts the data to a string if it is not a string and writes it to the file) so there shouldn't be any surprising parts there.  BOOGABLARGABOO! Okay, maybe that surprised you, but nothing else should.
+
+### More file operations
+
+The File class also supports a number of other file operations that promote all sorts of filesystem hooliganism.  Here are a few:
+
+	File.delete("textfile.txt")
+	File.rename("textfile.txt", "textfile.txt.bak")
+	File.chown(nil, 201, "textfile.txt")
+	File.chmod(0777, "textfile.txt")
+
+The first two method's names should give away their function.  If the proverbial cat is not out of the bag, they delete and rename the provided files (with the renamed filename fed in as the second parameter).  The `delete` method will return the number of files deleted (i.e. `1` for this case).
+
+The last two methods may be a little confusing if you are not up to snuff on your UNIX/Linux filesystems and their associated commands.  The `chown` command allows a user with superuser privileges to change the owner of a file (or the owner may change the group ownership to any group of which he/she is a member); note that the `chown` method takes numeric owner and group IDs rather than string names (which the command line version allows).  The `chmod` method allows the owner of a file (or a superuser) to change the permissions of a file (i.e. which users/groups can read, write to, or execute a file); the first parameter is a bit pattern which represents the permissions on the filesystem.  Check Appendix A for URLs with more information on UNIX filesystem metadata (including bit patterns to be used with the `chmod` method).
+
+<table>
+	<tbody>
+		<tr>
+			<th colspan="2">
+				File Access Modes
+			</th>
+		</tr>
+		<tr>
+			<td>
+				r
+			</td>
+			<td>
+				Read-only access; starts at beginning of file (default)
+			</td>
+		</tr>
+		<tr>
+			<td>
+				w
+			</td>
+			<td>
+				Write-only; truncates existing file to zero length or creates new file
+			</td>
+		</tr>
+		<tr>
+			<td>
+				a
+			</td>
+			<td>
+				Write-only; starts at end of existing file or creates new file
+			</td>
+		</tr>
+		<tr>
+			<td>
+				r+
+			</td>
+			<td>
+				Read-write; starts at beginning of file
+			</td>
+		</tr>
+		<tr>
+			<td>
+				w+
+			</td>
+			<td>
+				Read-write; truncates existing file to zero length or creates new file
+			</td>
+		</tr>
+		<tr>
+			<td>
+				a+
+			</td>
+			<td>
+				Read-write; starts at end of existing file or creates new file
+			</td>
+		</tr>
+		<tr>
+			<td>
+				b
+			</td>
+			<td>
+				Binary file mode; may appear with any of the above options (Windows only)
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+## Threads and Forks and Processes, Oh My!
+
+Don't you hate it when you get slapped with an hourglass/beachball when you're doing something simple?  It's not like your computer is overloaded or anything; what's the deal?  The deal is that the programmer (probably) didn't use a multithreaded design, so everything it does happens in one thread.  What's a thread you ask?  I'm glad you asked (if you didn't ask because you already know, skip this section).
+
+Think of a thread as a way of telling your computer you want it to multitask.  Let's say you're developing a WinAmp/iTunes/Foobar clone, and you want to be able to play music, have wicked awesome visualizations, and grab CDDB information about your tracks all at the same time.  This isn't going to work very well in a single threaded setup because you will have to wait for CDDB to respond before your track plays, and then you have to worry about trying to draw and play music at the same time.  The easiest solution would be to split each task off into its own thread. The music would play in its own thread, completely untouched by the other things going on; the visualizations would draw in their own thread, not interfering with the music; CDDB could be contacted independently of the other two, so that if you have a slow Internet connection, downloading the data won't bother the playback.  Threads let your computer do more things at once, and are pretty important if you plan on doing anything remotely complicated with Ruby.
+
+### Ruby thread basics
+
+Using threads in Ruby is as simple as passing a block of code to the `Thread` class's constructor.  For example, let's create three threads.  They will each do something at different intervals (e.g., print some text to the screen).
+
+	first = Thread.new() do  
+	myindex = 0  
+	
+	while(myindex < 10):
+	puts "Thread One!"    
+	sleep 3    
+	myindex += 1
+	end
+	end
+	
+	second = Thread.new() do
+	myindex2 = 0
+	while(myindex2 < 5):
+	puts "Thread Two!"
+	sleep 5
+	myindex2 += 1
+	end
+	end
+	
+	third = Thread.new() do  
+	myindex3 = 0  
+	
+	while(myindex3 < 2):
+	puts "Thread Three!"    
+	sleep 10    
+	myindex3 += 1  
+	end
+	end  
+	
+	first.join()
+	second.join()
+	third.join()
+	
+	# => Thread One!
+	# => Thread Two!
+	# => Thread One!
+
+*(and so on...)*
+
+To get threads going, you first need to create an instance of the `Thread` class and pass a block of code to it; our code simply prints some text and then makes that thread pause a few seconds using the `sleep` method.  The calls to the `join` method aren't necessary to make this work; the threads will run by themselves and be killed when your program ends.  The benefit of calling `join` is that your program will wait until all threads that have been joined exit (i.e. the code has finished and the block exits).  If you take the join calls out of the above program, each thread will print once and exit because the main thread exited; as it is above (i.e., with the `join` calls), it will run for about 30 seconds, with each thread printing a few times.
+
+![Figure 12](../static/images/threads.jpg)
+
+*Figure 12: Threads allow you to do work in parallel to the main thread: multitasking for Ruby.*
+
+The `join` method is great, but what if you don't want a thread to run forever after you exit?  Even further, what if you want to give it time to try to shut down after your program ends?  Fortunately, the `join` method is pretty smart; you can feed it an integer as a parameter and it will use that as a timeout.
+
+	time_me_out = Thread.new() do
+	while(true):
+	puts "Keep loopin' loopin' loopin'..."
+	sleep 5
+	puts "Keep that script on loopin'!  RAWHIDE!"
+	sleep 5
+	end
+	end  
+	
+	time_me_out.join(15)
+
+	# => Keep loopin' loopin' loopin'
+	
+*(5 second wait)*
+	
+	# => Keep that script on loopin'!  RAWHIDE!
+
+*(5 second wait)*
+	
+	# => Keep loopin' loopin' loopin'
+
+*(and so on...)*
+
+Since we gave join a timeout of 15 seconds, the script/song will only go for 15 seconds (since as soon as the thread is joined, the main thread exits; toss in a loop or something that runs for a while below it to make it run a little longer).
+
+### Controlling threads
+
+Threads offer a few methods for controlling themselves.  The first of these methods is `pass`, which will tell the thread scheduler to pass the execution to another thread.  For example, let's say you have two threads and you'd like them to print things out and pass the control to each other as they do.  Let's spell "weal" using two threads!
+
+	t1 = Thread.new { print "w"; Thread.pass; print "a" }
+	t2 = Thread.new { print "e"; Thread.pass; print "l" }
+
+	t1.join
+	t2.join
+
+	# => weal
+
+The `pass` method basically tells the current thread to hang out for a second while the another thread does its thing.  In the example, the threads switch off because they pause themselves to allow another thread to execute.
+
+Another method that is used to control threads from within is the `stop` method.  This method simply stops the thread's execution, which can be started again at a later time.  The `stop` method is really useful for situations where a thread needs to pause until you can accomplish another task.  Let's say you were designing some robotic sailors, and the first mate couldn't drop anchor until the captain says it's okay to do so.  You'd probably do something like the following.
+
+	mate = Thread.new do
+	puts "Ahoy! Can I be dropping the anchor sir?"
+	Thread.stop
+	puts "Aye sir, dropping anchor!"
+	end
+
+	Thread.pass
+	puts "CAPTAIN: Aye, laddy!"
+
+	mate.run
+	mate.join
+
+	# => Ahoy! Can I be dropping the anchor sir?
+	# => CAPTAIN: Aye, laddy!
+	# => Aye sir, dropping anchor!
+
+Rumor has it that is how the Love Boat actually started: robotic sailors.  Anyhow, the stop class method stops the current thread, but as you can see in the example, the run instance method will restart it (remember: stop is a class method, run is an instance method).  The thread can then be joined to continue on its merry little way.
+
+Threads can be altogether exited also.  You can do this one of two ways: either from within using `exit` or the outside using `kill`.
+
+	homicide = Thread.new do
+	while (1 == 1):
+	puts "Don't kill me!"
+	Thread.pass
+	end
+	end
+
+	suicide = Thread.new do
+	puts "This is all meaningless!"
+	Thread.exit
+	end
+
+	Thread.kill(homicide)
+
+	# => Don't kill me!
+	# => This is all meaningless!
+	# => Don't kill me!
+
+They work the same, they just accomplish it different ways.  It's usually better practice to kill a thread off from within simply because you know when and where it will be killed; killing threads off at will from wherever can lead to some serious confusion, and frankly, needless killing of innocent threads.
+
+### Getting information from threads
+
+There are a few methods that can be used to grab information about threads.   The first of these being `Thread.current` and `Thread.list`. The `current` method, of course, gives you access to the current thread.  The `list` method lists all threads that are runnable or stopped.  If you would like to get some information about these threads, then you can call the instance methods `alive?` and `status`. The `alive?` method will tell you whether or not the thread is active or not; it will return `true` if the thread is running or sleeping and `false` if it has exited or is stopped.  The status method will return "`run`" if the thread is running as normal, "`sleep`" if the thread is sleeping, "`aborting`" if the thread is aborting, `nil` if terminated with an exception, and `false` if the thread terminated normally.  Testing whether or not a thread is simply runnning can be done using the `stop?` method.  For example:
+
+	mythread = Thread.new { Thread.stop }
+	mythread.stop?	# => true
+	Thread.current.stop?	# => false
+
+Ruby returns `true` if the thread is stopped or sleeping; otherwise it will return `false`. You can also get the value returned from a thread using the `value` method.
+
+	calculator = Thread.new { 12 / 4 * 3 }
+	calculator.value # => 9
+
+This is excellent for long calculations whose value isn't needed right away; doing them this way lets you run them on another thread so they don't interrupt the main thread and the execution of your program.
+
+### Processes, the other way to do stuff
+
+Sometimes you need to spawn a new process altogether.  Whether you need to execute a third party program or just invoke another Ruby instance that runs your script, spawning external processes can be pretty important at times.  Ruby offers a few ways to spawn and control new processes.
+
+**The `system` method** PHP programmers rejoice!  Ruby has a system method that operates like the PHP system method.  Perl programmers may also rejoice, as Ruby also supports backtick notation for starting external processes.  For those of you who are unfamiliar with both, let's just look at an example.
+
+	system("cat /etc/passwd")
+
+	extern = `whoami`puts ("Your username is #{extern}.") # => jeremy
+
+The functions of these methods is fairly obvious.  The `system` method spawns an external application in a subprocess; it returns `true` if it is exited successfully and `false` otherwise (with the exit code in `$?`). The unfortunate thing about `system` is that it vomits the output on to wherever your application's output is being streamed to, which means you can can't capture it either. That's where the backticks come in; they also spawn an application in a subprocess but also allow you to capture its output.
+
+**Pipe dreams** The `system` method works well enough in a lot of cases, but what if you need provide some interactivity with the application?  Say you need to give it some input or perhaps it gives you delayed output and you'd like to start processing it before it's done executing.  Ruby offers the `IO.popen` method that does just that.
+
+The `popen` method will spawn an application and then give you a stream which you can read from and write to just like any other stream (e.g., file stream).
+
+	rb = IO.popen("ruby", "w+")
+	rb.puts "puts 'Whoa!  Radical subprocess, dude!'"
+	rb.close_write
+
+	puts rb.gets
+
+As you can see, you open the pipe with `popen` just as you would a file stream, specifying a target and access mode (which are the same access modes for files).  You can then use `puts` to write to to the stream and any other stream method (e.g., `gets`, `read`, etc.).  Do be aware that the `close_write` call was required for me.  I'm not sure if this a platform issue or not, but it might be safe to just go ahead and throw it in there for good measure.
+
+**Independent Execution** If you're on a machine that implements fork (i.e., not Windows) then you can use the `exec` method to execute things in a less hands on method while still retaining a little control.
+
+	exec("apachectl restart") if fork.nil?
+	# restarting apache...
+	Process.wait		# Wait for the process to exit (optional)
+
+This has the same basic effect as using system, except that you can tell your application to wait until that process is done using `Process.wait`; this is a good idea if you're running a subprocess that could cause irreparable damage if exited prematurely (e.g., moving files or something like that).
+
+## For the Environment!
+
+Accessing much of the environment that your Ruby program is in is as simple as raising your Planeteer ring to the sky and calling down your personal power. Wait, that's not right.  It's as simple as using a few neat functions that allow Ruby to access environment variables, program arguments, and a bit about Ruby's own environment.  The power is yours!
+
+### Environment variables and the like
+
+It's easy to access environment variables in Ruby; if you've ever used PHP or something similar to access environment variables, it's very much the same concept in Ruby.
+
+	ENV['SHELL']	# => /bin/sh
+	ENV['HOME']		# => /home/mrneighborly
+	ENV['USER']		# => mrneighborly
+
+The above values are fairly common if you're on a Linux-type system; if you're on Windows they change a bit.  For example, on Linux `USER` is the environment variable holds your username, but on Window this value is placed in `USERNAME`. The other two example values evaluate to `nil`. I suggest that if you're going to use environment variables, that you pop open `irb` and do two things.  First, make sure the value you want to use is valid on the platforms you'll be using it on.  Secondly, call up the ENV collection and look at all the values available.  If the value you planned on using isn't available, an alternate equivalent might be (e.g. `USER` and `USERNAME`).
+
+To write to an environment variable, you simply assign a value much like you would a normal variable.
+
+	ENV['USERNAME'] = 'dontdothis'	
+	puts ENV['USERNAME'] # => dontdothis
+
+Your changes to environment variables are inherited by any child processes that you spawn, but they do not propagate back up to the parent of the Ruby application. All of your changes stay local to your application.  If need be, you could spawn a process to use a command like `set` or `export` to change it in the shell.
+
+### The command line and you
+
+Most Ruby scripts are invoked from the command line; this means that, if need be, you can pass arguments to it on the command line.  For example, if you write a text editor, you could pass the file name you want to open to it on the command line (e.g. myeditor.rb myfile.txt) rather than having to use File -&gt; Open or Ctrl+O or whatever.   Perhaps you remember when we installed Ruby way back when, I had you type `ruby -v`, where Ruby is a command line argument. Ruby's faculties for accomplishing this very same thing are fairly simple to employ; you are given a global array, ARGV, to do with what you wish.
+
+	ARGV.each{|arg| puts "Arg: #{arg}; "}
+
+If you were to invoke the above script with a few arguments, you would see them printed out sequentially.
+
+	ruby argv.rb "My args!" 123 19
+
+	# => Arg: My args!; Arg: 123; Arg: 19;
+
+You can use this feature to gather information (e.g. filenames, numerical parameters, etc.) as I have done here, or you could use it to allow the user to specify command line switches (like `-v` on the Ruby command).
+
+### Ruby and its little corner of your computer
+
+In the greater ecosystem of your computer, Ruby has its own little microcosm.  When loading libraries and such, Ruby doesn't just magically know where they are; their paths are part of Ruby's environment configuration.  Use the following Ruby invocation to see where Ruby looks.
+
+	ruby -e "puts $:"
+
+On a typical Windows installation, you might see a list very similar to one like this.
+
+	C:/ruby/lib/ruby/site_ruby/1.8
+	C:/ruby/lib/ruby/site_ruby/1.8/i386-msvcrt
+	C:/ruby/lib/ruby/site_ruby
+	C:/ruby/lib/ruby/1.8
+	C:/ruby/lib/ruby/1.8/i386-mswin32
+	.
+
+As you can see, Ruby looks in multiple locations typically within the Ruby directory; also note that it is version specific (i.e. it only looks at libraries installed in the 1.8 directory since we are using 1.8 here).  The results on a Linux or OSX box should be similar; simply replace "`C:/`" with something like "`/usr/local/lib/`" or "`/usr/lib/`" and you should get a very similar list.
+
+You can also gather some information about how Ruby was built and in what environment.  This information can be useful is a bug exists for a specific build environment, and you want to see if a problem you are experiencing might be a result of that bug.  This information is written to the `Config` module in the file `rbconfig.rb` in the  library directory, usually in a directory under that which is labeled by the build environment (i.e. `i386-mswin32`). You can access this information programmatically also (since it is part of the library).
+
+	include Config
+
+	CONFIG['host_os']	# => "mswin32"
+	CONFIG['target_os'] # => "mswin32"
+	CONFIG['libdir'] # => "C:/ruby/lib"
+	CONFIG['build_cpu'] # => "i686"
+
+Since the Config module is exposed, you can simply include it and call values from the global constant hash CONFIG to use them.  Now the next time someone calls you a liar and tells you that can't possibly be running Ruby on an Apple II*e*, you can prove them wrong.  *Dead* wrong.
+
+## Win32 and Beyond
+
+Ruby is typically associated with the UNIX-based operating systems; heck, until about a year ago, Matz himself was prone to kicking you in the teeth for even mentioning Windows and Ruby in the same sentence.  Fortunately, recent activity has promoted Windows to a position of (at the very least) tolerance within the Ruby community, evidenced in projects such as the One-Click Ruby Installer ([http://rubyinstaller.rubyforge.org/](http://rubyinstaller.rubyforge.org/)) and the wonderful no-install Rails project, InstantRails ([http://instantrails.rubyforge.org/](http://instantrails.rubyforge.org/)). Ruby libraries for Windows have also been enhanced.  There are a number of them available (search RubyForge if you'd like to see a sampling), but I want to focus on the `Win32API`, `Win32`, and `WIN32OLE` modules in the standard library.
+
+### API
+
+Many applications today are directly tied to the Windows API.  Many tasks such as INI file interaction are much easier to accomplish with the Windows API, and mechanisms like printing are only accessible through these channels. As such, when replacing current functionality in another language with Ruby code or when trying to use these mechanisms in your Ruby code, your only choice is to figure out a way to get Ruby and the Windows API talk to each other.  Ruby offers the Win32API library to help ease the pain of this integration.
+
+The `Win32API` module allows you to make calls to any Windows API module (e.g. `kernel32`, `user32`, and so on).  You can make these calls by instantiating a `Win32API` object and calling the call the method on it.  For example, let's say you needed to read from and write to INI files that are used by another part of your organizations system.  These INI files house login information other essential bits that let the applications access mutual resources; as an example, let's build a little test file.
+
+	[database]
+	login = dbuser
+	password = foobaz 
+
+	[fileshare]
+	username = shazbot
+	location = //server/path
+
+Because of performance reasons (i.e. you don't want to write the regular expressions to parse the INI file) you decide to use the Windows API function `GetPrivateProfileString` to parse out values.  To use GetPrivateProfileString within Ruby, you need to first look at the function definition and the function definitions of any related functions you will need (in this case, we will need the `lstrlenA` function also).
+
+	DWORD GetPrivateProfileString(
+	LPCTSTR lpAppName,
+	LPCTSTR lpKeyName,
+	LPCTSTR lpDefault,
+	LPTSTR lpReturnedString,
+	DWORD nSize,
+	LPCTSTR lpFileName
+	)
+
+	int lstrlen(
+	LPCTSTR lpString
+	);
+
+Now that we have the parameters and return types of these functions, we have all the information we need to construct Win32API objects and make calls to these functions (this is all explained below!).
+
+	require 'Win32API'
+
+	# GetPrivateProfileString instance
+	getvalue = Win32API.new('kernel32', 'GetPrivateProfileString',
+	%w(P P P P L P), 'L');
+
+	# lstrlenA instance
+	strlen = Win32API.new('kernel32', 'lstrlenA', %w(P), 'L');
+
+	retstr = ' ' * (255 + 1)
+	getvalue.Call('database', 'login', '', retstr, 255, 'C:/test.ini')
+	
+	length = strlen.Call(retstr)
+	puts retstr[0..length - 1]
+
+	# => dbuser
+
+As you can see, you need to first include the Win32API module.  Then, create instances of the Win32API class for each function you are going to call.  In this case, we created two instances: `getvalue` which holds a reference to `GetPrivateProfileString` and `strlen` which holds a reference to `lstrlenA` (both of which are labeled with comments).  The first parameter for the constructor is the API module to look in (e.g. `GetPrivateProfileString` lives in `kernel32`), and the second parameter is the function name that you wish to call. The third parameter is an array of parameter types that the function takes; for example, in the above function declarations, we saw that lstrlenA takes a single constant string pointer (`LPCSTR`). The parameter type can be specified as one of three types: P for string pointers, N and L for numbers, I for integers, and V for void. So in our example, `GetPrivateProfileString` takes 5 string pointers and one long number parameter.   The fourth parameter is the return type (e.g. we specified L for long number since DWORD, the type specified in the function definition, is simply a typedef for `long`). Using INI files is great for legacy systems, but even Microsoft knows that keeping all your important data in the Registry is where it's at nowadays!
+
+### The Registry
+
+The `Win32` module provides you with a very friendly interface to operate on the Windows registry.  Is'nt that exciting?  Now you can stick tons of essential information in there (such as license keys), have it overwritten, deleted, and generally molested by a virus, or even better, lost in a system restore because of said virus (I'm allowed to be bitter)!  Even so, it's a dandy place to store general configuration information for your application if used properly.
+
+To operate on the registry, you need to first call open on the `Win32::Registry` class and give it a registry path to open followed by a block.  Think of this in the same way that you can open a normal file and have it close after the ensuing block is finished.
+
+	require 'win32/registry'
+
+	Win32::Registry::HKEY_LOCAL_MACHINE.open('SOFTWARE\Microsoft\WindowsNT\CurrentVersion\') do |reg|
+	# Do your dirty work here!
+	end
+
+Let's just look at opening the registry up right now, and we'll look at what you can do when it's open in just a little bit.  The above block will open up the registry path `HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\`. If you are unsure about what this means, just look it up on Google, but basically what we've done is open up the registry, look inside at the software area for the local machine, open up the `CurrentVersion` "folder" inside the `Windows NT` "folder" inside the `Microsoft` "folder " (I say "folder" because they're not real "folders" in the sense that they are navigable on the hard drive; they are phantom folders, mere ghosts, floating in the never ending ether that is the registry).  If you get an error when running this, that probably means you're on Windows 98 or something like that; if that's true, then take off the NT on Windows.  If you got an error, and you are on Linux, please put this book down and call your nearest tech support center.  Now that we've got the registry opened up and ready to do something, let's grab some values and use them.
+
+**Reading**  Reading values in from the registry can be done a couple of ways; generally, you simply provide the key name and the value is returned.
+
+	value = reg['ProductName']
+	value = reg['PathName', Win32::Registry::REG_SZ]
+	type, value = reg.read('BuildLab')
+
+The first call above is the most basic (and probably most practical in most cases); values from the registry can be accessed much like they are accessed from a hash. Simply enclose the registry key name (in this case "ProductName") in brackets.  The next call will return the value, but will throw an error if the value returned does not match the type given as the second value (e.g., if the value for PathName were a DWORD in the registry, when you requested a REG_SZ it would have thrown a `TypeError`). The value of this type parameter can only be a certain number of constants, which are directly related to key types in the registry. The table below lists these constants for your reference.
+
+<table>
+	<thead>
+		<tr>
+			<th colspan="4">registry type constants</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>REG_NONE</td>
+			<td>
+				No specific type.
+			</td>
+			<td>
+				<p>REG_DWORD_LITTLE_ENDIAN</p>
+				<p>REG_DWORD_BIG_ENDIAN</p>
+			</td>
+			<td>
+				A 32-bit number in little- or big- endian format (Windows is designed to run on little-endian platforms).
+			</td>
+		</tr>
+		<tr>
+			<td>
+				REG_SZ
+			</td>
+			<td>
+				A null-terminated string.
+			</td>
+			<td>
+				REG_LINK
+			</td>
+			<td>
+				Reserved for system use.
+			</td>
+		</tr>
+		<tr>
+			<td>
+				REG_EXPAND_SZ
+			</td>
+			<td>
+				A null-terminated string with some expandable expression like an environment variable.
+			</td>
+			<td>
+				REG_MULTI_SZ
+			</td>
+			<td>
+				A sequence of null-terminated strings, terminated by an empty, null-terminated string. 
+			</td>
+		</tr>
+		<tr>
+			<td>
+				REG_BINARY
+			</td>
+			<td>
+				Binary data in any form.
+			</td>
+			<td>
+				REG_RESOURCE_LIST*
+			</td>
+			<td>
+				Nested arrays that store a resource list used by a hardware device driver or one of the physical devices it controls.
+			</td>
+		</tr>
+		<tr>
+			<td>
+				REG_DWORD
+			</td>
+			<td>
+				A 32-bit number.
+			</td>
+			<td>
+				REG_RESOURCE_REQUIREMENTS_LIST*
+			</td>
+			<td>
+				A complex data type for hardware configuration.
+			</td>
+		</tr>
+		<tr>
+			<td>
+				REG_FULL_RESOURCE_DESCRIPTOR*
+			</td>
+			<td>
+				Nested arrays of binary data that store a resource list used by a physical hardware device.
+			</td>
+			<td>
+				<p>REG_QWORD</p>
+				<p>REG_QWORD_LITTLE_ENDIAN</p>
+			</td>
+			<td>
+				A 64-bit number.
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+* Keys of this type are not editable, but can be read.
+
+The third and final call in the example uses the read method; the advantage to calling the value this way is that it gives you the type of the key.  This is useful if you are iterating over a set of keys and you need to perform specific operations on keys that are DWORD keys but not REG_SZ keys.
+
+**Enumerating** You also have the option to enumerate values and subkeys (or sub "folders"), and in turn walk over the entire collection of values or a series of subkeys keys doing operations, storing or changing values, etc.  You can use the each_value or each_key method to enumerate values or keys, respectively.
+
+	reg.each_value { |name, type, data| puts name + " = " + data }
+	reg.each_key { |key, wtime| puts key + " :: " + wtime }
+
+The `each_value` method will iterate over each value in the current key and return its value, type, and name.  The above code should output something like "ValueName = MyValue"  for each value in the current key (e.g., if use with the previous code to open up the `CurrentVersion` key in the `Windows NT` key, you should see something "`BuildLab = 2600.xpsp_sp2_rtm.040803-2158`" for the first result).
+
+**Writing** Writing values to the registry is very similar to reading them.  The methods and their parameters are laid out very similarly.
+
+	reg['RevisionNumber'] = '1337'
+	reg['Name', Win32::Registry::REG_MULTI_SZ] = 'Mr.\0Neighborly\0\0'
+	reg.write('MyPath', Win32::Registry::REG_EXPAND_SZ, '%PATH%')
+
+The first call shown above will simply write the value `2600` to the value `RevisionNumber`; notice that much like when reading values, you can make the registry act like a hash.  The next call allows you to write a value with a specified type; like its read counterpart, it will throw a `TypeError` if it's the wrong type.  The last call is very similar to the read method demonstrated above; the first parameter is the value name you wish to set, the second parameter is the type, and the third is the value to assign to it.
+
+**Deleting** Deleting keys and values is as simple as calling a method; just hope you don't blow away something important on accident, because there's no undoing it!
+
+	reg.delete_value('MyVersion')
+	reg.delete_key('FavoriteCheese')
+	reg.delete_key('Ex-Wives', true)
+
+The first method, `delete_value`, will delete the value which you specify as the first parameter.  The second method shown, `delete_key`, will delete the key which you specify, and if the second, optional boolean parameter is provided, it will delete the key recursively (or not if you provide `false`).
+
+### OLE Automation
+
+OLE Automation (well, officially just "automation" but the OLE term has sort of stuck) is a nifty little mechanism that Windows and many Windows applications offer that allows you to automate their operation.  For example, Excel exposes an automation interface which allows you to launch, create new documents, edit documents, and so on.  These interfaces are built with scripting in mind, so often applications will provide a built-in way to tap into these interfaces (i.e. Visual Basic for Applications), but you can get to these interfaces with other clients also (e.g. C++ with COM, or, in our case, Ruby).
+
+**Automation Basics** Ruby's OLE automation interface is very, very simple compared to most other languages.  As an example, let's pop open Internet Explorer and navigate to the web page for this book.
+
+	require 'win32ole'
+
+	myie=WIN32OLE.new('InternetExplorer.Application')
+	myie.visible=true
+	myie.navigate("http://www.humblelittlerubybook.com")
+	myie.left = 0
+	myie['top'] = 0
+
+As you can, the code is very simple.  First you need to import the `win32ole` library using require.  Next, create a new `WIN32OLE` instance, feeding in the application interface you want to talk to (in this case it's Internet Explorer, so `InternetExplorer.Application`). Note that parameter may or may not always be `Whatever.Application`, but it usually is; you may need to consult the application's documentation to find out exactly what it is if you are having problems.  After that, you simply call methods on the interface (these should be outlined in the automation interface's documentation).  In our case, we make the IE window visible, tell it to navigate to our web page, and move the window to the upper left corner of the screen (i.e. set the `left` and `top` properties to `0`). Note that properties can be set using either attribute notation (i.e., `myie.left`) or hash notation (i.e., `myie['top']`); since both forms do the same thing, it's really a matter of preference as to which one you should use.
+
+**Automation Events** In addition to causing things to happen in an application, the `Win32OLE` class can also be used to be notified of what's going on in an application. This is done through an event sink mechanism that is exposed by the application and then consumed by your Ruby application.
+
+	require 'win32ole'
+
+	# Handler methods
+	def stop_msg_loop
+	puts "Application closed."  
+	throw :appclosed
+	end
+
+	def handler(event, *args)  
+	puts "Event fired! : #{event}"
+	end
+
+	# Main code
+	ie = WIN32OLE.new('InternetExplorer.Application')
+	ie.visible = TRUE
+	ie.gohome
+	sink = WIN32OLE_EVENT.new(ie, 'DWebBrowserEvents')
+
+	sink.on_event {|*args| handler(*args)}
+	sink.on_event("Quit") {|*args| stop_msg_loop}
+
+	catch(:appclosed) {
+	loop {
+	WIN32OLE_EVENT.message_loop
+	}
+	}
+
+To subscribe to events, you need to follow the general procedure for consuming an OLE interface: import the `win32ole` library, create a new `WIN32OLE` instance, and call methods and/or attributes.  The first new part of this code is the creation of a `WIN32OLE_EVENT` instance; the constructor for this class is given a `WIN32OLE` instance and the name of an event sink exposed by this interface (if the event sink doesn't exist, an error is thrown).  You can then hook into events using the `on_event` method, which is given a block as a parameter; this block is then in turn given the event's arguments.  You can use `on_event` in one of two ways.  The first is to give it a general handler, as in the first call to `on_event`; this handler becomes a sort of catch all for any events that don't have explicit handlers.  You can also give events explicit handlers, like the second call gives the the "`Quit`" event.  Note that right now there is no way to easily detach from an event, so our little "hack" to use catch to break out of the message loop seems to the be the easiest way to do it.
+
+**Windows Management Instrumentation** The `win32ole` library also allows you to use the Windows Management Instrumentation (WMI) since it's simply a COM interface.  WMI can be used for a number of administrative and management tasks, such as service management, process management, event watching, log auditing, and so on, on both local and remote machines.  For example, to get a list of the services on the local machine along with their descriptions and status, you would do something like the following.
+
+	require 'win32ole'
+
+	mywmi = WIN32OLE.connect("winmgmts:\\\\.")
+
+	mywmi.InstancesOf("Win32_Service").each do |s|
+	puts s.Caption + " : " + s.State
+	puts s.Description  
+	puts
+	end
+
+The `connect` method does basically the same thing as the `new` method, except the `connect` method hooks into an existing instance of an OLE server whereas the `new` method creates a new instance (i.e., WMI is already running as a server on your machine unless you disabled it, but for something like Word or Outlook a new, application-specific instance is needed).  In this case, we used the `InstancesOf` method that is exposed by WMI to get an array of the instances of the WMI class `Win32_Service`, which is simply a representation of an entry in the service list for your machine.  In our block we could have called methods such as `StopService` or `StartService` to control it or if there were processes we could use `Create` to start them, but for the sake of brevity (and the sanity of your machine), I opted to simply display the name, description, and status.  When you run this script, you should see output for each service that looks something like this:
+
+	Task Scheduler : Running
+
+	Enables a user to configure and schedule automated tasks on this computer. If this service is stopped, these tasks will not be run at their scheduled times. If this service is disabled, any services that explicitly depend on it will fail to start.
+
+You can also get lists of processes, computers, users, groups, and so on, but that is out of the scope of this book.  Look at the MSDN documentation for WMI linked in Appendix A for more on what information is exposed by WMI.
+
+The `win32ole` library also allows you to subscribe to WMI events; WMI events span the whole gamut of system-wide events such as file creation, process creation, service actions, log entries, and so on.  As an example, we'll watch for a process that we create to end.
+
+	require 'win32ole'
+
+	locator = WIN32OLE.new("WbemScripting.SWbemLocator.1")
+	service = locator.ConnectServer("./","","","")
+
+	proc = service.Get "Win32_Process"
+	rc = proc.Create('notepad.exe', nil, nil, nil)
+	processid = WIN32OLE::ARGV[3]
+	puts "New process id: #{processid}"
+
+	query = "select * from __InstanceDeletionEvent within 1 where targetinstance
+	isa 'WIN32_Process' and targetinstance.Handle = #{processid}"
+
+	event = service.ExecNotificationQuery(query)event.nextevent
+
+	puts "Process terminated."
+
+Because of the way the WMI operates, you can't use the built-in event mechanism in the win32ole library, but it's fairly simple to get this working nonetheless. First, create a new instance of the `WIN32OLE` class using the new method and point it at the server `Wbemscripting.SWbemLocator`. This OLE server is the basic equivalent of connecting like we did before (`winmgts://`), but using this in conjunction with the subsequent call to `ConnectServer` allows you to do two things.
+
+First, you can connect to remote computers, meaning you could use this code or similar snippets to do various tasks on a number of computers you may be managing. Second, you can provide login credentials as the last two parameters to this method.  None are needed on the local machine usually (unless you are not an administrator or privileged account), but if this were a remote machine call you would probably need a user name as the third parameter and the password as the fourth.  Next we use the WMI method to get a reference to the `Win32_Process` class and create an instance of it, passing in "`notepad.exe`" as the process to start.  Doing so creates a new Notepad instance (i.e., you should see Notepad pop up on your screen) and returns some data about it, which we use to get the process ID.
+
+Next, we use WQL (WMI Query Language) to tell WMI that we're going to be watching for processes to be destroyed that have the process handle (ID) of the process that we created; the WQL statement is executed using the `ExecNotificationQuery` method that is exposed by WMI.  This method returns an event notifier object, which we can call the `nexteven` method on; this method tells the current thread to pause until the next event is fired, so if you were to use this in an actual application that should continue running, this should be forked into its own thread.  Close Notepad and you should see the output "`Process terminated`";  this means that the next event has fired (i.e., the process has been deleted) and the current thread has been given control once again.  This is a fairly simplified example, but hopefully it should give you the basic concepts to translate more complicated examples from VBScript, C++, or C# into Ruby and make use of them.
+
+## This Chapter
+
+You learned about Ruby's system level interaction.  You learned...
+
+-	about Ruby's filesystem interaction capabilities.
+-	how to start threads and fork processes.
+-	how Ruby can interact with Microsoft Windows on a number of levels.
+
+---
