@@ -582,5 +582,5 @@ The pattern enclosed in the slashes is matched to the string using the `=~`; usi
 You learned about Ruby's object system and built-in classes. You learned...
 
 * that everything in Ruby is an object.
-* that the basic built-in classes in Ruby are the number (Fixnum and Bignum), the String, the Range, the Array, and the Hash.
+* that the basic built-in classes in Ruby are the number (`Fixnum` and `Bignum`), the `String`, the `Range`, the `Array`, and the `Hash`.
 * that setting a Ruby variable is actually setting a reference rather than a value, but can be set to values if needed.
