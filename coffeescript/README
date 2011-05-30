@@ -8,7 +8,6 @@ Alex MacCaw (info@eribium.org)
 2. General syntax, objects, arrays, flow control, functions, switch, string interpolation
 3. Classes, inheritance, super, context
 4. Using CoffeeScript with Stich, Express. Loading in templates.
-5. And maybe a chapter on CoffeeScript with Backbone/Spine
+5. And maybe a chapter on CoffeeScript with Backbone/Spine/Underscore/jQuery
 
 Jison
-jQuery
