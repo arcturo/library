@@ -42,13 +42,6 @@ How about specifying arguments? Well, CoffeeScript lets you do that by specifyin
 
     times = (a, b) -> a * b
 
-Which compiles to:
-
-    var times;
-    times = function(a, b) {
-      return a * b;
-    };
-
 CoffeeScript supports default arguments too, for example:
 
     times = (a = 1, b = 2) -> a * 2
@@ -60,7 +53,11 @@ You can also use splats to accept multiple arguments, denoted by `...`:
       nums.forEach (n) -> result += n
       result
 
-In the example above, `nums` is an array of all the arguments passed to the function. 
+In the example above, `nums` is an array of all the arguments passed to the function. It's not an `arguments` object, but rather a real array, so you don't need to concern yourself with `Array.prototype.splice` or `jQuery.makeArray()` if you want to manipulate it. 
+
+    trigger = (events...) ->
+      events.splice(1, 0, this)
+      this.parent.trigger.apply(events)
 
 ##Function invocation
 
@@ -95,7 +92,7 @@ The reason you might want to do this, is that callbacks from `addEventListener()
 
 This binding idea is a similar concept to jQuery's [`proxy()`](http://api.jquery.com/jQuery.proxy/) or [ES5's](https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Function/bind) `bind()` functions. 
 
-#Object literals & arrays
+#Object literals & array definition
 
 Object literals can be specified exactly as in JavaScript, with a pair of braces and key/value statements. However, like with function invocation, CoffeeScript makes the braces optional. In fact, you can also use indentation and new lines instead of comma separation.  
 
@@ -180,21 +177,78 @@ The solution is to use the strict equality operator, which consists of three equ
 
 #Loops and Comprehensions
 
-array loops
-object loops
-while
+Array iteration in JavaScript has a rather archaic syntax, reminiscent of an older language like C rather than a modern object orientated one. The introduction of ES5 improved that situation somewhat, with the `forEach()` function, but that still requires a function call every iteration and is therefore much slower. Again, CoffeeScript comes to the rescue, with a beautiful syntax:
+
+    for name in ["Roger", "Roderick", "Brian"]
+      alert "Release #{name}"
+      
+If you need the current iteration index, just pass an extra argument:
+      
+    for name, i in ["Roger the pickpocket", "Roderick the robber"]
+      alert "#{i} - Release #{name}"
+
+You can also iterate on one line, turning the `for` loop into a comprehension. 
+
+    release prisoner for prisoner in ["Roger", "Roderick", "Brian"]
+    
+As with Python comprehensions, you can filter them:
+
+    prisoners = ["Roger", "Roderick", "Brian"]
+    release prisoner for prisoner in prisoners when prisoner[0] is "R" 
+
+You can also use comprehensions for iterating over properties in objects. Instead of the `in` keyword, use `of`.
+
+    names = sam: seaborn, donna: moss
+    alert("#{first} #{last}") for first, last of names
+
+The only low level loop that CoffeeScript exposes is the `while` loop. This has similar behavior to the `while` loop in pure JavaScript, but has the added advantage that it returns an array of results, i.e. like the `Array.prototype.map()` function.
+
+    num = 6
+    minstrel = while num -= 1
+      num + " Brave Sir Robin ran away"
 
 #Arrays
 
-slicing 
-ranges
-in
-slicing strings
+CoffeeScript takes inspiration from Ruby when it comes to array slicing by using ranges. Ranges are created by two numerical values, the first and last positions in the range, separated by `..`. If a range isn't prefixed by anything, CoffeeScript expands it out into an array.
 
-#Aliases
+    range = [1..5]
+    
+If, however, the range is specified immediately after a variable, CoffeeScript converts it into a `splice()` function call. 
+    
+    firstTwo = ["one", "two", "three"][0..1]
+    
+In the example above, the range returns a new array, containing only the first two elements of the original array. You can also use the same syntax for replacing an array segment with another array.
 
-    @
+    numbers = [0..9]
+    numbers[3..5] = [-3, -4, -5]
 
-    ::
+What's neat, is that JavaScript allows you to call `splice()` on strings too, so you can use ranges with string to return a new subset of characters. 
+    
+    my = "my string"[0..2]
 
-#The Existential Operator
+Checking to see if a value exists inside an array is always a bore in JavaScript, particular as `indexOf()` doesn't yet have full cross-browser support (IE, I'm talking about you). CoffeeScript solves this with the `in` operator, for example.
+
+    words = ["rattled", "roudy", "rebbles", "ranks"]
+    alert "Stop wagging me" if "ranks" in words 
+
+#Aliases & the Existential Operator
+
+CoffeeScript includes some useful aliases to save some typing. One of which is `@`, which is an alias for `this`.
+
+    @.saviour = true
+    
+Another is `::`, which is an alias for `prototype`
+
+    User::first = -> @records[0]
+    
+Using `if` for `null` checks in JavaScript is common, but has a few pitfalls in that empty strings and zero are both coerced into `false`, which can catch you out. CoffeeScript existential operator `?` returns true unless a variable is `null` or `undefined`, similar to Ruby's `nil?`. 
+
+    praise if brian?
+    
+You can also use it in place of the `||` operator:
+
+    velocity = southern ? 40
+    
+If you're using a `null` check before calling a function, you can skip that by placing the existential operator right before the opening brackets. This is similar to Ruby's `try` method. 
+
+    blackKnight.getLegs?().kick()
