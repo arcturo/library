@@ -226,6 +226,63 @@ As you can see, you can test its validity in a certain format, and, using instan
 
 As you can see, comparing dates is just like comparing a standard numerical value or something similar; a date that comes before another date is judged to be "less than"; a date that comes after is judged to be "greater than." You can also use the `>>` and `<<` operator to add or subtract months (see the last two examples). Now that you have a familiarity with the `Date` class, let's move on to the `Time` class.
 
-#### Time
+#### Times
 
+The `Time` class is very similar in function to the `Date` class, except it concentrates on times and timestamps rather than simply dates. Much like the `Date` class, various constructors are available.
+
+    rightnow = Time.new
+    #=> Sun Sep 10 21:36:15 Eastern Daylight Time 2006
+    
+    Time.at(934934932)
+    #=> Tue Aug 17 20:08:52 Eastern Daylight Time 1999
+    
+    Time.local(2000,"jan",1,20,15,1)
+    #=> Sat Jan 01 20:15:01 Eastern Standard Time 2000
+    
+    Time.utc(2006, 05, 21, 5, 13)
+    #=> Sun May 21 05:13:00 UTC 2006
+    
+    Time.parse("Tue Jun 13 14:15:01 Eastern Standard Time 2005")
+    #=> Tue Jun 13 14:15:01 Eastern Daylight Time 2006
+
+As you can see, you can create a new `Time` object that holds the values for the current time and timezone by simply calling `new` (or optionally, `now`; they do the same thing). If you require a certain time, you can use `at`, which operates on epoch time (i.e., seconds from January 1st, 1970); you can also use the `utc` and `gm` methods to create times based on those timeszones and the provided parameters (or the `local` method to use the current local timezone). You can, just like `Date`, use the `parse` method to parse a timestamp into a `Time` object.
+
+The `Time` class also offers a few instance methods that allow you to get portions of the object's value, convert the value, and output the value in other formats.
+
+    rightnow = Time.new
+    #=> Sun Sep 10 21:42:30 Eastern Daylight Time 2006
+    
+    rightnow.hour
+    #=> 21
+    
+    rightnow.mon
+    #=> 9
+    
+    rightnow.day
+    #=> 10
+    
+    rightnow.to_i
+    #=> 1158543750
+    
+    rightnow.to_s
+    #=> Sun Sep 17 21:42:30 Eastern Daylight Time 2006
+
+As you can see, the methods for `Time` are very similar to `Date` with regards to getting portions of the value, and also notice that you can convert the `Time` objec to other classes, such as a `Fixnum`.
+
+Let's concentrate on one instance method for a moment; the `strftime` method is a very useful method that allows you output a timestamp in the format of your choice by providing you with a formatting interface. This interface acts very, very similarly to `printf` in C++; it uses delimiters like `%f` to indicate the placement of values in the output string. Here are a few examples:
+
+    rightnow = Time.now
+    
+    rightnow.strftime("%m/%d/%Y")
+    #=> 09/10/2006
+    rightnow.strftime("%I:%M%p")
+    #=> 09:13PM
+    rightnow.strftime("The %dth of %B in '%y")
+    #=> The 17th of September in '06
+    rightnow.strftime("%x")
+    #=> 09/17/06
+
+The `strftime` method is one of the most complex in the `Time` module; check out the `Time` class's documentation at [http://www.ruby-doc.org/core/classes/Time.html](http://www.ruby-doc.org/core/classes/Time.html) if you'd like more information about `strftime` and what you can do with it.
+
+#### Dates and Times
 
