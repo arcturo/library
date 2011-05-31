@@ -185,4 +185,47 @@ The `sub` method will only replace the first match for the pattern, but the `gsu
 
 ### Date/Time
 
+Have you ever found yourself in the deli, browsing the ham and other delectable meat products, and then realized that you left your calendar in Bermuda? That happened to me just last millenium, and let me tell you, I felt vulnerable. No calendar means, no days. No days means no nights, which means I could *die*. Fortunately, Ruby provided me with a fairly useful date and time library to use until I could get my half brother in law's pet monkey's trainer's dog to mail my calendar back yesterday.
+
+There are three date and time classes in the Ruby library: `Date`, `Time`, and `DateTime`. I heard a rumor that `Date` and `Time` hooked it up around version 1.4 and got `DateTime` about 9 months later, but then again, this source also told me that Rails was a gentlemen's club for Ruby programmers. 
+
+#### Dates
+
+The first class I'd like to cover is `Date`; this class simply exposes an interface to store, manipulate, and compare dates in a Ruby application.
+
+    mydate = Date.new(1999, 6, 4) #=> 1999-06-04
+    mydatejd = Date.jd(2451334) #=> 1999-06-04
+    mydateord = Date.ordinal(1999, 155) #=> 1999-06-04
+    mydatecom = Date.commercial(1999, 22, 5) #=> 1999-06-04
+    Date.jd_to_civil(2451334) #=> [1999,6,4]
+    Date.jd_to_civil(2451334) #=> [1999,6,4]
+    mydatep = Date.parse("1999-06-04") #=> 1999-06-04
+
+As you can see, creating a `Date` instance is rather simple in its literal form; simply call new (or the `civil` method; the two are synonyms), providing a date as the following parameters. This method uses the date form we usually see, but `Date` also supports other date forms. The `jd` method allows you to create a `Date` instance based on a Julian day number; the `ordinal` method creates a `Date` object based on a provided Ordinal date, or a date created providing the year and day number; `commercial` creates a Date object from the provided Commercial date, or a date created by providing the year, week number, and day number. Methods are provided to convert between these date forms also (e.g., `commercial_to_jd`, `jd_to_civil`, and so on). These all work well enough, but notice the last example using the `parse` method; this allows you to parse strings into `Date` objects. I find this is the most intuitive way of creating `Date` objects second to using the new method.
+
+You can also test input with various class methods, and, once you have a `Date` object, get all sorts of information from it with a few instance methods. 
+
+    Date.valid_jd?(3829) #=> 3829
+    Date.valid_civil?(1999, 13, 43) #=> nil
+    mydate.mon #=> 6
+    mydate.yday #=> 155
+    mydate.day #=> 4
+
+As you can see, you can test its validity in a certain format, and, using instance methods, convert between the different formats. You can also get various components of the date, such as the year day (`yday`), month (`mon`), and so on. You can also compare and manipulate dates using standard operators.
+
+    date1 = Date.new(1985, 3, 18)
+    date2 = Date.new(1985, 5, 5)
+    
+    date1 < date2 #=> true
+    date1 == date2 #=> false
+    date3 = date1
+    date1 == date3 #=> true
+    
+    date1 << 3 #=> 1984-12-18
+    date2 >> 5 #=> 1985-10-05
+
+As you can see, comparing dates is just like comparing a standard numerical value or something similar; a date that comes before another date is judged to be "less than"; a date that comes after is judged to be "greater than." You can also use the `>>` and `<<` operator to add or subtract months (see the last two examples). Now that you have a familiarity with the `Date` class, let's move on to the `Time` class.
+
+#### Time
+
 
