@@ -11,7 +11,7 @@ def generate(source, template = "site/page.ms")
 end
 
 task :generate do
-  pages = Dir["txt/*.md"].inject([]) do |array, src|
+  pages = Dir["chapters/*.md"].inject([]) do |array, src|
     array << ({
       :src    => src,
       :static => File.basename(src, ".md") + ".html",
