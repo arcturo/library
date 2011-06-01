@@ -1,0 +1,38 @@
+require "rdiscount"
+require "mustache"
+require "active_support/core_ext/string"
+require "fileutils"
+
+def generate(source, template = "site/page.ms")
+  Mustache.render(
+    File.read(template), 
+    :content => RDiscount.new(source).to_html
+  )
+end
+
+task :generate do
+  pages = Dir["txt/*.md"].inject([]) do |array, src|
+    array << ({
+      :src    => src,
+      :static => File.basename(src, ".md") + ".html",
+      :name   => File.basename(src, ".md").gsub(/\d+_/, "").titleize,
+      :href   => File.basename(src, ".md") + ".html"
+    })
+    array
+  end
+  
+  pages.each do |page|
+    File.open(page[:static], "w+") do |f|
+      f.write generate(File.read(page[:src]))
+    end
+  end
+  
+  File.open("index.html", "w+") do |f|
+    f.write(Mustache.render(
+      File.read("site/index.ms"), 
+      :pages => pages
+    ))
+  end  
+end
+
+task :default => :generate

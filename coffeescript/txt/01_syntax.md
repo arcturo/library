@@ -1,3 +1,7 @@
+<div class="back"><a href="index.html">&laquo; Back to all chapters</a></div>
+
+#CoffeeScript Syntax
+
 2. General syntax, objects, arrays, flow control, functions, switch, string interpolation
 
 No semicolons
@@ -5,7 +9,7 @@ Comments
 Whitespace - no superset
 Compiler written in coffeeScript
 
-#Variables & Scope
+##Variables & Scope
 
 CoffeeScript fixes one of the major bugbears with JavaScript, global variables. In JavaScript, it's all too easy to accidentally declare a global variable by forgetting to declare `var` before the variable assignment. CoffeeScript solves this by simply removing global variables. Behind the scenes, CoffeeScript wraps up scripts with a anonymous function, keeping the local context, and automatically prefixes all variable assignments with `var`. For example, take this simple variable assignment in CoffeeScript:
 
@@ -20,7 +24,7 @@ However, sometimes it's useful to create global variables. You can either do thi
     
 In the root context, `this` is equal to the `window` object, and by creating a local `exports` variable you're making it really obvious to anyone reading your code exactly which global variables a script is creating. Additionally, it paves the way for CommonJS modules, which we're going to cover later in the book. 
 
-#Functions
+##Functions
 
 CoffeeScript removes the rather verbose `function` statement, and replaces it with an thin arrow: `->`. Functions can be one liners, or indented on multiple lines. The last expression in the function is implicitly returned. In other words, you don't need to use the `return` statement unless you want to return earlier inside the function. 
     
@@ -36,7 +40,7 @@ As mentioned earlier, there's no reason why the we can't use multiple lines, as 
       # An extra line
       "bar"
       
-##Function arguments
+###Function arguments
 
 How about specifying arguments? Well, CoffeeScript lets you do that by specifying arguments in a pair of rounded brackets before the arrow.
 
@@ -59,7 +63,7 @@ In the example above, `nums` is an array of all the arguments passed to the func
       events.splice(1, 0, this)
       this.parent.trigger.apply(events)
 
-##Function invocation
+###Function invocation
 
 Functions can be invoked exactly as in JavaScript, with brackets `()`, `apply()` or `call()`. However, like Ruby, CoffeeScript will automatically call functions if they are invoked with at least one argument.
 
@@ -79,7 +83,7 @@ Although parenthesis is optional, I'd recommend using it if it's not immediately
 
 If you don't pass any arguments with an invocation, CoffeeScript has no way of working out if you intend to invoke the function, or just treat it like a variable. In this respect, CoffeeScript's behavior differs from Ruby which always invokes references to functions, and more similar to Python's. This has been the source of a few errors in my CoffeeScript programs, so it's worth keeping an eye out for cases where you intend to call a function without any arguments, and include parenthesis.
 
-##Function context
+###Function context
 
 Context changes are rife within JavaScript, especially with event callbacks, so CoffeeScript provides a few helpers to manage this. One such helper is a variation on `->`, the fat arrow function: `=>`
 
@@ -92,7 +96,7 @@ The reason you might want to do this, is that callbacks from `addEventListener()
 
 This binding idea is a similar concept to jQuery's [`proxy()`](http://api.jquery.com/jQuery.proxy/) or [ES5's](https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Function/bind) `bind()` functions. 
 
-#Object literals & array definition
+##Object literals & array definition
 
 Object literals can be specified exactly as in JavaScript, with a pair of braces and key/value statements. However, like with function invocation, CoffeeScript makes the braces optional. In fact, you can also use indentation and new lines instead of comma separation.  
 
@@ -122,7 +126,7 @@ Likewise, arrays can use whitespace instead of comma separators, although the sq
     
 As you can see in the example above, CoffeeScript has also stripped the trailing comma in `array3`, another common source of cross-browser errors. 
 
-#Flow control
+##Flow control
 
 The convention of optional parentheses continues with CoffeeScript's `if` and `else` keywords.
 
@@ -175,7 +179,7 @@ The solution is to use the strict equality operator, which consists of three equ
 
     if 10 == "+10" then "type coercion fail"
 
-#Loops and Comprehensions
+##Loops and Comprehensions
 
 Array iteration in JavaScript has a rather archaic syntax, reminiscent of an older language like C rather than a modern object orientated one. The introduction of ES5 improved that situation somewhat, with the `forEach()` function, but that still requires a function call every iteration and is therefore much slower. Again, CoffeeScript comes to the rescue, with a beautiful syntax:
 
@@ -207,7 +211,7 @@ The only low level loop that CoffeeScript exposes is the `while` loop. This has 
     minstrel = while num -= 1
       num + " Brave Sir Robin ran away"
 
-#Arrays
+##Arrays
 
 CoffeeScript takes inspiration from Ruby when it comes to array slicing by using ranges. Ranges are created by two numerical values, the first and last positions in the range, separated by `..`. If a range isn't prefixed by anything, CoffeeScript expands it out into an array.
 
@@ -231,7 +235,7 @@ Checking to see if a value exists inside an array is always a bore in JavaScript
     words = ["rattled", "roudy", "rebbles", "ranks"]
     alert "Stop wagging me" if "ranks" in words 
 
-#Aliases & the Existential Operator
+##Aliases & the Existential Operator
 
 CoffeeScript includes some useful aliases to save some typing. One of which is `@`, which is an alias for `this`.
 
@@ -251,4 +255,4 @@ You can also use it in place of the `||` operator:
     
 If you're using a `null` check before calling a function, you can skip that by placing the existential operator right before the opening brackets. This is similar to Ruby's `try` method. 
 
-    blackKnight.getLegs?().kick()
+    blackKnight.getLegs()?.kick()

@@ -12,11 +12,13 @@ So first to get some common fallacies out the way. You will need to know JavaScr
 
 CoffeeScript is not limited to the browser, and can be used to great effect in server side JavaScript implementations, such as [Node.js](http://nodejs.org/).   Additionally, CoffeeScript is getting much wider use and integration, such as being a default in Rails 3.1. Now is definitely the time to jump on the CoffeeScript train, and you'll thank yourself for the time invested in learning about the language now, in lieu of the major time savings you'll make later. 
 
-#Initial setup
+##Initial setup
 
 One of the easiest ways to initially play around with the library is to use it right inside the browser; navigate to [http://jashkenas.github.com/coffee-script](http://jashkenas.github.com/coffee-script) and click on the *Try CoffeeScript* tab. The site uses a browser version of the CoffeeScript compiler, converting any CoffeeScript typed inside the left panel, to JavaScript in the right panel.
 
 In fact you can use browser based compiler yourself, by including [this script](http://jashkenas.github.com/coffee-script/extras/coffee-script.js) in a page, marking up any CoffeeScript script tags with the correct `type`.
+
+<span class="noconvert"></span>
 
     <script src="http://jashkenas.github.com/coffee-script/extras/coffee-script.js" type="text/javascript" charset="utf-8"></script>
     <script type="text/coffeescript">
@@ -27,9 +29,13 @@ Obviously, in production, you don't want to be interpreting CoffeeScript at runt
 
 To install it, first make sure you have a working copy of the latest stable version of [Node.js](http://nodejs.org), and [npm](http://npmjs.org/) (the Node Package Manager). You can then install CoffeeScript with npm:
 
+<span class="noconvert"></span>
+
     npm install coffee-script
     
 This will give you a `coffee` executable. If you execute it without any command line options, it'll give you the CoffeeScript console, which you can use to quickly execute CoffeeScript statements. To pre-process files, pass the `--compile` option.
+
+<span class="noconvert"></span>
 
     coffee --compile my-script.coffee
     
