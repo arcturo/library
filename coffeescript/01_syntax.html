@@ -19,15 +19,29 @@
 
 <h1>CoffeeScript Syntax</h1>
 
-<ol>
-<li>General syntax, objects, arrays, flow control, functions, switch, string interpolation</li>
-</ol>
+<p>Firstly, before we get any further into this section, I want to reiterate that while CoffeeScript's syntax is often identical with JavaScript's, it's not a superset, and therefore some JavaScript keywords, such as <code>function()</code> and <code>var</code> aren't permitted, and will throw syntax errors. If you're writing a CoffeeScript file, it needs to be pure CoffeeScript; you can't intermingle the two languages.</p>
 
+<p>Why isn't CoffeeScript a superset? Well, the very fact that whitespace is significant in CoffeeScript programs prevents it being a superset. And, once that's decision's been made, the team decided you might as well go the full hog and deprecate some JavaScript keywords and features in the name of simplicity and in an effort to reduce many commonly occurring bugs.</p>
 
-<p>No semicolons
-Comments
-Whitespace - no superset
-Compiler written in coffeeScript</p>
+<p>What I find mind-blowing, in a meta sort of way, is that the CoffeeScript interpreter itself is actually written in CoffeeScript. It looks like the chicken or egg paradox has finally been solved!</p>
+
+<p>Right, so firstly let's tackle the basic stuff. There's no semicolons in CoffeeScript, it'll add them automatically for you upon compilation. Semicolons were the cause of much debate in the JavaScript community, and behind some weird interpreter <a href="http://bonsaiden.github.com/JavaScript-Garden/#core.semicolon">behavior</a>. Anyway, CoffeeScript resolves this problem for you by simply removing semi-colons from its syntax, adding them as needed behind the scenes.</p>
+
+<p>Comments are in the same format as Ruby comments, starting with a hash character.</p>
+
+<p><span class="noconvert"></span></p>
+
+<pre><code># A comment
+</code></pre>
+
+<p>Multiline comments are also supported, and are brought forward to the generated JavaScript. They're prefixed by three hash characters.</p>
+
+<pre><code>###
+  A multiline comment, perhaps a LICENSE.
+###
+</code></pre>
+
+<p>As I briefly alluded to, whitespace is significant in CoffeeScript. In practice, this means that you can replace TODO <code>{}</code> with a tab. This takes inspiration from Python's syntax, and has the excellent side-effect of ensuring that your script is formatted in a sane manner, otherwise it won't run!</p>
 
 <h2>Variables &amp; Scope</h2>
 
@@ -218,6 +232,19 @@ null         ==   undefined     // true
 
 <pre><code>if 10 == "+10" then "type coercion fail"
 </code></pre>
+
+<h2>String interpolation</h2>
+
+<p>CoffeeScript brings Ruby style string interpolation to JavaScript. Double quotes strings can contain <code>#{}</code> tags, which contain a variable to be interpolated into the string.</p>
+
+<pre><code>favourite_color = "Blue. No, yel..."
+question = "Bridgekeeper: What... is your favourite colour?
+            Galahad: #{favourite_color}
+            Bridgekeeper: Wrong!
+            "
+</code></pre>
+
+<p>As you can see in the example above, multiline strings are also allowed, without having to prefix each line with a <code>+</code>:</p>
 
 <h2>Loops and Comprehensions</h2>
 

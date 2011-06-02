@@ -2,12 +2,27 @@
 
 #CoffeeScript Syntax
 
-2. General syntax, objects, arrays, flow control, functions, switch, string interpolation
+Firstly, before we get any further into this section, I want to reiterate that while CoffeeScript's syntax is often identical with JavaScript's, it's not a superset, and therefore some JavaScript keywords, such as `function()` and `var` aren't permitted, and will throw syntax errors. If you're writing a CoffeeScript file, it needs to be pure CoffeeScript; you can't intermingle the two languages. 
 
-No semicolons
-Comments
-Whitespace - no superset
-Compiler written in coffeeScript
+Why isn't CoffeeScript a superset? Well, the very fact that whitespace is significant in CoffeeScript programs prevents it being a superset. And, once that's decision's been made, the team decided you might as well go the full hog and deprecate some JavaScript keywords and features in the name of simplicity and in an effort to reduce many commonly occurring bugs. 
+
+What I find mind-blowing, in a meta sort of way, is that the CoffeeScript interpreter itself is actually written in CoffeeScript. It looks like the chicken or egg paradox has finally been solved!
+
+Right, so firstly let's tackle the basic stuff. There's no semicolons in CoffeeScript, it'll add them automatically for you upon compilation. Semicolons were the cause of much debate in the JavaScript community, and behind some weird interpreter [behavior](http://bonsaiden.github.com/JavaScript-Garden/#core.semicolon). Anyway, CoffeeScript resolves this problem for you by simply removing semi-colons from its syntax, adding them as needed behind the scenes.
+
+Comments are in the same format as Ruby comments, starting with a hash character. 
+
+<span class="noconvert"></span>
+
+    # A comment
+    
+Multiline comments are also supported, and are brought forward to the generated JavaScript. They're prefixed by three hash characters.
+
+    ###
+      A multiline comment, perhaps a LICENSE.
+    ###
+
+As I briefly alluded to, whitespace is significant in CoffeeScript. In practice, this means that you can replace TODO `{}` with a tab. This takes inspiration from Python's syntax, and has the excellent side-effect of ensuring that your script is formatted in a sane manner, otherwise it won't run!
 
 ##Variables & Scope
 
@@ -178,6 +193,18 @@ The example below is taken from [JavaScript Garden's equality section](http://bo
 The solution is to use the strict equality operator, which consists of three equal signs: `===`. It works exactly like the normal equality operator, but without any type coercion. It's recommended to always use the strict equality operator, and explicitly convert types if needs be. As mentioned earlier, this is the default in CoffeeScript, with any weak equality operators being converted into strict ones. 
 
     if 10 == "+10" then "type coercion fail"
+    
+##String interpolation
+
+CoffeeScript brings Ruby style string interpolation to JavaScript. Double quotes strings can contain `#{}` tags, which contain a variable to be interpolated into the string. 
+
+    favourite_color = "Blue. No, yel..."
+    question = "Bridgekeeper: What... is your favourite colour?
+                Galahad: #{favourite_color}
+                Bridgekeeper: Wrong!
+                "
+
+As you can see in the example above, multiline strings are also allowed, without having to prefix each line with a `+`:
 
 ##Loops and Comprehensions
 
