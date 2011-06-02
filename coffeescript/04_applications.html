@@ -19,12 +19,105 @@
 
 <h1>Creating Applications</h1>
 
+<p>intro</p>
+
+<h2>Structure &amp; CommonJS</h2>
+
+<h2>Stitch it up</h2>
+
+<h2>JavaScript templates</h2>
+
 <p>Stitch</p>
 
 <p>eco
 tmpl</p>
 
 <p>Backbone/Spine</p>
+
+<p><span class="noconvert"></span></p>
+
+<pre><code>app/controllers
+app/views
+app/models
+app/lib
+lib
+public
+public/index.html
+public/css
+public/css/views
+</code></pre>
+
+<p><span class="noconvert"></span></p>
+
+<pre><code>npm install stitch
+</code></pre>
+
+<p><span class="noconvert"></span></p>
+
+<pre><code>#!/usr/bin/env node
+var stitch  = require('stitch'),
+    express = require('express'),
+    util    = require('util'),
+    argv    = process.argv.slice(2);
+
+var package = stitch.createPackage({
+  paths: [__dirname + '/lib', __dirname + '/app'],
+  dependencies: [
+    __dirname + '/lib/json2.js',
+    __dirname + '/lib/shim.js',
+    __dirname + '/lib/jquery.js',
+    __dirname + '/lib/jquery.tmpl.js',
+    __dirname + '/lib/spine.tmpl.js',
+    __dirname + '/lib/spine.js'
+  ]
+});
+
+var app = express.createServer();
+
+app.configure(function() {
+  app.set('views', __dirname + '/views');
+  app.use(express.compiler({ src: __dirname + '/public', enable: ['less'] }));
+  app.use(app.router);
+  app.use(express.static(__dirname + '/public'));
+  app.get('/application.js', package.createServer());
+});
+
+var port = argv[0] || 9294;
+util.puts("Starting server on port: " + port);
+app.listen(port);
+</code></pre>
+
+<p><span class="noconvert"></span></p>
+
+<pre><code>stitch.compilers.tmpl = function(module, filename) {
+  var content = fs.readFileSync(filename, 'utf8');
+  content = ["var template = jQuery.template(", JSON.stringify(content), ");", 
+             "module.exports = (function(data){ return jQuery.tmpl(template, data); });\n"].join("");
+  return module._compile(content, filename);
+};
+</code></pre>
+
+<p><span class="noconvert"></span></p>
+
+<pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+  &lt;meta charset=utf-8&gt;
+  &lt;title&gt;Application&lt;/title&gt;
+  &lt;link rel="stylesheet" href="/css/application.css" type="text/css" charset="utf-8"&gt;
+  &lt;script src="/application.js" type="text/javascript" charset="utf-8"&gt;&lt;/script&gt;
+  &lt;script type="text/javascript" charset="utf-8"&gt;
+    var exports = this;
+    jQuery(function(){
+      var App = require("app");
+      exports.App = App.init({el: $("body")});      
+    });
+  &lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
 </div>
 </body>
 </html>
