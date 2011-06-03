@@ -25,6 +25,72 @@
 
 <h1>Classes</h1>
 
+<p>Classes in JavaScript seem to have the kind of effect that a clove of garlic has to Dracula for some purists; although let's be honest, if you're that way inclined, you're unlikely to be reading a book on CoffeeScript. However, it turns out that they're just as damn useful in JavaScript as they are in other languages and CoffeeScript provides a great class abstraction.</p>
+
+<p>As they're not available natively in JavaScript, CoffeeScript emulates classes behind the scenes, handling things like instantiation and inheritance. All that's exposed to you, as a developer, is the <code>class</code> keyword.</p>
+
+<pre><code>class Animal
+</code></pre>
+
+<p>In the example above, <code>Animal</code> is the name of the class, and also the name of the resultant variable that you can use to create instances. Since, behind the scenes, CoffeeScript is using construction functions you can instantiate classes using the <code>new</code> keyword.</p>
+
+<pre><code>animal = new Animal
+</code></pre>
+
+<p>Defining constructors (functions that get invoked upon instantiation) is simple, just use a function named <code>constructor</code>. This is akin to using's Ruby's <code>initialize</code> or Python's <code>__init__</code>.</p>
+
+<pre><code>class Animal
+  constructor: (name) -&gt;
+    @name = name
+</code></pre>
+
+<p>In fact, CoffeeScript provides a shorthand for the common pattern of setting instance properties. By prefixing argument's with <code>@</code>, CoffeeScript will automatically set the arguments as instance properties in the constructor. Indeed, this shorthand will also work for normal functions outside classes.</p>
+
+<pre><code>class Animal
+  constructor: (@name) -&gt;
+</code></pre>
+
+<p>As you'd expect, any arguments passed on instantiation are proxied to the constructor.</p>
+
+<pre><code>animal = new Animal("Parrot")
+alert("Animal is a #{animal.name}")
+</code></pre>
+
+<h2>Instance properties</h2>
+
+<p>binding this</p>
+
+<h2>Static properties</h2>
+
+<p>Inside of a class definition, "this" refers to the class object. So, in brief:</p>
+
+<p>Don't get inherited</p>
+
+<h2>Inheritance</h2>
+
+<pre><code>class Parrot
+  constructor: -&gt;
+    super("Parrot")
+
+  alive: -&gt;
+    false
+
+  dead: -&gt;
+    not @alive()
+</code></pre>
+
+<h2>Super</h2>
+
+<h2>Mixins</h2>
+
+<pre><code>extend = (obj, mixin) -&gt;
+  for name, method of mixin
+    obj[name] = method
+
+include = (klass, mixin) -&gt;
+  extend klass.prototype, mixin
+</code></pre>
+
   </div>
 </div>
 </body>
