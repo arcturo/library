@@ -16,7 +16,7 @@
 <body>
 <div id="container">
   <header>
-    <h1><a href="index.html">CoffeeScript</a></h1>
+    <h1><a href="index.html">The Little Book on CoffeeScript</a></h1>
   </header>
   
   <div id="content">
