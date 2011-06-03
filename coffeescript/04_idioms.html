@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset=utf-8>
+<title>CoffeeScript</title>
+<link rel="stylesheet" href="site/site.css" type="text/css" charset="utf-8">
+<link rel="stylesheet" href="site/highlight.css" type="text/css" charset="utf-8">
+<script src="site/jquery.js" type="text/javascript" charset="utf-8"></script>      
+<script src="site/highlight.js" type="text/javascript" charset="utf-8"></script>
+<script src="site/coffee-script.js" type="text/javascript" charset="utf-8"></script>
+<script src="site/preview.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript" charset="utf-8">
+  hljs.initHighlightingOnLoad();
+</script>
+</head>
+<body>
+<div id="container">
+  <header>
+    <h1><a href="index.html">CoffeeScript</a></h1>
+  </header>
+  
+  <div id="content">
+    <h2>Each</h2>
+
+<p>JS:</p>
+
+<p><span class="noconvert"></span></p>
+
+<pre><code>array.forEach(function(item, i){
+  myFunction(item)
+});
+
+for (var i=0; i &lt; array.length; i++)
+  myFunction(array[i]);
+</code></pre>
+
+<p>CS:</p>
+
+<pre><code>myFunction(item) for item in array
+
+array.forEach (item) -&gt; myFunction(item)
+</code></pre>
+
+<h2>Map</h2>
+
+<p>JS:</p>
+
+<p><span class="noconvert"></span></p>
+
+<pre><code>var result = array.map(function(item, i){
+  return item.name;
+});
+</code></pre>
+
+<p>CS:</p>
+
+<pre><code>result = (item.name for item in array)
+</code></pre>
+
+<h2>Select</h2>
+
+<p>JS:</p>
+
+<p><span class="noconvert"></span></p>
+
+<pre><code>result = array.filter(function(item, i){
+  return item.name == "test"
+});
+</code></pre>
+
+<p>CS</p>
+
+<pre><code>result = (myFunction(item) for item in array when item.name is "test")
+
+passed = []
+failed = []
+(if score &gt; 60 then passed else failed).push score for score in [49, 58, 76, 82, 88, 90]
+
+passed = (score for score in scores when score &gt; 60)
+</code></pre>
+
+<h2>Reduce</h2>
+
+<pre><code>[1..1000].reduce (t, s) -&gt; t + s
+</code></pre>
+
+<h2>Includes</h2>
+
+<p>JS:</p>
+
+<p><span class="noconvert"></span></p>
+
+<pre><code>var included = (array.indexOf("test") != -1)
+</code></pre>
+
+<p>CS:</p>
+
+<pre><code>included = "test" in array
+
+included = ~"a long test string".indexOf "test"
+</code></pre>
+
+<h2>Min/Max</h2>
+
+<pre><code>Math.max.apply Math, [14, 35, -7, 46, 98] # 98
+Math.min.apply Math, [14, 35, -7, 46, 98]
+</code></pre>
+
+<h2>jQuery</h2>
+
+<pre><code>jQuery ($) -&gt;
+
+
+someObject = { a: 'value for a', b: 'value for b' }
+{ a, b } = someObject
+console.log "a is '#{a}', b is '#{b}'"
+</code></pre>
+
+<blockquote><p>CoffeeScript uses a straight source-to-source compiler. No type checking is performed, and we can't work out if a variable even exists or not. This means that we can't implement features that other languages can build in natively without costly runtime checks. As a result, any feature which relies on this kind of analysis won't be considered.</p></blockquote>
+
+<p>Use <code>or</code> instead of ||
+Use <code>and</code> instead of &amp;&amp;</p>
+
+<pre><code>if @attributes then makeArray(@attributes)    # Multi-line if/elses should probably use indentation.
+else @attributes = []
+
+for key, value of obj    # Again, you can use a `when` if you like.
+  unless key in moduleKeywords 
+    @::[key] = value
+
+for key, value of obj when key not in moduleKeywords 
+    @::[key] = value
+
+return if typeof console is "undefined"
+
+for name in evs
+  @_callbacks[name] ?= []
+  @_callbacks[name].push(callback)
+
+for name in evs
+  @_callbacks[name] or= []
+  @_callbacks[name].push(callback)
+
+
+unless typeof exports is "undefined"    # `unless ... else` reads poorly in English. Better to stick to `if ... else`.
+  Spine = exports
+else
+  Spine = @Spine = {}
+
+if typeof exports is not "undefined"    # `unless ... else` reads poorly in English. Better to stick to `if ... else`.
+  Spine = exports
+else
+  Spine = @Spine = {}
+</code></pre>
+
+  </div>
+</div>
+</body>
+</html>

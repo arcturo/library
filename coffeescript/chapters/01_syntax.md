@@ -266,7 +266,7 @@ Checking to see if a value exists inside an array is always a bore in JavaScript
 
 CoffeeScript includes some useful aliases to save some typing. One of which is `@`, which is an alias for `this`.
 
-    @.saviour = true
+    @saviour = true
     
 Another is `::`, which is an alias for `prototype`
 

@@ -3,7 +3,7 @@ body {
   font-size: 15px;
   line-height: 22px;
   color: #252519;
-  margin: 0 30px; padding: 0;
+  margin: 0; padding: 0;
 }
 
 a {
@@ -59,9 +59,26 @@ ul {
   list-style-position: inside;
 }
 
-#container {
-  width: 625px;
-  margin: 40px 0 50px 40px;
+header {
+  display: block;
+  padding: 8px 50px;
+  background: ghostWhite;
+  border-bottom: 1px solid #DDD;
+}
+
+header h1 {
+  border: 0;
+  margin: 0;
+  font-size: 20px;
+}
+
+header h1 a {
+  text-decoration: none;
+}
+
+#content {
+  margin: 0 0 50px 50px;
+  max-width: 625px;
 }
 
 .back {
@@ -69,7 +86,7 @@ ul {
   margin: 10px 5px 0 0;
 }
 
-#container .wrap {
+#content .wrap {
   overflow: hidden;
   width: 650px;
   border: 1px solid #e5e5ee;  
@@ -77,7 +94,7 @@ ul {
   background: ghostWhite;
 }
 
-#container .wrap pre {
+#content .wrap pre {
   border: 0;
   margin: 0;
   width: 48%;
@@ -85,6 +102,22 @@ ul {
   padding: 5px;
 }
 
-#container .wrap pre:last-child {
+#content .wrap pre:last-child {
   border-left: 1px solid #e5e5ee;
+}
+
+.pages {
+  margin: 2em 0 0 0; 
+  padding: 0;
+}
+
+.pages li {
+  border-bottom: 1px solid #EEE;
+  line-height: 1.7em;
+  margin: 15px 0px 3px;
+  list-style-position: inside;
+}
+
+.pages li a {
+  text-decoration: none;
 }

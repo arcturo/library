@@ -14,7 +14,13 @@
 </script>
 </head>
 <body>
-<div id="container"><div class="back"><a href="index.html">&laquo; Back to all chapters</a></div>
+<div id="container">
+  <header>
+    <h1><a href="index.html">CoffeeScript</a></h1>
+  </header>
+  
+  <div id="content">
+    <div class="back"><a href="index.html">&laquo; Back to all chapters</a></div>
 
 
 <h1>CoffeeScript Syntax</h1>
@@ -317,7 +323,7 @@ alert "Stop wagging me" if "ranks" in words
 
 <p>CoffeeScript includes some useful aliases to save some typing. One of which is <code>@</code>, which is an alias for <code>this</code>.</p>
 
-<pre><code>@.saviour = true
+<pre><code>@saviour = true
 </code></pre>
 
 <p>Another is <code>::</code>, which is an alias for <code>prototype</code></p>
@@ -339,6 +345,8 @@ alert "Stop wagging me" if "ranks" in words
 
 <pre><code>blackKnight.getLegs()?.kick()
 </code></pre>
+
+  </div>
 </div>
 </body>
 </html>

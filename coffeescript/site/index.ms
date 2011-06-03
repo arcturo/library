@@ -8,13 +8,17 @@
 </head>
 <body>
 <div id="container">
-  <h1>CoffeeScript</h1>
+  <header>
+    <h1><a href="index.html">CoffeeScript</a></h1>
+  </header>
   
-  <ol class="pages">
-  {{#pages}}
-    <li><a href="{{href}}">{{name}}</a></li>
-  {{/pages}}
-  </ol>
+  <div id="content">
+    <ol class="pages">
+    {{#pages}}
+      <li><a href="{{href}}">{{name}}</a></li>
+    {{/pages}}
+    </ol>
+  </div>
 </div>
 </body>
 </html>

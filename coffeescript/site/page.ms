@@ -14,6 +14,14 @@
 </script>
 </head>
 <body>
-<div id="container">{{&content}}</div>
+<div id="container">
+  <header>
+    <h1><a href="index.html">CoffeeScript</a></h1>
+  </header>
+  
+  <div id="content">
+    {{&content}}
+  </div>
+</div>
 </body>
 </html>
