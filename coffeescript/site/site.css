@@ -46,11 +46,12 @@ pre, code {
 }
 
 pre {
-  width: 650px;
+  width: 610px;
   overflow: auto;
   border: 1px solid #e5e5ee;  
   margin: 0 0 15px 0;
   background: ghostWhite;
+  padding: 5px;
 }
 
 ul {
@@ -87,23 +88,22 @@ header h1 a {
 }
 
 #content .wrap {
-  overflow: hidden;
-  width: 650px;
-  border: 1px solid #e5e5ee;  
-  margin: 0 0 15px 0;
-  background: ghostWhite;
+  width: 625px;
+  position: relative;
 }
 
 #content .wrap pre {
-  border: 0;
-  margin: 0;
-  width: 48%;
-  float: left;
-  padding: 5px;
+  width: auto;
 }
 
-#content .wrap pre:last-child {
-  border-left: 1px solid #e5e5ee;
+#content .wrap .handle {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  width: 15px;
+  height: 15px;
+  background: #BFBDC9;
+  cursor: pointer;
 }
 
 .pages {
