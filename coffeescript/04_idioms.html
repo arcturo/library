@@ -25,9 +25,11 @@
 
 <h1>Common CoffeeScript idioms</h1>
 
+<p>Every language has a set of idioms and conventions, and CoffeeScript is no exception. This chapter will explore those conventions, and show you some JavaScript to CoffeeScript caparisons so you can get a practical sense of the language.</p>
+
 <h2>Each</h2>
 
-<p>JS:</p>
+<p>In JavaScript to iterate over every item in an array, we could either use the newly added <a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/array/foreach"><code>forEach()</code></a> function, or an old C style <code>for</code> loop. If you're planning to use some of JavaScript's latest features in ECMAScript 5, I advise you also include a <a href="https://github.com/kriskowal/es5-shim">shim</a> in the page to emulate support in older browsers.</p>
 
 <pre><code>array.forEach(function(item, i){
   myFunction(item)
@@ -37,14 +39,14 @@ for (var i=0; i &lt; array.length; i++)
   myFunction(array[i]);
 </code></pre>
 
-<p>CS:</p>
+<p>Although the <code>forEach()</code> syntax is much more succinct and readable, it suffers from the drawback that the callback function will be invoked every iteration of the array, and is therefore much slower than the equivalent <code>for</code> loop. Let's see how it looks in CoffeeScript.</p>
 
 <p><span class="csscript"></span></p>
 
 <pre><code>myFunction(item) for item in array
-
-array.forEach (item) -&gt; myFunction(item)
 </code></pre>
+
+<p>It's a readable and concise syntax, I'm sure you'll agree, and what's great is that it compiles to a <code>for</code> loop behind the scenes. In other words, CoffeeScript's syntax offers the same expressiveness as <code>forEach()</code>, but without the speed and shimming caveats.</p>
 
 <h2>Map</h2>
 
@@ -53,6 +55,10 @@ array.forEach (item) -&gt; myFunction(item)
 <pre><code>var result = array.map(function(item, i){
   return item.name;
 });
+
+var result = []
+for (var i=0; i &lt; array.length; i++)
+  result.push(array[i].name)
 </code></pre>
 
 <p>CS:</p>
@@ -69,6 +75,11 @@ array.forEach (item) -&gt; myFunction(item)
 <pre><code>result = array.filter(function(item, i){
   return item.name == "test"
 });
+
+var result = []
+for (var i=0; i &lt; array.length; i++)
+  if (callback(array[i]))
+    result.push(array[i])
 </code></pre>
 
 <p>CS</p>
@@ -93,6 +104,8 @@ passed = (score for score in scores when score &gt; 60)
 
 <h2>Includes</h2>
 
+<p>Shim</p>
+
 <p>JS:</p>
 
 <pre><code>var included = (array.indexOf("test") != -1)
@@ -115,6 +128,14 @@ included = ~"a long test string".indexOf "test"
 Math.min.apply Math, [14, 35, -7, 46, 98]
 </code></pre>
 
+<h2>And/or</h2>
+
+<p>Use <code>or</code> instead of ||
+Use <code>and</code> instead of &amp;&amp;</p>
+
+<pre><code>test or= 
+</code></pre>
+
 <h2>jQuery</h2>
 
 <p><span class="csscript"></span></p>
@@ -128,41 +149,6 @@ console.log "a is '#{a}', b is '#{b}'"
 </code></pre>
 
 <blockquote><p>CoffeeScript uses a straight source-to-source compiler. No type checking is performed, and we can't work out if a variable even exists or not. This means that we can't implement features that other languages can build in natively without costly runtime checks. As a result, any feature which relies on this kind of analysis won't be considered.</p></blockquote>
-
-<p>Use <code>or</code> instead of ||
-Use <code>and</code> instead of &amp;&amp;</p>
-
-<pre><code>if @attributes then makeArray(@attributes)    # Multi-line if/elses should probably use indentation.
-else @attributes = []
-
-for key, value of obj    # Again, you can use a `when` if you like.
-  unless key in moduleKeywords 
-    @::[key] = value
-
-for key, value of obj when key not in moduleKeywords 
-    @::[key] = value
-
-return if typeof console is "undefined"
-
-for name in evs
-  @_callbacks[name] ?= []
-  @_callbacks[name].push(callback)
-
-for name in evs
-  @_callbacks[name] or= []
-  @_callbacks[name].push(callback)
-
-
-unless typeof exports is "undefined"    # `unless ... else` reads poorly in English. Better to stick to `if ... else`.
-  Spine = exports
-else
-  Spine = @Spine = {}
-
-if typeof exports is not "undefined"    # `unless ... else` reads poorly in English. Better to stick to `if ... else`.
-  Spine = exports
-else
-  Spine = @Spine = {}
-</code></pre>
 
   </div>
 </div>

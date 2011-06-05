@@ -22,15 +22,17 @@ Multiline comments are also supported, and are brought forward to the generated 
       A multiline comment, perhaps a LICENSE.
     ###
 
-As I briefly alluded to, whitespace is significant in CoffeeScript. In practice, this means that you can replace TODO `{}` with a tab. This takes inspiration from Python's syntax, and has the excellent side-effect of ensuring that your script is formatted in a sane manner, otherwise it won't run!
+As I briefly alluded to, whitespace is significant in CoffeeScript. In practice, this means that you can replace curly brackets (`{}`) with a tab. This takes inspiration from Python's syntax, and has the excellent side-effect of ensuring that your script is formatted in a sane manner, otherwise it won't even compile!
 
 ##Variables & Scope
 
-CoffeeScript fixes one of the major bugbears with JavaScript, global variables. In JavaScript, it's all too easy to accidentally declare a global variable by forgetting to declare `var` before the variable assignment. CoffeeScript solves this by simply removing global variables. Behind the scenes, CoffeeScript wraps up scripts with a anonymous function, keeping the local context, and automatically prefixes all variable assignments with `var`. For example, take this simple variable assignment in CoffeeScript:
+CoffeeScript fixes one of the major bugbears with JavaScript, global variables. In JavaScript, it's all too easy to accidentally declare a global variable by forgetting to include `var` before the variable assignment. CoffeeScript solves this by simply removing global variables. Behind the scenes, CoffeeScript wraps up scripts with a anonymous function, keeping the local context, and automatically prefixes all variable assignments with `var`. For example, take this simple variable assignment in CoffeeScript:
 
 <span class="csscript"></span>
 
     myVariable = "test"
+
+Notice the dark grey box in the top right of the code example above. Give that a click, and the code will toggle between CoffeeScript and the compiled JavaScript. This is rendered right inside the page at runtime, so you assured the compiled output is accurate. 
 
 As you can see, the variable assignment is kept completely local, it's impossible to accidentally create a global variable. CoffeeScript actually takes this a step further, and makes it impossible to shadow a higher-level variable. This goes a great deal to prevent some of the most common mistakes developers make in JavaScript.
 
@@ -77,7 +79,7 @@ CoffeeScript supports default arguments too, for example:
 
     times = (a = 1, b = 2) -> a * 2
     
-You can also use splats to accept multiple arguments, denoted by `...`:
+You can also use splats to accept multiple arguments, denoted by `...`
 
 <span class="csscript"></span>
 
