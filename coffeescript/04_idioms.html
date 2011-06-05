@@ -20,7 +20,12 @@
   </header>
   
   <div id="content">
-    <h2>Each</h2>
+    <div class="back"><a href="index.html">&laquo; Back to all chapters</a></div>
+
+
+<h1>Common CoffeeScript idioms</h1>
+
+<h2>Each</h2>
 
 <p>JS:</p>
 
@@ -33,6 +38,8 @@ for (var i=0; i &lt; array.length; i++)
 </code></pre>
 
 <p>CS:</p>
+
+<p><span class="csscript"></span></p>
 
 <pre><code>myFunction(item) for item in array
 
@@ -50,6 +57,8 @@ array.forEach (item) -&gt; myFunction(item)
 
 <p>CS:</p>
 
+<p><span class="csscript"></span></p>
+
 <pre><code>result = (item.name for item in array)
 </code></pre>
 
@@ -64,6 +73,8 @@ array.forEach (item) -&gt; myFunction(item)
 
 <p>CS</p>
 
+<p><span class="csscript"></span></p>
+
 <pre><code>result = (myFunction(item) for item in array when item.name is "test")
 
 passed = []
@@ -74,6 +85,8 @@ passed = (score for score in scores when score &gt; 60)
 </code></pre>
 
 <h2>Reduce</h2>
+
+<p><span class="csscript"></span></p>
 
 <pre><code>[1..1000].reduce (t, s) -&gt; t + s
 </code></pre>
@@ -87,6 +100,8 @@ passed = (score for score in scores when score &gt; 60)
 
 <p>CS:</p>
 
+<p><span class="csscript"></span></p>
+
 <pre><code>included = "test" in array
 
 included = ~"a long test string".indexOf "test"
@@ -94,11 +109,15 @@ included = ~"a long test string".indexOf "test"
 
 <h2>Min/Max</h2>
 
+<p><span class="csscript"></span></p>
+
 <pre><code>Math.max.apply Math, [14, 35, -7, 46, 98] # 98
 Math.min.apply Math, [14, 35, -7, 46, 98]
 </code></pre>
 
 <h2>jQuery</h2>
+
+<p><span class="csscript"></span></p>
 
 <pre><code>jQuery ($) -&gt;
 
