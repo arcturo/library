@@ -1,6 +1,6 @@
 jQuery(function($) {
   return $("pre").each(function() {
-    if ($(this).prev().find(".noconvert")[0]) return;
+    if ( !$(this).prev().find(".csscript")[0] ) return;
     
     var cs, wrap, compiled, handle, original;
     try {

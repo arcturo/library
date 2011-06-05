@@ -35,12 +35,12 @@
 
 <p>Comments are in the same format as Ruby comments, starting with a hash character.</p>
 
-<p><span class="noconvert"></span></p>
-
 <pre><code># A comment
 </code></pre>
 
 <p>Multiline comments are also supported, and are brought forward to the generated JavaScript. They're prefixed by three hash characters.</p>
+
+<p><span class="csscript"></span></p>
 
 <pre><code>###
   A multiline comment, perhaps a LICENSE.
@@ -53,12 +53,16 @@
 
 <p>CoffeeScript fixes one of the major bugbears with JavaScript, global variables. In JavaScript, it's all too easy to accidentally declare a global variable by forgetting to declare <code>var</code> before the variable assignment. CoffeeScript solves this by simply removing global variables. Behind the scenes, CoffeeScript wraps up scripts with a anonymous function, keeping the local context, and automatically prefixes all variable assignments with <code>var</code>. For example, take this simple variable assignment in CoffeeScript:</p>
 
+<p><span class="csscript"></span></p>
+
 <pre><code>myVariable = "test"
 </code></pre>
 
 <p>As you can see, the variable assignment is kept completely local, it's impossible to accidentally create a global variable. CoffeeScript actually takes this a step further, and makes it impossible to shadow a higher-level variable. This goes a great deal to prevent some of the most common mistakes developers make in JavaScript.</p>
 
 <p>However, sometimes it's useful to create global variables. You can either do this by directly setting them as properties on <code>window</code>, or with the following pattern:</p>
+
+<p><span class="csscript"></span></p>
 
 <pre><code>exports = this
 exports.MyVariable = "foo-bar"
@@ -72,12 +76,16 @@ exports.MyVariable = "foo-bar"
 
 <p>With that in mind, let's take a look at an example:</p>
 
+<p><span class="csscript"></span></p>
+
 <pre><code>func = -&gt; "bar"
 </code></pre>
 
 <p>You can see in the resultant compilation, the <code>-&gt;</code> is turned into a <code>function</code> statement, and the <code>"bar"</code> string is automatically returned.</p>
 
 <p>As mentioned earlier, there's no reason why the we can't use multiple lines, as long we indent the function body properly.</p>
+
+<p><span class="csscript"></span></p>
 
 <pre><code>func = -&gt;
   # An extra line
@@ -88,15 +96,21 @@ exports.MyVariable = "foo-bar"
 
 <p>How about specifying arguments? Well, CoffeeScript lets you do that by specifying arguments in a pair of rounded brackets before the arrow.</p>
 
+<p><span class="csscript"></span></p>
+
 <pre><code>times = (a, b) -&gt; a * b
 </code></pre>
 
 <p>CoffeeScript supports default arguments too, for example:</p>
 
+<p><span class="csscript"></span></p>
+
 <pre><code>times = (a = 1, b = 2) -&gt; a * 2
 </code></pre>
 
 <p>You can also use splats to accept multiple arguments, denoted by <code>...</code>:</p>
+
+<p><span class="csscript"></span></p>
 
 <pre><code>sum = (nums...) -&gt; 
   result = 0
@@ -106,6 +120,8 @@ exports.MyVariable = "foo-bar"
 
 <p>In the example above, <code>nums</code> is an array of all the arguments passed to the function. It's not an <code>arguments</code> object, but rather a real array, so you don't need to concern yourself with <code>Array.prototype.splice</code> or <code>jQuery.makeArray()</code> if you want to manipulate it.</p>
 
+<p><span class="csscript"></span></p>
+
 <pre><code>trigger = (events...) -&gt;
   events.splice(1, 0, this)
   this.parent.trigger.apply(events)
@@ -114,6 +130,8 @@ exports.MyVariable = "foo-bar"
 <h3>Function invocation</h3>
 
 <p>Functions can be invoked exactly as in JavaScript, with brackets <code>()</code>, <code>apply()</code> or <code>call()</code>. However, like Ruby, CoffeeScript will automatically call functions if they are invoked with at least one argument.</p>
+
+<p><span class="csscript"></span></p>
 
 <pre><code>a = "Howdy!"
 
@@ -128,6 +146,8 @@ alert(inspect(a))
 
 <p>Although parenthesis is optional, I'd recommend using it if it's not immediately obvious what's being invoked, and with which arguments. In the last example, with <code>inspect</code>, I'd definitely recommend wrapping at least the <code>inspect</code> invocation in brackets</p>
 
+<p><span class="csscript"></span></p>
+
 <pre><code>alert inspect(a)
 </code></pre>
 
@@ -138,6 +158,8 @@ alert(inspect(a))
 <p>Context changes are rife within JavaScript, especially with event callbacks, so CoffeeScript provides a few helpers to manage this. One such helper is a variation on <code>-&gt;</code>, the fat arrow function: <code>=&gt;</code></p>
 
 <p>Using the fat arrow instead of the thin arrow ensures that the function context will be bound to the local one. For example:</p>
+
+<p><span class="csscript"></span></p>
 
 <pre><code>this.clickHandler = -&gt; alert "clicked"
 element.addEventListener "click", (e) =&gt; this.clickHandler(e)
@@ -150,6 +172,8 @@ element.addEventListener "click", (e) =&gt; this.clickHandler(e)
 <h2>Object literals &amp; array definition</h2>
 
 <p>Object literals can be specified exactly as in JavaScript, with a pair of braces and key/value statements. However, like with function invocation, CoffeeScript makes the braces optional. In fact, you can also use indentation and new lines instead of comma separation.</p>
+
+<p><span class="csscript"></span></p>
 
 <pre><code>object1 = {one: 1, two: 2}
 
@@ -165,6 +189,8 @@ User.create(name: "John Smith")
 </code></pre>
 
 <p>Likewise, arrays can use whitespace instead of comma separators, although the square brackets (<code>[]</code>) are still required.</p>
+
+<p><span class="csscript"></span></p>
 
 <pre><code>array1 = [1, 2, 3]
 
@@ -183,6 +209,8 @@ array3 = [1,2,3,]
 
 <p>The convention of optional parentheses continues with CoffeeScript's <code>if</code> and <code>else</code> keywords.</p>
 
+<p><span class="csscript"></span></p>
+
 <pre><code>if true == true
   "We're ok"
 
@@ -197,21 +225,29 @@ if 1 &gt; 0 then "Ok" else "Y2K!"
 
 <p>CoffeeScript also includes a Ruby idiom of allowing suffixed <code>if</code> statements.</p>
 
+<p><span class="csscript"></span></p>
+
 <pre><code>alert "It's cold!" if heat &lt; 5
 </code></pre>
 
 <p>Instead of using the exclamation mark (<code>!</code>) for negation, you can also use the <code>not</code> keyword - which can sometimes make your code more readable as exclamation marks can be easy to miss.</p>
+
+<p><span class="csscript"></span></p>
 
 <pre><code>if not true then "Panic"
 </code></pre>
 
 <p>In the example above, we could also use the CoffeeScript's <code>unless</code> statement, the opposite of <code>if</code>.</p>
 
+<p><span class="csscript"></span></p>
+
 <pre><code>unless true
   "Panic"
 </code></pre>
 
 <p>In a similar fashion to <code>not</code>, CoffeeScript also introduces the <code>is</code> statement, which translates to <code>===</code>.</p>
+
+<p><span class="csscript"></span></p>
 
 <pre><code>if true is 1
   "Type coercian fixed!"
@@ -221,7 +257,7 @@ if 1 &gt; 0 then "Ok" else "Y2K!"
 
 <p>The example below is taken from <a href="http://bonsaiden.github.com/JavaScript-Garden/#types.equality">JavaScript Garden's equality section</a> which delves into the issue in some depth.</p>
 
-<p><span class="noconvert"></span></p>
+<p><span class="csscript"></span></p>
 
 <pre><code>""           ==   "0"           // false
 0            ==   ""            // true
@@ -236,12 +272,16 @@ null         ==   undefined     // true
 
 <p>The solution is to use the strict equality operator, which consists of three equal signs: <code>===</code>. It works exactly like the normal equality operator, but without any type coercion. It's recommended to always use the strict equality operator, and explicitly convert types if needs be. As mentioned earlier, this is the default in CoffeeScript, with any weak equality operators being converted into strict ones.</p>
 
+<p><span class="csscript"></span></p>
+
 <pre><code>if 10 == "+10" then "type coercion fail"
 </code></pre>
 
 <h2>String interpolation</h2>
 
 <p>CoffeeScript brings Ruby style string interpolation to JavaScript. Double quotes strings can contain <code>#{}</code> tags, which contain a variable to be interpolated into the string.</p>
+
+<p><span class="csscript"></span></p>
 
 <pre><code>favourite_color = "Blue. No, yel..."
 question = "Bridgekeeper: What... is your favourite colour?
@@ -256,11 +296,15 @@ question = "Bridgekeeper: What... is your favourite colour?
 
 <p>Array iteration in JavaScript has a rather archaic syntax, reminiscent of an older language like C rather than a modern object orientated one. The introduction of ES5 improved that situation somewhat, with the <code>forEach()</code> function, but that still requires a function call every iteration and is therefore much slower. Again, CoffeeScript comes to the rescue, with a beautiful syntax:</p>
 
+<p><span class="csscript"></span></p>
+
 <pre><code>for name in ["Roger", "Roderick", "Brian"]
   alert "Release #{name}"
 </code></pre>
 
 <p>If you need the current iteration index, just pass an extra argument:</p>
+
+<p><span class="csscript"></span></p>
 
 <pre><code>for name, i in ["Roger the pickpocket", "Roderick the robber"]
   alert "#{i} - Release #{name}"
@@ -268,10 +312,14 @@ question = "Bridgekeeper: What... is your favourite colour?
 
 <p>You can also iterate on one line, turning the <code>for</code> loop into a comprehension.</p>
 
+<p><span class="csscript"></span></p>
+
 <pre><code>release prisoner for prisoner in ["Roger", "Roderick", "Brian"]
 </code></pre>
 
 <p>As with Python comprehensions, you can filter them:</p>
+
+<p><span class="csscript"></span></p>
 
 <pre><code>prisoners = ["Roger", "Roderick", "Brian"]
 release prisoner for prisoner in prisoners when prisoner[0] is "R" 
@@ -279,11 +327,15 @@ release prisoner for prisoner in prisoners when prisoner[0] is "R"
 
 <p>You can also use comprehensions for iterating over properties in objects. Instead of the <code>in</code> keyword, use <code>of</code>.</p>
 
+<p><span class="csscript"></span></p>
+
 <pre><code>names = sam: seaborn, donna: moss
 alert("#{first} #{last}") for first, last of names
 </code></pre>
 
 <p>The only low level loop that CoffeeScript exposes is the <code>while</code> loop. This has similar behavior to the <code>while</code> loop in pure JavaScript, but has the added advantage that it returns an array of results, i.e. like the <code>Array.prototype.map()</code> function.</p>
+
+<p><span class="csscript"></span></p>
 
 <pre><code>num = 6
 minstrel = while num -= 1
@@ -294,15 +346,21 @@ minstrel = while num -= 1
 
 <p>CoffeeScript takes inspiration from Ruby when it comes to array slicing by using ranges. Ranges are created by two numerical values, the first and last positions in the range, separated by <code>..</code>. If a range isn't prefixed by anything, CoffeeScript expands it out into an array.</p>
 
+<p><span class="csscript"></span></p>
+
 <pre><code>range = [1..5]
 </code></pre>
 
 <p>If, however, the range is specified immediately after a variable, CoffeeScript converts it into a <code>splice()</code> function call.</p>
 
+<p><span class="csscript"></span></p>
+
 <pre><code>firstTwo = ["one", "two", "three"][0..1]
 </code></pre>
 
 <p>In the example above, the range returns a new array, containing only the first two elements of the original array. You can also use the same syntax for replacing an array segment with another array.</p>
+
+<p><span class="csscript"></span></p>
 
 <pre><code>numbers = [0..9]
 numbers[3..5] = [-3, -4, -5]
@@ -310,10 +368,14 @@ numbers[3..5] = [-3, -4, -5]
 
 <p>What's neat, is that JavaScript allows you to call <code>splice()</code> on strings too, so you can use ranges with string to return a new subset of characters.</p>
 
+<p><span class="csscript"></span></p>
+
 <pre><code>my = "my string"[0..2]
 </code></pre>
 
 <p>Checking to see if a value exists inside an array is always a bore in JavaScript, particular as <code>indexOf()</code> doesn't yet have full cross-browser support (IE, I'm talking about you). CoffeeScript solves this with the <code>in</code> operator, for example.</p>
+
+<p><span class="csscript"></span></p>
 
 <pre><code>words = ["rattled", "roudy", "rebbles", "ranks"]
 alert "Stop wagging me" if "ranks" in words 
@@ -323,25 +385,35 @@ alert "Stop wagging me" if "ranks" in words
 
 <p>CoffeeScript includes some useful aliases to save some typing. One of which is <code>@</code>, which is an alias for <code>this</code>.</p>
 
+<p><span class="csscript"></span></p>
+
 <pre><code>@saviour = true
 </code></pre>
 
 <p>Another is <code>::</code>, which is an alias for <code>prototype</code></p>
+
+<p><span class="csscript"></span></p>
 
 <pre><code>User::first = -&gt; @records[0]
 </code></pre>
 
 <p>Using <code>if</code> for <code>null</code> checks in JavaScript is common, but has a few pitfalls in that empty strings and zero are both coerced into <code>false</code>, which can catch you out. CoffeeScript existential operator <code>?</code> returns true unless a variable is <code>null</code> or <code>undefined</code>, similar to Ruby's <code>nil?</code>.</p>
 
+<p><span class="csscript"></span></p>
+
 <pre><code>praise if brian?
 </code></pre>
 
 <p>You can also use it in place of the <code>||</code> operator:</p>
 
+<p><span class="csscript"></span></p>
+
 <pre><code>velocity = southern ? 40
 </code></pre>
 
 <p>If you're using a <code>null</code> check before calling a function, you can skip that by placing the existential operator right before the opening brackets. This is similar to Ruby's <code>try</code> method.</p>
+
+<p><span class="csscript"></span></p>
 
 <pre><code>blackKnight.getLegs()?.kick()
 </code></pre>

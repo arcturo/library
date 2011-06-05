@@ -22,8 +22,6 @@ One of the easiest ways to initially play around with the library is to use it r
 
 In fact you can use browser based compiler yourself, by including [this script](http://jashkenas.github.com/coffee-script/extras/coffee-script.js) in a page, marking up any CoffeeScript script tags with the correct `type`.
 
-<span class="noconvert"></span>
-
     <script src="http://jashkenas.github.com/coffee-script/extras/coffee-script.js" type="text/javascript" charset="utf-8"></script>
     <script type="text/coffeescript">
       # Some CoffeeScript
@@ -33,13 +31,9 @@ Obviously, in production, you don't want to be interpreting CoffeeScript at runt
 
 To install it, first make sure you have a working copy of the latest stable version of [Node.js](http://nodejs.org), and [npm](http://npmjs.org/) (the Node Package Manager). You can then install CoffeeScript with npm:
 
-<span class="noconvert"></span>
-
     npm install coffee-script
     
 This will give you a `coffee` executable. If you execute it without any command line options, it'll give you the CoffeeScript console, which you can use to quickly execute CoffeeScript statements. To pre-process files, pass the `--compile` option.
-
-<span class="noconvert"></span>
 
     coffee --compile my-script.coffee
     

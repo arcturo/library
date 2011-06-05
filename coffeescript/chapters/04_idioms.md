@@ -3,7 +3,7 @@
 
 JS:
 
-<span class="noconvert"></span>
+
 
     array.forEach(function(item, i){
       myFunction(item)
@@ -22,7 +22,7 @@ CS:
 
 JS:
 
-<span class="noconvert"></span>
+
 
     var result = array.map(function(item, i){
       return item.name;
@@ -36,7 +36,7 @@ CS:
 
 JS:
 
-<span class="noconvert"></span>
+
 
     result = array.filter(function(item, i){
       return item.name == "test"
@@ -60,7 +60,7 @@ CS
 
 JS:
 
-<span class="noconvert"></span>
+
 
     var included = (array.indexOf("test") != -1)
 
