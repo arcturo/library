@@ -1,3 +1,6 @@
+<div class="back"><a href="index.html">&laquo; Back to all chapters</a></div>
+
+#Common CoffeeScript idioms
 
 ##Each
 
@@ -13,6 +16,8 @@ JS:
       myFunction(array[i]);
 
 CS:
+
+<span class="csscript"></span>
       
     myFunction(item) for item in array
     
@@ -29,7 +34,9 @@ JS:
     });
     
 CS:
-      
+
+<span class="csscript"></span>
+
     result = (item.name for item in array)
 
 ##Select
@@ -44,6 +51,8 @@ JS:
 
 CS
 
+<span class="csscript"></span>
+
     result = (myFunction(item) for item in array when item.name is "test")
 
     passed = []
@@ -53,6 +62,8 @@ CS
     passed = (score for score in scores when score > 60)
     
 ##Reduce
+
+<span class="csscript"></span>
 
     [1..1000].reduce (t, s) -> t + s
     
@@ -65,6 +76,8 @@ JS:
     var included = (array.indexOf("test") != -1)
 
 CS:
+
+<span class="csscript"></span>
     
     included = "test" in array
     
@@ -72,10 +85,14 @@ CS:
     
 ##Min/Max
 
+<span class="csscript"></span>
+
     Math.max.apply Math, [14, 35, -7, 46, 98] # 98
     Math.min.apply Math, [14, 35, -7, 46, 98]
     
 ##jQuery
+
+<span class="csscript"></span>
 
     jQuery ($) ->
       
