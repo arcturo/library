@@ -25,18 +25,18 @@
 
 <h1>Common CoffeeScript idioms</h1>
 
-<p>Every language has a set of idioms and conventions, and CoffeeScript is no exception. This chapter will explore those conventions, and show you some JavaScript to CoffeeScript caparisons so you can get a practical sense of the language.</p>
+<p>Every language has a set of idioms and practices, and CoffeeScript is no exception. This chapter will explore those conventions, and show you some JavaScript to CoffeeScript comparisons so you can get a practical sense of the language.</p>
 
 <h2>Each</h2>
 
-<p>In JavaScript to iterate over every item in an array, we could either use the newly added <a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/array/foreach"><code>forEach()</code></a> function, or an old C style <code>for</code> loop. If you're planning to use some of JavaScript's latest features in ECMAScript 5, I advise you also include a <a href="https://github.com/kriskowal/es5-shim">shim</a> in the page to emulate support in older browsers.</p>
+<p>In JavaScript to iterate over every item in an array, we could either use the newly added <a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/array/foreach"><code>forEach()</code></a> function, or an old C style <code>for</code> loop. If you're planning to use some of JavaScript's latest features introduced in ECMAScript 5, I advise you also include a <a href="https://github.com/kriskowal/es5-shim">shim</a> in the page to emulate support in older browsers.</p>
 
-<pre><code>array.forEach(function(item, i){
+<pre><code>for (var i=0; i &lt; array.length; i++)
+  myFunction(array[i]);
+
+array.forEach(function(item, i){
   myFunction(item)
 });
-
-for (var i=0; i &lt; array.length; i++)
-  myFunction(array[i]);
 </code></pre>
 
 <p>Although the <code>forEach()</code> syntax is much more succinct and readable, it suffers from the drawback that the callback function will be invoked every iteration of the array, and is therefore much slower than the equivalent <code>for</code> loop. Let's see how it looks in CoffeeScript.</p>
@@ -46,22 +46,22 @@ for (var i=0; i &lt; array.length; i++)
 <pre><code>myFunction(item) for item in array
 </code></pre>
 
-<p>It's a readable and concise syntax, I'm sure you'll agree, and what's great is that it compiles to a <code>for</code> loop behind the scenes. In other words, CoffeeScript's syntax offers the same expressiveness as <code>forEach()</code>, but without the speed and shimming caveats.</p>
+<p>It's a readable and concise syntax, I'm sure you'll agree, and what's great is that it compiles to a <code>for</code> loop behind the scenes. In other words CoffeeScript's syntax offers the same expressiveness as <code>forEach()</code>, but without the speed and shimming caveats.</p>
 
 <h2>Map</h2>
 
-<p>JS:</p>
+<p>As with <code>forEach()</code>, ES5 also includes a native map function that has a much more succinct syntax than the classic <code>for</code> loop, namely <a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array/map"><code>map()</code></a>. Unfortunately it suffers from much the same caveats that <code>forEach()</code> does, its speed is greatly reduced due to the function calls.</p>
 
-<pre><code>var result = array.map(function(item, i){
-  return item.name;
-});
-
-var result = []
+<pre><code>var result = []
 for (var i=0; i &lt; array.length; i++)
   result.push(array[i].name)
+
+var result = array.map(function(item, i){
+  return item.name;
+});
 </code></pre>
 
-<p>CS:</p>
+<p>As we covered in the syntax chapter, CoffeeScript's comprehensions can be used to get the same behavior as <code>map()</code>. Notice we're surrounding the comprehension with brackets, which is <strong>absolutely critical</strong> in ensuring the comprehension returns what you'd expect, the mapped array.</p>
 
 <p><span class="csscript"></span></p>
 
@@ -70,57 +70,70 @@ for (var i=0; i &lt; array.length; i++)
 
 <h2>Select</h2>
 
-<p>JS:</p>
+<p>Again, ES5 has a utility function <a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/array/filter"><code>filter()</code></a> for reducing arrays:</p>
 
-<pre><code>result = array.filter(function(item, i){
+<pre><code>var result = []
+for (var i=0; i &lt; array.length; i++)
+  if (array[i].name == "test")
+    result.push(array[i])
+
+result = array.filter(function(item, i){
   return item.name == "test"
 });
-
-var result = []
-for (var i=0; i &lt; array.length; i++)
-  if (callback(array[i]))
-    result.push(array[i])
 </code></pre>
 
-<p>CS</p>
+<p>CoffeeScript's basic syntax uses the <code>when</code> keyword to filter items with a comparison. Behind the scenes a <code>for</code> loop is generated. The whole execution is performed in an anonymous function to ward against scope leakage and variable conflict.</p>
 
 <p><span class="csscript"></span></p>
 
-<pre><code>result = (myFunction(item) for item in array when item.name is "test")
+<pre><code>result = (item for item in array when item.name is "test")
+</code></pre>
 
-passed = []
+<p>Don't forgot to include the brackets, as otherwise <code>result</code> will be the last item in the array.
+CoffeeScript's comprehensions are so flexible that they allow you to do powerful selections as in the following example:</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>passed = []
 failed = []
 (if score &gt; 60 then passed else failed).push score for score in [49, 58, 76, 82, 88, 90]
 
+# Or
 passed = (score for score in scores when score &gt; 60)
-</code></pre>
-
-<h2>Reduce</h2>
-
-<p><span class="csscript"></span></p>
-
-<pre><code>[1..1000].reduce (t, s) -&gt; t + s
 </code></pre>
 
 <h2>Includes</h2>
 
-<p>Shim</p>
-
-<p>JS:</p>
+<p>Checking to see if a value is inside an array is typically done with <code>indexOf()</code>, which rather mind-bogglingly still requires a shim, as Internet Explorer hasn't implemented it.</p>
 
 <pre><code>var included = (array.indexOf("test") != -1)
 </code></pre>
 
-<p>CS:</p>
+<p>CoffeeScript has a neat alternative to this which Pythonists may recognize, namely <code>in</code>.</p>
 
 <p><span class="csscript"></span></p>
 
 <pre><code>included = "test" in array
+</code></pre>
 
-included = ~"a long test string".indexOf "test"
+<p>Behind the scenes, CoffeeScript is using <code>Array.prototype.indexOf()</code>, and shimming if necessary, to detect if the value is inside the array. Unfortunately this  means the same <code>in</code> syntax won't work for strings. We need to revert back to using <code>indexOf()</code> and testing if the result is negative:</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>included = "a long test string".indexOf "test" is not -1
+</code></pre>
+
+<p>Or even better, hijack the bitwise operator so we don't have to do a <code>-1</code> comparison.</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>string   = "a long test string"
+included = not~ string.indexOf "test"
 </code></pre>
 
 <h2>Min/Max</h2>
+
+<p>This technique is not specific to CoffeeScript, but I thought it useful to demonstrate anyway. <code>Math.max</code> and <code>Math.min</code> will work if you call them in a context of an array, so you can easily work out the maximum and minimum values in an array.</p>
 
 <p><span class="csscript"></span></p>
 
@@ -130,25 +143,57 @@ Math.min.apply Math, [14, 35, -7, 46, 98]
 
 <h2>And/or</h2>
 
-<p>Use <code>or</code> instead of ||
-Use <code>and</code> instead of &amp;&amp;</p>
+<p>CoffeeScript style guides indicates that <code>or</code> is preferred over <code>||</code>, and <code>and</code> is preferred over <code>&amp;&amp;</code>. I can see why, as the former is somewhat more readable. Nethertheless, the two styles have identical results.</p>
 
-<pre><code>test or= 
-</code></pre>
-
-<h2>jQuery</h2>
+<p>This preference over more english style code also applies to using <code>is</code> over <code>==</code> and <code>is not</code> over <code>!=</code>.</p>
 
 <p><span class="csscript"></span></p>
 
-<pre><code>jQuery ($) -&gt;
+<pre><code>string = "migrating coconuts"
+string == string # true
+string is string # true
+</code></pre>
 
+<p>One extremely nice addition to CoffeeScript is the 'or equals', which is a pattern Rubyists many recognize as <code>||=</code>:</p>
 
-someObject = { a: 'value for a', b: 'value for b' }
+<p><span class="csscript"></span></p>
+
+<pre><code>hash or= {}
+</code></pre>
+
+<p>If hash evaluates to <code>false</code>, then it's set to an empty object. It's important to note here that, unlike CoffeeScript's existential operator, this expression also recognizes <code>0</code>, <code>""</code> and <code>[]</code> as false. If that isn't your intention, you'll need to use the existential operator which only gets activated if <code>hash</code> is <code>undefined</code> or <code>null</code>:</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>hash ?= {}
+</code></pre>
+
+<h2>De-structuring assignments</h2>
+
+<p>De-structuring assignments can be used with any depth of array and object nesting, to help pull out deeply nested properties.</p>
+
+<pre><code>someObject = { a: 'value for a', b: 'value for b' }
 { a, b } = someObject
 console.log "a is '#{a}', b is '#{b}'"
 </code></pre>
 
-<blockquote><p>CoffeeScript uses a straight source-to-source compiler. No type checking is performed, and we can't work out if a variable even exists or not. This means that we can't implement features that other languages can build in natively without costly runtime checks. As a result, any feature which relies on this kind of analysis won't be considered.</p></blockquote>
+<h2>External libraries</h2>
+
+<p>Using external libraries is exactly the same as calling functions on CoffeeScript libraries; since at the end of the day everything is compiled down to JavaScript. Using CoffeeScript with <a href="http://jquery.com">jQuery</a> is especially elegant, due to the amount of callbacks in</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>jQuery ($) -&gt;
+  # DOMContentLoaded
+  $(".el").click -&gt;
+    alert("Clicked!")
+
+
+# Use local alias
+$ = jQuery
+</code></pre>
+
+<p>Since all of CoffeeScript's output is wrapped in an anonymous function, we can set a local <code>$</code> alias for <code>jQuery</code>. This will make sure that even if jQuery's no conflict mode is enabled, and the dollar is re-defined, our script will still function as intended.</p>
 
   </div>
 </div>
