@@ -34,7 +34,7 @@
 <pre><code>class Animal
 </code></pre>
 
-<p>In the example above, <code>Animal</code> is the name of the class, and also the name of the resultant variable that you can use to create instances. Behind the scenes CoffeeScript is using construction functions which means you can instantiate classes using the <code>new</code> keyword.</p>
+<p>In the example above, <code>Animal</code> is the name of the class, and also the name of the resultant variable that you can use to create instances. Behind the scenes CoffeeScript is using construction functions which means you can instantiate classes using the <code>new</code> operator.</p>
 
 <p><span class="csscript"></span></p>
 
@@ -50,7 +50,7 @@
     @name = name
 </code></pre>
 
-<p>In fact, CoffeeScript provides a shorthand for the common pattern of setting instance properties. By prefixing argument's with <code>@</code>, CoffeeScript will automatically set the arguments as instance properties in the constructor. Indeed, this shorthand will also work for normal functions outside classes. The example below is equivalent to the last example, where we set the instance variables manually.</p>
+<p>In fact, CoffeeScript provides a shorthand for the common pattern of setting instance properties. By prefixing argument's with <code>@</code>, CoffeeScript will automatically set the arguments as instance properties in the constructor. Indeed, this shorthand will also work for normal functions outside classes. The example below is equivalent to the last example, where we set the instance properties manually.</p>
 
 <p><span class="csscript"></span></p>
 
@@ -81,7 +81,7 @@ animal = new Animal
 animal.sell(new Customer)
 </code></pre>
 
-<p>Context changes are rife within JavaScript, and earlier in the Syntax chapter we talked about how CoffeeScript can lock the value of <code>this</code> to a particular context using a fat arrow function: <code>=&gt;</code>. This ensures that whatever context a function is called under, it'll always execute inside the context it was created in. CoffeeScript has extended support for fat arrows to classes, so by using a fat arrow for an instance function you'll ensure that it's invoked in the correct context, and that <code>this</code> is always equal to the current instance.</p>
+<p>Context changes are rife within JavaScript, and earlier in the Syntax chapter we talked about how CoffeeScript can lock the value of <code>this</code> to a particular context using a fat arrow function: <code>=&gt;</code>. This ensures that whatever context a function is called under, it'll always execute inside the context it was created in. CoffeeScript has extended support for fat arrows to classes, so by using a fat arrow for an instance method you'll ensure that it's invoked in the correct context, and that <code>this</code> is always equal to the current instance.</p>
 
 <p><span class="csscript"></span></p>
 
@@ -104,7 +104,7 @@ $("#sell").click(animal.sell)
 <p><span class="csscript"></span></p>
 
 <pre><code>class Animal
-  this.find: (name) -&gt;
+  this.find = (name) -&gt;      
 
 Animal.find("Parrot")
 </code></pre>
@@ -167,8 +167,8 @@ alert("This parrot is no more") if parrot.rip()
 <p><span class="csscript"></span></p>
 
 <pre><code>extend = (obj, mixin) -&gt;
-  for name, method of mixin
-    obj[name] = method
+  obj[name] = method for name, method of mixin        
+  obj
 
 include = (klass, mixin) -&gt;
   extend klass.prototype, mixin

@@ -25,7 +25,7 @@
 
 <h1>CoffeeScript Syntax</h1>
 
-<p>Firstly, before we get any further into this section, I want to reiterate that while CoffeeScript's syntax is often identical with JavaScript's, it's not a superset, and therefore some JavaScript keywords, such as <code>function()</code> and <code>var</code> aren't permitted, and will throw syntax errors. If you're writing a CoffeeScript file, it needs to be pure CoffeeScript; you can't intermingle the two languages.</p>
+<p>Firstly, before we get any further into this section, I want to reiterate that while CoffeeScript's syntax is often identical with JavaScript's, it's not a superset, and therefore some JavaScript keywords, such as <code>function</code> and <code>var</code> aren't permitted, and will throw syntax errors. If you're writing a CoffeeScript file, it needs to be pure CoffeeScript; you can't intermingle the two languages.</p>
 
 <p>Why isn't CoffeeScript a superset? Well, the very fact that whitespace is significant in CoffeeScript programs prevents it being a superset. And, once that's decision's been made, the team decided you might as well go the full hog and deprecate some JavaScript keywords and features in the name of simplicity and in an effort to reduce many commonly occurring bugs.</p>
 
@@ -38,7 +38,7 @@
 <pre><code># A comment
 </code></pre>
 
-<p>Multiline comments are also supported, and are brought forward to the generated JavaScript. They're prefixed by three hash characters.</p>
+<p>Multiline comments are also supported, and are brought forward to the generated JavaScript. They're enclosed by three hash characters.</p>
 
 <p><span class="csscript"></span></p>
 
@@ -62,7 +62,7 @@
 
 <p>As you can see, the variable assignment is kept completely local, it's impossible to accidentally create a global variable. CoffeeScript actually takes this a step further, and makes it impossible to shadow a higher-level variable. This goes a great deal to prevent some of the most common mistakes developers make in JavaScript.</p>
 
-<p>However, sometimes it's useful to create global variables. You can either do this by directly setting them as properties on <code>window</code>, or with the following pattern:</p>
+<p>However, sometimes it's useful to create global variables. You can either do this by directly setting them as properties on the global object (<code>window</code> in browsers), or with the following pattern:</p>
 
 <p><span class="csscript"></span></p>
 
@@ -70,7 +70,7 @@
 exports.MyVariable = "foo-bar"
 </code></pre>
 
-<p>In the root context, <code>this</code> is equal to the <code>window</code> object, and by creating a local <code>exports</code> variable you're making it really obvious to anyone reading your code exactly which global variables a script is creating. Additionally, it paves the way for CommonJS modules, which we're going to cover later in the book.</p>
+<p>In the root context, <code>this</code> is equal to the global object, and by creating a local <code>exports</code> variable you're making it really obvious to anyone reading your code exactly which global variables a script is creating. Additionally, it paves the way for CommonJS modules, which we're going to cover later in the book.</p>
 
 <h2>Functions</h2>
 
@@ -223,7 +223,7 @@ if true != true then "Panic"
 if 1 &gt; 0 then "Ok" else "Y2K!"
 </code></pre>
 
-<p>As you can see above, if the <code>if</code> statement is on one line, you'll need to use the <code>then</code> keyword, so CoffeeScript knows when the function body begins. Conditional operators (<code>?:</code>) are not supported, instead you should use a single line <code>if/else</code> statement.</p>
+<p>As you can see above, if the <code>if</code> statement is on one line, you'll need to use the <code>then</code> keyword, so CoffeeScript knows when the block begins. Conditional operators (<code>?:</code>) are not supported, instead you should use a single line <code>if/else</code> statement.</p>
 
 <p>CoffeeScript also includes a Ruby idiom of allowing suffixed <code>if</code> statements.</p>
 
@@ -255,7 +255,7 @@ if 1 &gt; 0 then "Ok" else "Y2K!"
   "Type coercian fixed!"
 </code></pre>
 
-<p>You may have noticed in the examples above, that CoffeeScript is converting <code>==</code> statements into <code>===</code> and <code>!=</code> statements into <code>!==</code>. This is one of my favorite features to the language, and yet one of the most simple. What's the reasoning behind this? Well frankly JavaScript's type coercion is a bit odd, and its equality operator coerces types in order to compare them, leading to some confusing behaviors and the source of many bugs.</p>
+<p>You may have noticed in the examples above, that CoffeeScript is converting <code>==</code> operators into <code>===</code> and <code>!=</code> into <code>!==</code>. This is one of my favorite features to the language, and yet one of the most simple. What's the reasoning behind this? Well frankly JavaScript's type coercion is a bit odd, and its equality operator coerces types in order to compare them, leading to some confusing behaviors and the source of many bugs.</p>
 
 <p>The example below is taken from <a href="http://bonsaiden.github.com/JavaScript-Garden/#types.equality">JavaScript Garden's equality section</a> which delves into the issue in some depth.</p>
 
@@ -281,7 +281,7 @@ null         ==   undefined     // true
 
 <h2>String interpolation</h2>
 
-<p>CoffeeScript brings Ruby style string interpolation to JavaScript. Double quotes strings can contain <code>#{}</code> tags, which contain a variable to be interpolated into the string.</p>
+<p>CoffeeScript brings Ruby style string interpolation to JavaScript. Double quotes strings can contain <code>#{}</code> tags, which contain expressions to be interpolated into the string.</p>
 
 <p><span class="csscript"></span></p>
 
@@ -312,7 +312,7 @@ question = "Bridgekeeper: What... is your favourite colour?
   alert "#{i} - Release #{name}"
 </code></pre>
 
-<p>You can also iterate on one line, turning the <code>for</code> loop into a comprehension.</p>
+<p>You can also iterate on one line, using the postfix form.</p>
 
 <p><span class="csscript"></span></p>
 
@@ -346,14 +346,14 @@ minstrel = while num -= 1
 
 <h2>Arrays</h2>
 
-<p>CoffeeScript takes inspiration from Ruby when it comes to array slicing by using ranges. Ranges are created by two numerical values, the first and last positions in the range, separated by <code>..</code>. If a range isn't prefixed by anything, CoffeeScript expands it out into an array.</p>
+<p>CoffeeScript takes inspiration from Ruby when it comes to array slicing by using ranges. Ranges are created by two numerical values, the first and last positions in the range, separated by <code>..</code> or <code>...</code>. If a range isn't prefixed by anything, CoffeeScript expands it out into an array.</p>
 
 <p><span class="csscript"></span></p>
 
 <pre><code>range = [1..5]
 </code></pre>
 
-<p>If, however, the range is specified immediately after a variable, CoffeeScript converts it into a <code>splice()</code> function call.</p>
+<p>If, however, the range is specified immediately after a variable, CoffeeScript converts it into a <code>slice()</code> method call.</p>
 
 <p><span class="csscript"></span></p>
 
@@ -368,7 +368,7 @@ minstrel = while num -= 1
 numbers[3..5] = [-3, -4, -5]
 </code></pre>
 
-<p>What's neat, is that JavaScript allows you to call <code>splice()</code> on strings too, so you can use ranges with string to return a new subset of characters.</p>
+<p>What's neat, is that JavaScript allows you to call <code>slice()</code> on strings too, so you can use ranges with string to return a new subset of characters.</p>
 
 <p><span class="csscript"></span></p>
 
@@ -413,11 +413,18 @@ alert "Stop wagging me" if "ranks" in words
 <pre><code>velocity = southern ? 40
 </code></pre>
 
-<p>If you're using a <code>null</code> check before calling a function, you can skip that by placing the existential operator right before the opening brackets. This is similar to Ruby's <code>try</code> method.</p>
+<p>If you're using a <code>null</code> check before accessing a property, you can skip that by placing the existential operator right before the opening brackets. This is similar to Ruby's <code>try</code> method.</p>
 
 <p><span class="csscript"></span></p>
 
 <pre><code>blackKnight.getLegs()?.kick()
+</code></pre>
+
+<p>You can safely call a value in the same manner, checking function-ness beforehand.</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>whiteKnight.guard? us
 </code></pre>
 
   </div>
