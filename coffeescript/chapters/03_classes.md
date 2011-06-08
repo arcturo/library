@@ -10,7 +10,7 @@ Behind the scenes, CoffeeScript is using JavaScript's native prototype to create
 
     class Animal
     
-In the example above, `Animal` is the name of the class, and also the name of the resultant variable that you can use to create instances. Behind the scenes CoffeeScript is using construction functions which means you can instantiate classes using the `new` keyword.
+In the example above, `Animal` is the name of the class, and also the name of the resultant variable that you can use to create instances. Behind the scenes CoffeeScript is using construction functions which means you can instantiate classes using the `new` operator.
 
 <span class="csscript"></span>
 
@@ -24,7 +24,7 @@ Defining constructors (functions that get invoked upon instantiation) is simple,
       constructor: (name) ->
         @name = name
 
-In fact, CoffeeScript provides a shorthand for the common pattern of setting instance properties. By prefixing argument's with `@`, CoffeeScript will automatically set the arguments as instance properties in the constructor. Indeed, this shorthand will also work for normal functions outside classes. The example below is equivalent to the last example, where we set the instance variables manually. 
+In fact, CoffeeScript provides a shorthand for the common pattern of setting instance properties. By prefixing argument's with `@`, CoffeeScript will automatically set the arguments as instance properties in the constructor. Indeed, this shorthand will also work for normal functions outside classes. The example below is equivalent to the last example, where we set the instance properties manually. 
 
 <span class="csscript"></span>
 
@@ -52,7 +52,7 @@ Adding additional instance properties to a class is very straightforward, it's e
     animal = new Animal
     animal.sell(new Customer)
 
-Context changes are rife within JavaScript, and earlier in the Syntax chapter we talked about how CoffeeScript can lock the value of `this` to a particular context using a fat arrow function: `=>`. This ensures that whatever context a function is called under, it'll always execute inside the context it was created in. CoffeeScript has extended support for fat arrows to classes, so by using a fat arrow for an instance function you'll ensure that it's invoked in the correct context, and that `this` is always equal to the current instance. 
+Context changes are rife within JavaScript, and earlier in the Syntax chapter we talked about how CoffeeScript can lock the value of `this` to a particular context using a fat arrow function: `=>`. This ensures that whatever context a function is called under, it'll always execute inside the context it was created in. CoffeeScript has extended support for fat arrows to classes, so by using a fat arrow for an instance method you'll ensure that it's invoked in the correct context, and that `this` is always equal to the current instance. 
     
 <span class="csscript"></span>
 
@@ -74,8 +74,8 @@ How about defining class (i.e. static) properties? Well, it turns out that insid
 <span class="csscript"></span>
 
     class Animal
-      this.find: (name) ->
-      
+      this.find = (name) ->      
+
     Animal.find("Parrot")
     
 In fact, as you may remember, CoffeeScript aliases `this` to `@`, which lets you write static properties even more succinctly: 
@@ -133,8 +133,8 @@ It's worth pointing out though that static properties aren't inherited, only ins
 <span class="csscript"></span>
 
     extend = (obj, mixin) ->
-      for name, method of mixin
-        obj[name] = method
+      obj[name] = method for name, method of mixin        
+      obj
 
     include = (klass, mixin) ->
       extend klass.prototype, mixin
