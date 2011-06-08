@@ -61,7 +61,7 @@ var result = array.map(function(item, i){
 });
 </code></pre>
 
-<p>As we covered in the syntax chapter, CoffeeScript's comprehensions can be used to get the same behavior as <code>map()</code>. Notice we're surrounding the comprehension with brackets, which is <strong>absolutely critical</strong> in ensuring the comprehension returns what you'd expect, the mapped array.</p>
+<p>As we covered in the syntax chapter, CoffeeScript's comprehensions can be used to get the same behavior as <code>map()</code>. Notice we're surrounding the comprehension with parens, which is <strong>absolutely critical</strong> in ensuring the comprehension returns what you'd expect, the mapped array.</p>
 
 <p><span class="csscript"></span></p>
 
@@ -89,7 +89,7 @@ result = array.filter(function(item, i){
 <pre><code>result = (item for item in array when item.name is "test")
 </code></pre>
 
-<p>Don't forgot to include the brackets, as otherwise <code>result</code> will be the last item in the array.
+<p>Don't forgot to include the parens, as otherwise <code>result</code> will be the last item in the array.
 CoffeeScript's comprehensions are so flexible that they allow you to do powerful selections as in the following example:</p>
 
 <p><span class="csscript"></span></p>

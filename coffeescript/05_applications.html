@@ -144,10 +144,9 @@ app.listen(port);
   &lt;!-- Require the main Stitch file --&gt;
   &lt;script src="/application.js" type="text/javascript" charset="utf-8"&gt;&lt;/script&gt;
   &lt;script type="text/javascript" charset="utf-8"&gt;
-    var exports = this;
     jQuery(function(){
       var App = require("app");
-      exports.App = App.init({el: $("body")});      
+      window.App = App.init({el: $("body")});      
     });
   &lt;/script&gt;
 &lt;/head&gt;

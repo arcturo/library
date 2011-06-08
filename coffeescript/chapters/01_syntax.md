@@ -67,7 +67,7 @@ As mentioned earlier, there's no reason why the we can't use multiple lines, as 
       
 ###Function arguments
 
-How about specifying arguments? Well, CoffeeScript lets you do that by specifying arguments in a pair of rounded brackets before the arrow.
+How about specifying arguments? Well, CoffeeScript lets you do that by specifying arguments in a pair of parenthesis before the arrow.
 
 <span class="csscript"></span>
 
@@ -98,7 +98,7 @@ In the example above, `nums` is an array of all the arguments passed to the func
 
 ###Function invocation
 
-Functions can be invoked exactly as in JavaScript, with brackets `()`, `apply()` or `call()`. However, like Ruby, CoffeeScript will automatically call functions if they are invoked with at least one argument.
+Functions can be invoked exactly as in JavaScript, with parens `()`, `apply()` or `call()`. However, like Ruby, CoffeeScript will automatically call functions if they are invoked with at least one argument.
 
 <span class="csscript"></span>
 
@@ -112,7 +112,7 @@ Functions can be invoked exactly as in JavaScript, with brackets `()`, `apply()`
     # Equivalent to:
     alert(inspect(a))
     
-Although parenthesis is optional, I'd recommend using it if it's not immediately obvious what's being invoked, and with which arguments. In the last example, with `inspect`, I'd definitely recommend wrapping at least the `inspect` invocation in brackets
+Although parenthesis is optional, I'd recommend using it if it's not immediately obvious what's being invoked, and with which arguments. In the last example, with `inspect`, I'd definitely recommend wrapping at least the `inspect` invocation in parens.
 
 <span class="csscript"></span>
 
@@ -144,7 +144,7 @@ Object literals can be specified exactly as in JavaScript, with a pair of braces
     object1 = {one: 1, two: 2}
 
     # Without braces
-    object2 = one:1, two:2
+    object2 = one: 1, two: 2
     
     # Using new lines instead of commas
     object3 = 
@@ -352,7 +352,7 @@ You can also use it in place of the `||` operator:
 
     velocity = southern ? 40
     
-If you're using a `null` check before accessing a property, you can skip that by placing the existential operator right before the opening brackets. This is similar to Ruby's `try` method. 
+If you're using a `null` check before accessing a property, you can skip that by placing the existential operator right before the opening parens. This is similar to Ruby's `try` method. 
 
 <span class="csscript"></span>
 

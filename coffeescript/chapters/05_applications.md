@@ -114,10 +114,9 @@ Now let's create our main page `index.html` which, if we're building a single pa
       <!-- Require the main Stitch file -->
       <script src="/application.js" type="text/javascript" charset="utf-8"></script>
       <script type="text/javascript" charset="utf-8">
-        var exports = this;
         jQuery(function(){
           var App = require("app");
-          exports.App = App.init({el: $("body")});      
+          window.App = App.init({el: $("body")});      
         });
       </script>
     </head>

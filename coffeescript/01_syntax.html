@@ -96,7 +96,7 @@ exports.MyVariable = "foo-bar"
 
 <h3>Function arguments</h3>
 
-<p>How about specifying arguments? Well, CoffeeScript lets you do that by specifying arguments in a pair of rounded brackets before the arrow.</p>
+<p>How about specifying arguments? Well, CoffeeScript lets you do that by specifying arguments in a pair of parenthesis before the arrow.</p>
 
 <p><span class="csscript"></span></p>
 
@@ -131,7 +131,7 @@ exports.MyVariable = "foo-bar"
 
 <h3>Function invocation</h3>
 
-<p>Functions can be invoked exactly as in JavaScript, with brackets <code>()</code>, <code>apply()</code> or <code>call()</code>. However, like Ruby, CoffeeScript will automatically call functions if they are invoked with at least one argument.</p>
+<p>Functions can be invoked exactly as in JavaScript, with parens <code>()</code>, <code>apply()</code> or <code>call()</code>. However, like Ruby, CoffeeScript will automatically call functions if they are invoked with at least one argument.</p>
 
 <p><span class="csscript"></span></p>
 
@@ -146,7 +146,7 @@ alert inspect a
 alert(inspect(a))
 </code></pre>
 
-<p>Although parenthesis is optional, I'd recommend using it if it's not immediately obvious what's being invoked, and with which arguments. In the last example, with <code>inspect</code>, I'd definitely recommend wrapping at least the <code>inspect</code> invocation in brackets</p>
+<p>Although parenthesis is optional, I'd recommend using it if it's not immediately obvious what's being invoked, and with which arguments. In the last example, with <code>inspect</code>, I'd definitely recommend wrapping at least the <code>inspect</code> invocation in parens.</p>
 
 <p><span class="csscript"></span></p>
 
@@ -180,7 +180,7 @@ element.addEventListener "click", (e) =&gt; this.clickHandler(e)
 <pre><code>object1 = {one: 1, two: 2}
 
 # Without braces
-object2 = one:1, two:2
+object2 = one: 1, two: 2
 
 # Using new lines instead of commas
 object3 = 
@@ -413,7 +413,7 @@ alert "Stop wagging me" if "ranks" in words
 <pre><code>velocity = southern ? 40
 </code></pre>
 
-<p>If you're using a <code>null</code> check before accessing a property, you can skip that by placing the existential operator right before the opening brackets. This is similar to Ruby's <code>try</code> method.</p>
+<p>If you're using a <code>null</code> check before accessing a property, you can skip that by placing the existential operator right before the opening parens. This is similar to Ruby's <code>try</code> method.</p>
 
 <p><span class="csscript"></span></p>
 

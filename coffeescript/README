@@ -2,12 +2,13 @@ A little book on CoffeeScript and building RIAs.
 
 http://coffeescript.org
 
-Alex MacCaw (info@eribium.org)
+TODO:
 
-1. CoffeeScript introduction, pros cons, common fallacies
-2. General syntax, objects, arrays, flow control, functions, switch, string interpolation
-3. Classes, inheritance, super, context
-4. Using CoffeeScript with Stich, Express. Loading in templates.
-5. And maybe a chapter on CoffeeScript with Backbone/Spine/Underscore/jQuery
+* When discussing multiline comments, it may be worthwhile to mention that multiline strings and regexes take the same form: """ and ///, respectively.
 
-Jison
+* "Semicolons were the cause of much debate in the JavaScript community, and behind some weird interpreter behavior." ... Could be more detailed here. Perhaps something like: "Newlines in JavaScript already cause semicolons to be automatically inserted in many cases, but not all of them, which leads to trouble. CoffeeScript simply allows newlines to end each statement."
+
+* "As you can see above, if the if statement is on one line, you'll need to use the then keyword" ... the "then" keyword can actually be in any place where you'd otherwise put an indented block, throughout the language.
+
+* The Max/Min trick is great, but will fail for really large arrays, which is worth mentioning. (Functions can only take so many arguments in certain browsers).
+

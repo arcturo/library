@@ -36,7 +36,7 @@ As with `forEach()`, ES5 also includes a native map function that has a much mor
       return item.name;
     });
 
-As we covered in the syntax chapter, CoffeeScript's comprehensions can be used to get the same behavior as `map()`. Notice we're surrounding the comprehension with brackets, which is **absolutely critical** in ensuring the comprehension returns what you'd expect, the mapped array. 
+As we covered in the syntax chapter, CoffeeScript's comprehensions can be used to get the same behavior as `map()`. Notice we're surrounding the comprehension with parens, which is **absolutely critical** in ensuring the comprehension returns what you'd expect, the mapped array. 
 
 <span class="csscript"></span>
 
@@ -61,7 +61,7 @@ CoffeeScript's basic syntax uses the `when` keyword to filter items with a compa
 
     result = (item for item in array when item.name is "test")
 
-Don't forgot to include the brackets, as otherwise `result` will be the last item in the array. 
+Don't forgot to include the parens, as otherwise `result` will be the last item in the array. 
 CoffeeScript's comprehensions are so flexible that they allow you to do powerful selections as in the following example:
 
 <span class="csscript"></span>
