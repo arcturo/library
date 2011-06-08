@@ -133,7 +133,7 @@ included = not~ string.indexOf "test"
 
 <h2>Min/Max</h2>
 
-<p>This technique is not specific to CoffeeScript, but I thought it useful to demonstrate anyway. <code>Math.max</code> and <code>Math.min</code> will work if you call them in a context of an array, so you can easily work out the maximum and minimum values in an array.</p>
+<p>This technique is not specific to CoffeeScript, but I thought it useful to demonstrate anyway. <code>Math.max</code> and <code>Math.min</code> take multiple arguments, so you can easily use <code>apply()</code> to pass an array to them, retrieving the maximum and minimum values in the array.</p>
 
 <p><span class="csscript"></span></p>
 
@@ -154,14 +154,14 @@ string == string # true
 string is string # true
 </code></pre>
 
-<p>One extremely nice addition to CoffeeScript is the 'or equals', which is a pattern Rubyists many recognize as <code>||=</code>:</p>
+<p>One extremely nice addition to CoffeeScript is the 'or equals', which is a pattern Rubyists may recognize as <code>||=</code>:</p>
 
 <p><span class="csscript"></span></p>
 
 <pre><code>hash or= {}
 </code></pre>
 
-<p>If hash evaluates to <code>false</code>, then it's set to an empty object. It's important to note here that, unlike CoffeeScript's existential operator, this expression also recognizes <code>0</code>, <code>""</code> and <code>[]</code> as false. If that isn't your intention, you'll need to use the existential operator which only gets activated if <code>hash</code> is <code>undefined</code> or <code>null</code>:</p>
+<p>If hash evaluates to <code>false</code>, then it's set to an empty object. It's important to note here that this expression also recognizes <code>0</code>, <code>""</code> and <code>[]</code> as false. If that isn't your intention, you'll need to use CoffeeScript's existential operator which only gets activated if <code>hash</code> is <code>undefined</code> or <code>null</code>:</p>
 
 <p><span class="csscript"></span></p>
 
@@ -179,21 +179,20 @@ console.log "a is '#{a}', b is '#{b}'"
 
 <h2>External libraries</h2>
 
-<p>Using external libraries is exactly the same as calling functions on CoffeeScript libraries; since at the end of the day everything is compiled down to JavaScript. Using CoffeeScript with <a href="http://jquery.com">jQuery</a> is especially elegant, due to the amount of callbacks in</p>
+<p>Using external libraries is exactly the same as calling functions on CoffeeScript libraries; since at the end of the day everything is compiled down to JavaScript. Using CoffeeScript with <a href="http://jquery.com">jQuery</a> is especially elegant, due to the amount of callbacks in jQuery's API.</p>
 
 <p><span class="csscript"></span></p>
 
-<pre><code>jQuery ($) -&gt;
+<pre><code># Use local alias
+$ = jQuery
+
+$ -&gt;
   # DOMContentLoaded
   $(".el").click -&gt;
     alert("Clicked!")
-
-
-# Use local alias
-$ = jQuery
 </code></pre>
 
-<p>Since all of CoffeeScript's output is wrapped in an anonymous function, we can set a local <code>$</code> alias for <code>jQuery</code>. This will make sure that even if jQuery's no conflict mode is enabled, and the dollar is re-defined, our script will still function as intended.</p>
+<p>Since all of CoffeeScript's output is wrapped in an anonymous function, we can set a local <code>$</code> alias for <code>jQuery</code>. This will make sure that even if jQuery's no conflict mode is enabled and the <code>$</code> re-defined, our script will still function as intended.</p>
 
   </div>
 </div>

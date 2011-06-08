@@ -100,7 +100,7 @@ Or even better, hijack the bitwise operator so we don't have to do a `-1` compar
     
 ##Min/Max
 
-This technique is not specific to CoffeeScript, but I thought it useful to demonstrate anyway. `Math.max` and `Math.min` will work if you call them in a context of an array, so you can easily work out the maximum and minimum values in an array. 
+This technique is not specific to CoffeeScript, but I thought it useful to demonstrate anyway. `Math.max` and `Math.min` take multiple arguments, so you can easily use `apply()` to pass an array to them, retrieving the maximum and minimum values in the array. 
 
 <span class="csscript"></span>
 
@@ -119,13 +119,13 @@ This preference over more english style code also applies to using `is` over `==
     string == string # true
     string is string # true
     
-One extremely nice addition to CoffeeScript is the 'or equals', which is a pattern Rubyists many recognize as `||=`:
+One extremely nice addition to CoffeeScript is the 'or equals', which is a pattern Rubyists may recognize as `||=`:
     
 <span class="csscript"></span>
 
     hash or= {}
     
-If hash evaluates to `false`, then it's set to an empty object. It's important to note here that, unlike CoffeeScript's existential operator, this expression also recognizes `0`, `""` and `[]` as false. If that isn't your intention, you'll need to use the existential operator which only gets activated if `hash` is `undefined` or `null`:
+If hash evaluates to `false`, then it's set to an empty object. It's important to note here that this expression also recognizes `0`, `""` and `[]` as false. If that isn't your intention, you'll need to use CoffeeScript's existential operator which only gets activated if `hash` is `undefined` or `null`:
 
 <span class="csscript"></span>
 
@@ -141,17 +141,16 @@ De-structuring assignments can be used with any depth of array and object nestin
 
 ##External libraries
 
-Using external libraries is exactly the same as calling functions on CoffeeScript libraries; since at the end of the day everything is compiled down to JavaScript. Using CoffeeScript with [jQuery](http://jquery.com) is especially elegant, due to the amount of callbacks in 
+Using external libraries is exactly the same as calling functions on CoffeeScript libraries; since at the end of the day everything is compiled down to JavaScript. Using CoffeeScript with [jQuery](http://jquery.com) is especially elegant, due to the amount of callbacks in jQuery's API. 
 
 <span class="csscript"></span>
 
-    jQuery ($) ->
+    # Use local alias
+    $ = jQuery
+
+    $ ->
       # DOMContentLoaded
       $(".el").click ->
         alert("Clicked!")
-        
     
-    # Use local alias
-    $ = jQuery
-    
-Since all of CoffeeScript's output is wrapped in an anonymous function, we can set a local `$` alias for `jQuery`. This will make sure that even if jQuery's no conflict mode is enabled, and the dollar is re-defined, our script will still function as intended. 
+Since all of CoffeeScript's output is wrapped in an anonymous function, we can set a local `$` alias for `jQuery`. This will make sure that even if jQuery's no conflict mode is enabled and the `$` re-defined, our script will still function as intended. 

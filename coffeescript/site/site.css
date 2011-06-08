@@ -104,6 +104,7 @@ header h1 a {
   height: 15px;
   background: #BFBDC9;
   cursor: pointer;
+  -webkit-user-select: none;
 }
 
 .pages {
