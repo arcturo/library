@@ -2,7 +2,7 @@
 
 #CoffeeScript Syntax
 
-Firstly, before we get any further into this section, I want to reiterate that while CoffeeScript's syntax is often identical with JavaScript's, it's not a superset, and therefore some JavaScript keywords, such as `function()` and `var` aren't permitted, and will throw syntax errors. If you're writing a CoffeeScript file, it needs to be pure CoffeeScript; you can't intermingle the two languages. 
+Firstly, before we get any further into this section, I want to reiterate that while CoffeeScript's syntax is often identical with JavaScript's, it's not a superset, and therefore some JavaScript keywords, such as `function` and `var` aren't permitted, and will throw syntax errors. If you're writing a CoffeeScript file, it needs to be pure CoffeeScript; you can't intermingle the two languages. 
 
 Why isn't CoffeeScript a superset? Well, the very fact that whitespace is significant in CoffeeScript programs prevents it being a superset. And, once that's decision's been made, the team decided you might as well go the full hog and deprecate some JavaScript keywords and features in the name of simplicity and in an effort to reduce many commonly occurring bugs. 
 
@@ -14,7 +14,7 @@ Comments are in the same format as Ruby comments, starting with a hash character
 
     # A comment
     
-Multiline comments are also supported, and are brought forward to the generated JavaScript. They're prefixed by three hash characters.
+Multiline comments are also supported, and are brought forward to the generated JavaScript. They're enclosed by three hash characters.
 
 <span class="csscript"></span>
 
@@ -36,14 +36,14 @@ Notice the dark grey box in the top right of the code example above. Give that a
 
 As you can see, the variable assignment is kept completely local, it's impossible to accidentally create a global variable. CoffeeScript actually takes this a step further, and makes it impossible to shadow a higher-level variable. This goes a great deal to prevent some of the most common mistakes developers make in JavaScript.
 
-However, sometimes it's useful to create global variables. You can either do this by directly setting them as properties on `window`, or with the following pattern:
+However, sometimes it's useful to create global variables. You can either do this by directly setting them as properties on the global object (`window` in browsers), or with the following pattern:
 
 <span class="csscript"></span>
 
     exports = this
     exports.MyVariable = "foo-bar"
     
-In the root context, `this` is equal to the `window` object, and by creating a local `exports` variable you're making it really obvious to anyone reading your code exactly which global variables a script is creating. Additionally, it paves the way for CommonJS modules, which we're going to cover later in the book. 
+In the root context, `this` is equal to the global object, and by creating a local `exports` variable you're making it really obvious to anyone reading your code exactly which global variables a script is creating. Additionally, it paves the way for CommonJS modules, which we're going to cover later in the book. 
 
 ##Functions
 
@@ -184,7 +184,7 @@ The convention of optional parentheses continues with CoffeeScript's `if` and `e
     #  (1 > 0) ? "Ok" : "Y2K!"
     if 1 > 0 then "Ok" else "Y2K!"
     
-As you can see above, if the `if` statement is on one line, you'll need to use the `then` keyword, so CoffeeScript knows when the function body begins. Conditional operators (`?:`) are not supported, instead you should use a single line `if/else` statement.
+As you can see above, if the `if` statement is on one line, you'll need to use the `then` keyword, so CoffeeScript knows when the block begins. Conditional operators (`?:`) are not supported, instead you should use a single line `if/else` statement.
 
 CoffeeScript also includes a Ruby idiom of allowing suffixed `if` statements.
 
@@ -212,7 +212,7 @@ In a similar fashion to `not`, CoffeeScript also introduces the `is` statement, 
     if true is 1
       "Type coercian fixed!"
 
-You may have noticed in the examples above, that CoffeeScript is converting `==` statements into `===` and `!=` statements into `!==`. This is one of my favorite features to the language, and yet one of the most simple. What's the reasoning behind this? Well frankly JavaScript's type coercion is a bit odd, and its equality operator coerces types in order to compare them, leading to some confusing behaviors and the source of many bugs. 
+You may have noticed in the examples above, that CoffeeScript is converting `==` operators into `===` and `!=` into `!==`. This is one of my favorite features to the language, and yet one of the most simple. What's the reasoning behind this? Well frankly JavaScript's type coercion is a bit odd, and its equality operator coerces types in order to compare them, leading to some confusing behaviors and the source of many bugs. 
 
 The example below is taken from [JavaScript Garden's equality section](http://bonsaiden.github.com/JavaScript-Garden/#types.equality) which delves into the issue in some depth. 
 
@@ -236,7 +236,7 @@ The solution is to use the strict equality operator, which consists of three equ
     
 ##String interpolation
 
-CoffeeScript brings Ruby style string interpolation to JavaScript. Double quotes strings can contain `#{}` tags, which contain a variable to be interpolated into the string. 
+CoffeeScript brings Ruby style string interpolation to JavaScript. Double quotes strings can contain `#{}` tags, which contain expressions to be interpolated into the string. 
 
 <span class="csscript"></span>
 
@@ -264,7 +264,7 @@ If you need the current iteration index, just pass an extra argument:
     for name, i in ["Roger the pickpocket", "Roderick the robber"]
       alert "#{i} - Release #{name}"
 
-You can also iterate on one line, turning the `for` loop into a comprehension. 
+You can also iterate on one line, using the postfix form. 
 
 <span class="csscript"></span>
 
@@ -294,13 +294,13 @@ The only low level loop that CoffeeScript exposes is the `while` loop. This has 
 
 ##Arrays
 
-CoffeeScript takes inspiration from Ruby when it comes to array slicing by using ranges. Ranges are created by two numerical values, the first and last positions in the range, separated by `..`. If a range isn't prefixed by anything, CoffeeScript expands it out into an array.
+CoffeeScript takes inspiration from Ruby when it comes to array slicing by using ranges. Ranges are created by two numerical values, the first and last positions in the range, separated by `..` or `...`. If a range isn't prefixed by anything, CoffeeScript expands it out into an array.
 
 <span class="csscript"></span>
 
     range = [1..5]
     
-If, however, the range is specified immediately after a variable, CoffeeScript converts it into a `splice()` function call. 
+If, however, the range is specified immediately after a variable, CoffeeScript converts it into a `slice()` method call. 
     
 <span class="csscript"></span>
 
@@ -313,7 +313,7 @@ In the example above, the range returns a new array, containing only the first t
     numbers = [0..9]
     numbers[3..5] = [-3, -4, -5]
 
-What's neat, is that JavaScript allows you to call `splice()` on strings too, so you can use ranges with string to return a new subset of characters. 
+What's neat, is that JavaScript allows you to call `slice()` on strings too, so you can use ranges with string to return a new subset of characters. 
     
 <span class="csscript"></span>
 
@@ -352,8 +352,14 @@ You can also use it in place of the `||` operator:
 
     velocity = southern ? 40
     
-If you're using a `null` check before calling a function, you can skip that by placing the existential operator right before the opening brackets. This is similar to Ruby's `try` method. 
+If you're using a `null` check before accessing a property, you can skip that by placing the existential operator right before the opening brackets. This is similar to Ruby's `try` method. 
 
 <span class="csscript"></span>
 
     blackKnight.getLegs()?.kick()
+
+You can safely call a value in the same manner, checking function-ness beforehand.
+
+<span class="csscript"></span>
+
+    whiteKnight.guard? us
