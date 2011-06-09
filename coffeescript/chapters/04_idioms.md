@@ -89,29 +89,29 @@ Behind the scenes, CoffeeScript is using `Array.prototype.indexOf()`, and shimmi
 
 <span class="csscript"></span>
 
-    included = "a long test string".indexOf "test" is not -1
+    included = "a long test string".indexOf("test") isnt -1
 
 Or even better, hijack the bitwise operator so we don't have to do a `-1` comparison. 
 
 <span class="csscript"></span>
     
     string   = "a long test string"
-    included = not~ string.indexOf "test"
+    included = !!~ string.indexOf "test"
     
 ##Min/Max
 
-This technique is not specific to CoffeeScript, but I thought it useful to demonstrate anyway. `Math.max` and `Math.min` take multiple arguments, so you can easily use `apply()` to pass an array to them, retrieving the maximum and minimum values in the array. 
+This technique is not specific to CoffeeScript, but I thought it useful to demonstrate anyway. `Math.max` and `Math.min` take multiple arguments, so you can easily use `...` to pass an array to them, retrieving the maximum and minimum values in the array. 
 
 <span class="csscript"></span>
 
-    Math.max.apply Math, [14, 35, -7, 46, 98] # 98
-    Math.min.apply Math, [14, 35, -7, 46, 98]
+    Math.max [14, 35, -7, 46, 98]... # 98
+    Math.min [14, 35, -7, 46, 98]... # -7
 
 ##And/or
 
-CoffeeScript style guides indicates that `or` is preferred over `||`, and `and` is preferred over `&&`. I can see why, as the former is somewhat more readable. Nethertheless, the two styles have identical results.  
+CoffeeScript style guides indicates that `or` is preferred over `||`, and `and` is preferred over `&&`. I can see why, as the former is somewhat more readable. Nevertheless, the two styles have identical results.  
 
-This preference over more english style code also applies to using `is` over `==` and `is not` over `!=`.
+This preference over more English style code also applies to using `is` over `==` and `isnt` over `!=`.
     
 <span class="csscript"></span>
 
@@ -131,9 +131,9 @@ If hash evaluates to `false`, then it's set to an empty object. It's important t
 
     hash ?= {}
 
-##De-structuring assignments
+##Destructuring assignments
 
-De-structuring assignments can be used with any depth of array and object nesting, to help pull out deeply nested properties.
+Destructuring assignments can be used with any depth of array and object nesting, to help pull out deeply nested properties.
 
     someObject = { a: 'value for a', b: 'value for b' }
     { a, b } = someObject
