@@ -120,7 +120,7 @@ passed = (score for score in scores when score &gt; 60)
 
 <p><span class="csscript"></span></p>
 
-<pre><code>included = "a long test string".indexOf "test" is not -1
+<pre><code>included = "a long test string".indexOf("test") isnt -1
 </code></pre>
 
 <p>Or even better, hijack the bitwise operator so we don't have to do a <code>-1</code> comparison.</p>
@@ -128,24 +128,24 @@ passed = (score for score in scores when score &gt; 60)
 <p><span class="csscript"></span></p>
 
 <pre><code>string   = "a long test string"
-included = not~ string.indexOf "test"
+included = !!~ string.indexOf "test"
 </code></pre>
 
 <h2>Min/Max</h2>
 
-<p>This technique is not specific to CoffeeScript, but I thought it useful to demonstrate anyway. <code>Math.max</code> and <code>Math.min</code> take multiple arguments, so you can easily use <code>apply()</code> to pass an array to them, retrieving the maximum and minimum values in the array.</p>
+<p>This technique is not specific to CoffeeScript, but I thought it useful to demonstrate anyway. <code>Math.max</code> and <code>Math.min</code> take multiple arguments, so you can easily use <code>...</code> to pass an array to them, retrieving the maximum and minimum values in the array.</p>
 
 <p><span class="csscript"></span></p>
 
-<pre><code>Math.max.apply Math, [14, 35, -7, 46, 98] # 98
-Math.min.apply Math, [14, 35, -7, 46, 98]
+<pre><code>Math.max [14, 35, -7, 46, 98]... # 98
+Math.min [14, 35, -7, 46, 98]... # -7
 </code></pre>
 
 <h2>And/or</h2>
 
-<p>CoffeeScript style guides indicates that <code>or</code> is preferred over <code>||</code>, and <code>and</code> is preferred over <code>&amp;&amp;</code>. I can see why, as the former is somewhat more readable. Nethertheless, the two styles have identical results.</p>
+<p>CoffeeScript style guides indicates that <code>or</code> is preferred over <code>||</code>, and <code>and</code> is preferred over <code>&amp;&amp;</code>. I can see why, as the former is somewhat more readable. Nevertheless, the two styles have identical results.</p>
 
-<p>This preference over more english style code also applies to using <code>is</code> over <code>==</code> and <code>is not</code> over <code>!=</code>.</p>
+<p>This preference over more English style code also applies to using <code>is</code> over <code>==</code> and <code>isnt</code> over <code>!=</code>.</p>
 
 <p><span class="csscript"></span></p>
 
@@ -168,9 +168,9 @@ string is string # true
 <pre><code>hash ?= {}
 </code></pre>
 
-<h2>De-structuring assignments</h2>
+<h2>Destructuring assignments</h2>
 
-<p>De-structuring assignments can be used with any depth of array and object nesting, to help pull out deeply nested properties.</p>
+<p>Destructuring assignments can be used with any depth of array and object nesting, to help pull out deeply nested properties.</p>
 
 <pre><code>someObject = { a: 'value for a', b: 'value for b' }
 { a, b } = someObject
