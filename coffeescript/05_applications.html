@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset=utf-8>
-<title>CoffeeScript</title>
+<title>The Little Book on CoffeeScript - Applications</title>
 <link rel="stylesheet" href="site/site.css" type="text/css" charset="utf-8">
 <link rel="stylesheet" href="site/highlight.css" type="text/css" charset="utf-8">
 <script src="site/jquery.js" type="text/javascript" charset="utf-8"></script>      
@@ -27,13 +27,13 @@
 
 <p>Now you've been given an overview of the syntax, lets explore actually structuring and creating CoffeeScript applications. This section aims to be useful to all CoffeeScript developers, novice or advanced. Indeed, it should be relevant to pure JavaScript developers too.</p>
 
-<p>For some reason, when developers are building client side JavaScript applications, tried and tested patterns and conventions often fly out the window, and the end result is a spaghetti mess of un-maintainable coupled JavaScript. I can't stress how important application architecture is; if you're writing any JavaScript/CoffeeScript beyond simple form validation you should implement a form of application structure, such as <a href="http://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller">MVC</a>.</p>
+<p>For some reason, when developers are building client side JavaScript applications, tried and tested patterns and conventions often fly out the window, and the end result is a spaghetti mess of un-maintainable coupled JavaScript. I can't stress enough how important application architecture is; if you're writing any JavaScript/CoffeeScript beyond simple form validation you should implement a form of application structure, such as <a href="http://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller">MVC</a>.</p>
 
-<p>The secret to building maintainable large applications is not to build large applications. In other words, build a series of modular de-coupled components. Keep application logic as generic as possible, abstracting it out as appropriate. Lastly separate out your logic into views, models and controllers (MVC). Implementing MVC is beyond the scope of this chapter, for that I recommend you see my book on <a href="http://oreilly.com/catalog/9781449307530/">JavaScript Web Applications</a> and use a framework like Backbone or <a href="https://github.com/maccman/spine">Spine</a>. Rather than that, here we're going to cover structuring applications using CommonJS modules.</p>
+<p>The secret to building maintainable large applications is not to build large applications. In other words, build a series of modular de-coupled components. Keep application logic as generic as possible, abstracting it out as appropriate. Lastly separate out your logic into views, models and controllers (MVC). Implementing MVC is beyond the scope of this chapter, for that I recommend you check out my book on <a href="http://oreilly.com/catalog/9781449307530/">JavaScript Web Applications</a> and use a framework like <a href="http://documentcloud.github.com/backbone/">Backbone</a> or <a href="https://github.com/maccman/spine">Spine</a>. Rather than that, here we're going to cover structuring applications using CommonJS modules.</p>
 
 <h2>Structure &amp; CommonJS</h2>
 
-<p>So what exactly are CommonJS modules? Well, If you've used <a href="http://nodejs.org/">NodeJS</a> before you've used CommonJS modules, probably without realizing it. CommonJS modules were initially developed for writing server side JavaScript libraries, in an attempt to deal with loading, namespacing and scoping issues. They were a common format which would be compatible across all JavaScript implementations, so for example a library written for <a href="http://www.mozilla.org/rhino/">Rhino</a> would work for Node. Eventually these ideas transitioned back to browsers, and now we have great libraries like <a href="http://requirejs.org">RequireJS</a> and <a href="https://github.com/jbrantly/yabble">Yabble</a> to use modules client-side.</p>
+<p>So what exactly are CommonJS modules? Well, If you've used <a href="http://nodejs.org/">NodeJS</a> before you've used CommonJS modules, probably without realizing it. CommonJS modules were initially developed for writing server side JavaScript libraries, in an attempt to deal with loading, namespacing and scoping issues. They were a common format which would be compatible across all JavaScript implementations. The aim was that a library written for <a href="http://www.mozilla.org/rhino/">Rhino</a> would work for Node. Eventually these ideas transitioned back to browsers, and now we have great libraries like <a href="http://requirejs.org">RequireJS</a> and <a href="https://github.com/jbrantly/yabble">Yabble</a> to use modules client-side.</p>
 
 <p>Practically speaking, modules ensure that your code is run in a local namespace (code encapsulation), that you can load other modules with the <code>require()</code> function, and expose module properties via <code>module.exports</code>. Let's dive into that in a bit more depth now.</p>
 

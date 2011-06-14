@@ -2,7 +2,9 @@
 <html>
 <head>
 <meta charset=utf-8>
-<title>CoffeeScript</title>
+<meta name="description" content="The Little Book on CoffeeScript">
+<meta name="keywords" content="coffeescript,javascript,book,tutorials">
+<title>The Little Book on CoffeeScript</title>
 <link rel="stylesheet" href="site/site.css" type="text/css" charset="utf-8">
 <script src="site/jquery.js" type="text/javascript" charset="utf-8"></script>      
 </head>

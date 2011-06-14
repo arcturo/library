@@ -3,10 +3,10 @@ require "mustache"
 require "active_support/core_ext/string"
 require "fileutils"
 
-def generate(source, template = "site/page.ms")
+def generate(page, template = "site/page.ms")
   Mustache.render(
     File.read(template), 
-    :content => RDiscount.new(source).to_html
+    page.merge(:content => RDiscount.new(File.read(page[:src])).to_html),
   )
 end
 
@@ -23,7 +23,7 @@ task :generate do
   
   pages.each do |page|
     File.open(page[:static], "w+") do |f|
-      f.write generate(File.read(page[:src]))
+      f.write generate(page)
     end
   end
   
