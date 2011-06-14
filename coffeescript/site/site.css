@@ -103,8 +103,8 @@ header h1 a {
   width: 15px;
   height: 15px;
   background: #BFBDC9;
+  border: 0;
   cursor: pointer;
-  -webkit-user-select: none;
 }
 
 .pages {

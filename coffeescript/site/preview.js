@@ -12,7 +12,7 @@ jQuery(function($) {
     compiled = $("<pre />").append($("<code />").text(cs));
     compiled.hide();
     
-    handle = $("<div />").addClass("handle");
+    handle = $("<button />").addClass("handle");
     handle.attr("title", "Click to toggle between CoffeeScript & JavaScript");
     handle.click(function(){
       original.toggle();
