@@ -122,7 +122,7 @@ CoffeeScript uses prototypal inheritance to automatically inherit all of a class
     Animal::rip = true
     
     parrot = new Parrot("Macaw")
-    alert("This parrot is no more") if parrot.rip()
+    alert("This parrot is no more") if parrot.rip
 
 It's worth pointing out though that static properties are copied to subclasses, rather than inherited using prototype as instance properties are. This is due to implementation details with JavaScript's prototypal architecture, and is a difficult problem to work around.
 
