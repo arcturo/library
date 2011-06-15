@@ -47,7 +47,7 @@ In the root context, `this` is equal to the global object, and by creating a loc
 
 ##Functions
 
-CoffeeScript removes the rather verbose `function` statement, and replaces it with an thin arrow: `->`. Functions can be one liners, or indented on multiple lines. The last expression in the function is implicitly returned. In other words, you don't need to use the `return` statement unless you want to return earlier inside the function. 
+CoffeeScript removes the rather verbose `function` statement, and replaces it with a thin arrow: `->`. Functions can be one liners, or indented on multiple lines. The last expression in the function is implicitly returned. In other words, you don't need to use the `return` statement unless you want to return earlier inside the function. 
     
 With that in mind, let's take a look at an example:
     

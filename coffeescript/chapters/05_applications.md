@@ -156,7 +156,7 @@ Since we defined a `tmpl` compiler handler, Stitch will automatically compile ou
     
     require("views/users/show")(new User("name"))
     
-##Bonus - 30 second deployment with Herkou
+##Bonus - 30 second deployment with Heroku
 
 [Heroku](http://heroku.com/) is an incredibly awesome web host that manages all the servers and scaling for you, letting you get on with the exciting stuff (building awesome JavaScript applications). You'll need an account with Heroku for this tutorial to work, but the great news is that their basic plan is completely free. While traditionally a Ruby host, Heroku have recently released their Cedar stack which includes Node support. 
 
