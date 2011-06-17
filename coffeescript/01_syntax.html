@@ -5,7 +5,7 @@
 <title>The Little Book on CoffeeScript - Syntax</title>
 <link rel="stylesheet" href="site/site.css" type="text/css" charset="utf-8">
 <link rel="stylesheet" href="site/highlight.css" type="text/css" charset="utf-8">
-<script src="site/jquery.js" type="text/javascript" charset="utf-8"></script>      
+<script src="site/jquery.js" type="text/javascript" charset="utf-8"></script>
 <script src="site/highlight.js" type="text/javascript" charset="utf-8"></script>
 <script src="site/coffee-script.js" type="text/javascript" charset="utf-8"></script>
 <script src="site/preview.js" type="text/javascript" charset="utf-8"></script>
@@ -18,7 +18,7 @@
   <header>
     <h1><a href="index.html">The Little Book on CoffeeScript</a></h1>
   </header>
-  
+
   <div id="content">
     <div class="back"><a href="index.html">&laquo; Back to all chapters</a></div>
 
@@ -85,7 +85,7 @@ exports.MyVariable = "foo-bar"
 
 <p>You can see in the resultant compilation, the <code>-&gt;</code> is turned into a <code>function</code> statement, and the <code>"bar"</code> string is automatically returned.</p>
 
-<p>As mentioned earlier, there's no reason why the we can't use multiple lines, as long we indent the function body properly.</p>
+<p>As mentioned earlier, there's no reason why we can't use multiple lines, as long we indent the function body properly.</p>
 
 <p><span class="csscript"></span></p>
 
@@ -114,7 +114,7 @@ exports.MyVariable = "foo-bar"
 
 <p><span class="csscript"></span></p>
 
-<pre><code>sum = (nums...) -&gt; 
+<pre><code>sum = (nums...) -&gt;
   result = 0
   nums.forEach (n) -&gt; result += n
   result
@@ -183,7 +183,7 @@ element.addEventListener "click", (e) =&gt; this.clickHandler(e)
 object2 = one: 1, two: 2
 
 # Using new lines instead of commas
-object3 = 
+object3 =
   one: 1
   two: 2
 
@@ -324,7 +324,7 @@ question = "Bridgekeeper: What... is your favourite colour?
 <p><span class="csscript"></span></p>
 
 <pre><code>prisoners = ["Roger", "Roderick", "Brian"]
-release prisoner for prisoner in prisoners when prisoner[0] is "R" 
+release prisoner for prisoner in prisoners when prisoner[0] is "R"
 </code></pre>
 
 <p>You can also use comprehensions for iterating over properties in objects. Instead of the <code>in</code> keyword, use <code>of</code>.</p>
@@ -380,7 +380,7 @@ numbers[3..5] = [-3, -4, -5]
 <p><span class="csscript"></span></p>
 
 <pre><code>words = ["rattled", "roudy", "rebbles", "ranks"]
-alert "Stop wagging me" if "ranks" in words 
+alert "Stop wagging me" if "ranks" in words
 </code></pre>
 
 <h2>Aliases &amp; the Existential Operator</h2>
