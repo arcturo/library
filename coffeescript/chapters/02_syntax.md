@@ -8,7 +8,7 @@ Why isn't CoffeeScript a superset? Well, the very fact that whitespace is signif
 
 What I find mind-blowing, in a meta sort of way, is that the CoffeeScript interpreter itself is actually written in CoffeeScript. It looks like the chicken or egg paradox has finally been solved!
 
-Right, so firstly let's tackle the basic stuff. There's no semicolons in CoffeeScript, it'll add them automatically for you upon compilation. Semicolons were the cause of much debate in the JavaScript community, and behind some weird interpreter [behavior](http://bonsaiden.github.com/JavaScript-Garden/#core.semicolon). Anyway, CoffeeScript resolves this problem for you by simply removing semi-colons from its syntax, adding them as needed behind the scenes.
+Right, so firstly let's tackle the basic stuff. There are no semicolons in CoffeeScript, it'll add them automatically for you upon compilation. Semicolons were the cause of much debate in the JavaScript community, and behind some weird interpreter [behavior](http://bonsaiden.github.com/JavaScript-Garden/#core.semicolon). Anyway, CoffeeScript resolves this problem for you by simply removing semi-colons from its syntax, adding them as needed behind the scenes.
 
 Comments are in the same format as Ruby comments, starting with a hash character. 
 
@@ -22,7 +22,7 @@ Multiline comments are also supported, and are brought forward to the generated 
       A multiline comment, perhaps a LICENSE.
     ###
 
-As I briefly alluded to, whitespace is significant in CoffeeScript. In practice, this means that you can replace curly brackets (`{}`) with a tab. This takes inspiration from Python's syntax, and has the excellent side-effect of ensuring that your script is formatted in a sane manner, otherwise it won't even compile!
+As I briefly alluded to, whitespace is significant in CoffeeScript. In practice, this means that you can replace curly brackets (`{}`) with a tab. This takes inspiration from Python's syntax, and has the excellent side effect of ensuring that your script is formatted in a sane manner, otherwise it won't even compile!
 
 ##Variables & Scope
 
@@ -47,7 +47,7 @@ In the root context, `this` is equal to the global object, and by creating a loc
 
 ##Functions
 
-CoffeeScript removes the rather verbose `function` statement, and replaces it with a thin arrow: `->`. Functions can be one liners, or indented on multiple lines. The last expression in the function is implicitly returned. In other words, you don't need to use the `return` statement unless you want to return earlier inside the function. 
+CoffeeScript removes the rather verbose `function` statement, and replaces it with a thin arrow: `->`. Functions can be one-liners, or indented on multiple lines. The last expression in the function is implicitly returned. In other words, you don't need to use the `return` statement unless you want to return earlier inside the function. 
     
 With that in mind, let's take a look at an example:
     
@@ -210,7 +210,7 @@ In a similar fashion to `not`, CoffeeScript also introduces the `is` statement, 
 <span class="csscript"></span>
 
     if true is 1
-      "Type coercian fixed!"
+      "Type coercion fixed!"
 
 You may have noticed in the examples above, that CoffeeScript is converting `==` operators into `===` and `!=` into `!==`. This is one of my favorite features to the language, and yet one of the most simple. What's the reasoning behind this? Well frankly JavaScript's type coercion is a bit odd, and its equality operator coerces types in order to compare them, leading to some confusing behaviors and the source of many bugs. 
 
@@ -241,7 +241,7 @@ CoffeeScript brings Ruby style string interpolation to JavaScript. Double quotes
 <span class="csscript"></span>
 
     favourite_color = "Blue. No, yel..."
-    question = "Bridgekeeper: What... is your favourite colour?
+    question = "Bridgekeeper: What... is your favourite color?
                 Galahad: #{favourite_color}
                 Bridgekeeper: Wrong!
                 "
@@ -284,7 +284,7 @@ You can also use comprehensions for iterating over properties in objects. Instea
     names = sam: seaborn, donna: moss
     alert("#{first} #{last}") for first, last of names
 
-The only low level loop that CoffeeScript exposes is the `while` loop. This has similar behavior to the `while` loop in pure JavaScript, but has the added advantage that it returns an array of results, i.e. like the `Array.prototype.map()` function.
+The only low-level loop that CoffeeScript exposes is the `while` loop. This has similar behavior to the `while` loop in pure JavaScript, but has the added advantage that it returns an array of results, i.e. like the `Array.prototype.map()` function.
 
 <span class="csscript"></span>
 

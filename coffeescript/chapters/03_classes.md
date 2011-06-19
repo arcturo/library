@@ -10,13 +10,13 @@ Behind the scenes, CoffeeScript is using JavaScript's native prototype to create
 
     class Animal
     
-In the example above, `Animal` is the name of the class, and also the name of the resultant variable that you can use to create instances. Behind the scenes CoffeeScript is using construction functions which means you can instantiate classes using the `new` operator.
+In the example above, `Animal` is the name of the class, and also the name of the resultant variable that you can use to create instances. Behind the scenes CoffeeScript is using construction functions, which means you can instantiate classes using the `new` operator.
 
 <span class="csscript"></span>
 
     animal = new Animal
 
-Defining constructors (functions that get invoked upon instantiation) is simple, just use a function named `constructor`. This is akin to using's Ruby's `initialize` or Python's `__init__`.
+Defining constructors (functions that get invoked upon instantiation) is simple, just use a function named `constructor`. This is akin to using Ruby's `initialize` or Python's `__init__`.
 
 <span class="csscript"></span>
 
