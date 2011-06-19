@@ -10,17 +10,17 @@ The secret to building maintainable large applications is not to build large app
 
 ##Structure & CommonJS
 
-So what exactly are CommonJS modules? Well, If you've used [NodeJS](http://nodejs.org/) before you've used CommonJS modules, probably without realizing it. CommonJS modules were initially developed for writing server side JavaScript libraries, in an attempt to deal with loading, namespacing and scoping issues. They were a common format which would be compatible across all JavaScript implementations. The aim was that a library written for [Rhino](http://www.mozilla.org/rhino/) would work for Node. Eventually these ideas transitioned back to browsers, and now we have great libraries like [RequireJS](http://requirejs.org) and [Yabble](https://github.com/jbrantly/yabble) to use modules client-side. 
+So what exactly are CommonJS modules? Well, If you've used [NodeJS](http://nodejs.org/) before you've used CommonJS modules, probably without realizing it. CommonJS modules were initially developed for writing server side JavaScript libraries, in an attempt to deal with loading, namespacing and scoping issues. They were a common format that would be compatible across all JavaScript implementations. The aim was that a library written for [Rhino](http://www.mozilla.org/rhino/) would work for Node. Eventually these ideas transitioned back to browsers, and now we have great libraries like [RequireJS](http://requirejs.org) and [Yabble](https://github.com/jbrantly/yabble) to use modules client-side. 
 
 Practically speaking, modules ensure that your code is run in a local namespace (code encapsulation), that you can load other modules with the `require()` function, and expose module properties via `module.exports`. Let's dive into that in a bit more depth now. 
 
 ###Requiring files
 
-You can load in other modules and libraries using `require()`. Simply pass a module name and, if it's in the load path, it'll return a object representing that module. For example:
+You can load in other modules and libraries using `require()`. Simply pass a module name and, if it's in the load path, it'll return an object representing that module. For example:
 
     var User = require("models/user");
     
-Synchronous require support is a contentious issue, but has mostly be resolved with the mainstream loader libraries and latest CommonJS [proposals](http://wiki.commonjs.org/wiki/Modules/AsynchronousDefinition). It may be something you'll have to look into if you decided to take a separate route than the one I'm advocating with Stitch below. 
+Synchronous require support is a contentious issue, but has mostly been resolved with the mainstream loader libraries and latest CommonJS [proposals](http://wiki.commonjs.org/wiki/Modules/AsynchronousDefinition). It may be something you'll have to look into if you decided to take a separate route than the one I'm advocating with Stitch below. 
 
 ###Exporting properties
 
@@ -87,7 +87,7 @@ Now to actually boot up the Stitch server. Let's create a file called `server.js
       app.use(app.router);
       // Set the static route, in this case `public`
       app.use(express.static(__dirname + '/public'));
-      // And invoke Stitch when application.js is requsted
+      // And invoke Stitch when application.js is requested
       app.get('/application.js', package.createServer());
     });
 
@@ -137,7 +137,7 @@ When the page loads, our inline jQuery callback is requiring the `app.coffee` sc
 
 ##JavaScript templates
 
-If you're moving logic to the client side, then you'll definitely need some sort of templating library. JavaScript templating is very similar to templates on the server, such as Ruby's ERB or Python's text interpolation, expect of course it runs client side. There are a whole host of templating libraries out there, so I encourage you to do some research and check them out. By default, Stitch comes with support for [eco](https://github.com/sstephenson/eco) templates baked right in. However, if you're using another templating library don't despair. Stitch has a rather neat feature which lets you add custom compilers for particular extensions.
+If you're moving logic to the client side, then you'll definitely need some sort of templating library. JavaScript templating is very similar to templates on the server, such as Ruby's ERB or Python's text interpolation, expect of course it runs client side. There are a whole host of templating libraries out there, so I encourage you to do some research and check them out. By default, Stitch comes with support for [eco](https://github.com/sstephenson/eco) templates baked right in. However, if you're using another templating library don't despair. Stitch has a rather neat feature that lets you add custom compilers for particular extensions.
 
 For example, let's add support for the [jQuery.tmpl](http://api.jquery.com/jquery.tmpl/) library, which I often use instead of eco due to a few implementation details:
 
@@ -158,7 +158,7 @@ Since we defined a `tmpl` compiler handler, Stitch will automatically compile ou
     
 ##Bonus - 30 second deployment with Heroku
 
-[Heroku](http://heroku.com/) is an incredibly awesome web host that manages all the servers and scaling for you, letting you get on with the exciting stuff (building awesome JavaScript applications). You'll need an account with Heroku for this tutorial to work, but the great news is that their basic plan is completely free. While traditionally a Ruby host, Heroku have recently released their Cedar stack which includes Node support. 
+[Heroku](http://heroku.com/) is an incredibly awesome web host that manages all the servers and scaling for you, letting you get on with the exciting stuff (building awesome JavaScript applications). You'll need an account with Heroku for this tutorial to work, but the great news is that their basic plan is completely free. While traditionally a Ruby host, Heroku have recently released their Cedar stack, which includes Node support. 
 
 Firstly we need to make a `Procfile`, which will inform Heroku about our application.
 
