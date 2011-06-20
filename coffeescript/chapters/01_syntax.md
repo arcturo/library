@@ -26,7 +26,7 @@ As I briefly alluded to, whitespace is significant in CoffeeScript. In practice,
 
 ##Variables & Scope
 
-CoffeeScript fixes one of the major bugbears with JavaScript, global variables. In JavaScript, it's all too easy to accidentally declare a global variable by forgetting to include `var` before the variable assignment. CoffeeScript solves this by simply removing global variables. Behind the scenes, CoffeeScript wraps up scripts with a anonymous function, keeping the local context, and automatically prefixes all variable assignments with `var`. For example, take this simple variable assignment in CoffeeScript:
+CoffeeScript fixes one of the major bugbears with JavaScript, global variables. In JavaScript, it's all too easy to accidentally declare a global variable by forgetting to include `var` before the variable assignment. CoffeeScript solves this by simply removing global variables. Behind the scenes, CoffeeScript wraps up scripts with an anonymous function, keeping the local context, and automatically prefixes all variable assignments with `var`. For example, take this simple variable assignment in CoffeeScript:
 
 <span class="csscript"></span>
 
@@ -47,7 +47,7 @@ In the root context, `this` is equal to the global object, and by creating a loc
 
 ##Functions
 
-CoffeeScript removes the rather verbose `function` statement, and replaces it with a thin arrow: `->`. Functions can be one liners, or indented on multiple lines. The last expression in the function is implicitly returned. In other words, you don't need to use the `return` statement unless you want to return earlier inside the function. 
+CoffeeScript removes the rather verbose `function` statement, and replaces it with a thin arrow: `->`. Functions can be one liners or indented on multiple lines. The last expression in the function is implicitly returned. In other words, you don't need to use the `return` statement unless you want to return earlier inside the function. 
     
 With that in mind, let's take a look at an example:
     
@@ -67,7 +67,7 @@ As mentioned earlier, there's no reason why the we can't use multiple lines, as 
       
 ###Function arguments
 
-How about specifying arguments? Well, CoffeeScript lets you do that by specifying arguments in a pair of parenthesis before the arrow.
+How about specifying arguments? Well, CoffeeScript lets you do that by specifying arguments in parentheses before the arrow.
 
 <span class="csscript"></span>
 

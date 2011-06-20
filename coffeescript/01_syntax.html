@@ -51,7 +51,7 @@
 
 <h2>Variables &amp; Scope</h2>
 
-<p>CoffeeScript fixes one of the major bugbears with JavaScript, global variables. In JavaScript, it's all too easy to accidentally declare a global variable by forgetting to include <code>var</code> before the variable assignment. CoffeeScript solves this by simply removing global variables. Behind the scenes, CoffeeScript wraps up scripts with a anonymous function, keeping the local context, and automatically prefixes all variable assignments with <code>var</code>. For example, take this simple variable assignment in CoffeeScript:</p>
+<p>CoffeeScript fixes one of the major bugbears with JavaScript, global variables. In JavaScript, it's all too easy to accidentally declare a global variable by forgetting to include <code>var</code> before the variable assignment. CoffeeScript solves this by simply removing global variables. Behind the scenes, CoffeeScript wraps up scripts with an anonymous function, keeping the local context, and automatically prefixes all variable assignments with <code>var</code>. For example, take this simple variable assignment in CoffeeScript:</p>
 
 <p><span class="csscript"></span></p>
 
@@ -74,7 +74,7 @@ exports.MyVariable = "foo-bar"
 
 <h2>Functions</h2>
 
-<p>CoffeeScript removes the rather verbose <code>function</code> statement, and replaces it with a thin arrow: <code>-&gt;</code>. Functions can be one liners, or indented on multiple lines. The last expression in the function is implicitly returned. In other words, you don't need to use the <code>return</code> statement unless you want to return earlier inside the function.</p>
+<p>CoffeeScript removes the rather verbose <code>function</code> statement, and replaces it with a thin arrow: <code>-&gt;</code>. Functions can be one liners or indented on multiple lines. The last expression in the function is implicitly returned. In other words, you don't need to use the <code>return</code> statement unless you want to return earlier inside the function.</p>
 
 <p>With that in mind, let's take a look at an example:</p>
 
@@ -96,7 +96,7 @@ exports.MyVariable = "foo-bar"
 
 <h3>Function arguments</h3>
 
-<p>How about specifying arguments? Well, CoffeeScript lets you do that by specifying arguments in a pair of parenthesis before the arrow.</p>
+<p>How about specifying arguments? Well, CoffeeScript lets you do that by specifying arguments in parentheses before the arrow.</p>
 
 <p><span class="csscript"></span></p>
 
