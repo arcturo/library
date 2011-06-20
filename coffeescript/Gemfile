@@ -1,0 +1,9 @@
+source :rubygems
+
+gem 'rake'
+gem 'bundler'
+gem 'rdiscount'
+gem 'mustache'
+gem 'activesupport'
+gem 'fileutils'
+gem 'i18n'

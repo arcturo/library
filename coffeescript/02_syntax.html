@@ -31,7 +31,7 @@
 
 <p>What I find mind-blowing, in a meta sort of way, is that the CoffeeScript interpreter itself is actually written in CoffeeScript. It looks like the chicken or egg paradox has finally been solved!</p>
 
-<p>Right, so firstly let's tackle the basic stuff. There's no semicolons in CoffeeScript, it'll add them automatically for you upon compilation. Semicolons were the cause of much debate in the JavaScript community, and behind some weird interpreter <a href="http://bonsaiden.github.com/JavaScript-Garden/#core.semicolon">behavior</a>. Anyway, CoffeeScript resolves this problem for you by simply removing semi-colons from its syntax, adding them as needed behind the scenes.</p>
+<p>Right, so firstly let's tackle the basic stuff. There are no semicolons in CoffeeScript, it'll add them automatically for you upon compilation. Semicolons were the cause of much debate in the JavaScript community, and behind some weird interpreter <a href="http://bonsaiden.github.com/JavaScript-Garden/#core.semicolon">behavior</a>. Anyway, CoffeeScript resolves this problem for you by simply removing semi-colons from its syntax, adding them as needed behind the scenes.</p>
 
 <p>Comments are in the same format as Ruby comments, starting with a hash character.</p>
 
@@ -47,7 +47,7 @@
 ###
 </code></pre>
 
-<p>As I briefly alluded to, whitespace is significant in CoffeeScript. In practice, this means that you can replace curly brackets (<code>{}</code>) with a tab. This takes inspiration from Python's syntax, and has the excellent side-effect of ensuring that your script is formatted in a sane manner, otherwise it won't even compile!</p>
+<p>As I briefly alluded to, whitespace is significant in CoffeeScript. In practice, this means that you can replace curly brackets (<code>{}</code>) with a tab. This takes inspiration from Python's syntax, and has the excellent side effect of ensuring that your script is formatted in a sane manner, otherwise it won't even compile!</p>
 
 <h2>Variables &amp; Scope</h2>
 
@@ -85,7 +85,7 @@ exports.MyVariable = "foo-bar"
 
 <p>You can see in the resultant compilation, the <code>-&gt;</code> is turned into a <code>function</code> statement, and the <code>"bar"</code> string is automatically returned.</p>
 
-<p>As mentioned earlier, there's no reason why the we can't use multiple lines, as long we indent the function body properly.</p>
+<p>As mentioned earlier, there's no reason why we can't use multiple lines, as long we indent the function body properly.</p>
 
 <p><span class="csscript"></span></p>
 
@@ -252,7 +252,7 @@ if 1 &gt; 0 then "Ok" else "Y2K!"
 <p><span class="csscript"></span></p>
 
 <pre><code>if true is 1
-  "Type coercian fixed!"
+  "Type coercion fixed!"
 </code></pre>
 
 <p>You may have noticed in the examples above, that CoffeeScript is converting <code>==</code> operators into <code>===</code> and <code>!=</code> into <code>!==</code>. This is one of my favorite features to the language, and yet one of the most simple. What's the reasoning behind this? Well frankly JavaScript's type coercion is a bit odd, and its equality operator coerces types in order to compare them, leading to some confusing behaviors and the source of many bugs.</p>
@@ -286,7 +286,7 @@ null         ==   undefined     // true
 <p><span class="csscript"></span></p>
 
 <pre><code>favourite_color = "Blue. No, yel..."
-question = "Bridgekeeper: What... is your favourite colour?
+question = "Bridgekeeper: What... is your favourite color?
             Galahad: #{favourite_color}
             Bridgekeeper: Wrong!
             "
@@ -335,7 +335,7 @@ release prisoner for prisoner in prisoners when prisoner[0] is "R"
 alert("#{first} #{last}") for first, last of names
 </code></pre>
 
-<p>The only low level loop that CoffeeScript exposes is the <code>while</code> loop. This has similar behavior to the <code>while</code> loop in pure JavaScript, but has the added advantage that it returns an array of results, i.e. like the <code>Array.prototype.map()</code> function.</p>
+<p>The only low-level loop that CoffeeScript exposes is the <code>while</code> loop. This has similar behavior to the <code>while</code> loop in pure JavaScript, but has the added advantage that it returns an array of results, i.e. like the <code>Array.prototype.map()</code> function.</p>
 
 <p><span class="csscript"></span></p>
 
