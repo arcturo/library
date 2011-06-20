@@ -18,7 +18,7 @@ First to get some common fallacies out the way. You will need to know JavaScript
 
 What are the disadvantages of using CoffeeScript? Well, it introduces another compile step between you and your JavaScript. CoffeeScript tries to mitigate the issue as best it can by producing clean and readable JavaScript, and with its server integrations which automate compilation. The other disadvantage, as with any new language, is the fact that the community is still small at this point, and you'll have a hard time finding fellow collaborators who already know the language. CoffeeScript is quickly gaining momentum though, and its IRC list is well staffed; any questions you have are usually answered promptly. 
 
-CoffeeScript is not limited to the browser, and can be used to great effect in server side JavaScript implementations, such as [Node.js](http://nodejs.org/).   Additionally, CoffeeScript is getting much wider use and integration, such as being a default in Rails 3.1. Now is definitely the time to jump on the CoffeeScript train, and you'll thank yourself for the time invested in learning about the language now, in lieu of the major time savings you'll make later. 
+CoffeeScript is not limited to the browser, and can be used to great effect in server side JavaScript implementations, such as [Node.js](http://nodejs.org/).   Additionally, CoffeeScript is getting much wider use and integration, such as being a default in Rails 3.1. Now is definitely the time to jump on the CoffeeScript train. The time you invest in learning about the language now will be repaid by major time savings later.
 
 ##Initial setup
 
