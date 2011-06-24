@@ -39,7 +39,6 @@ select, input, textarea, button { font:99% sans-serif; }
 pre, code, kbd, samp { font-family: monospace, sans-serif; }
 
 
-html { overflow: hidden }
 a:hover, a:active { outline: none; }
 ul, ol { margin-left: 2em; }
 ol { list-style-type: decimal; }
@@ -87,18 +86,32 @@ h1, h2, h3, h4, h5, h6 { font-weight: bold; }
 
 a { text-decoration: none }
 
-/* Mad typesets and font colours */
 body, a   { color: #000 }
 aside     { color: #ccc }
 h1    { font-family: 'ff-meta-web-pro' }
 p, li { font-family: 'ff-meta-web-pro-condensed' }
+code  { font-family: 'Monaco', monospace; background: #f8f8ff }
 
-/* Ze grid! */
-#book { width: 900px; margin: 0 auto; padding: 3% 2em; box-shadow: 0 0 5px rgba(0,0,0,0.2);  }
+#book { width: 900px; margin: 0 auto 2em; padding: 3% 2em; box-shadow: 0 0 5px rgba(0,0,0,0.2);  }
+#book.toc     { padding: 3% 2em }
+#book.chapter { padding: 1% 2em }
 
-#book > h1        { font-size: 3em; text-align: center; }
-#book > h1 svg    { margin-bottom: -7px; }
-#book > h1 aside  { font-size: 1rem }
+#book.toc > h1        { font-size: 3em; text-align: center; }
+#book.toc > h1 svg    { margin-bottom: -7px; }
+#book.toc > h1 aside  { font-size: 1rem }
+
+#book.chapter > h1  { font-size: 1.4em; margin-bottom: 1em }
+#book.toc > h1 svg  { margin-bottom: -7px }
+
+#content > h1,
+#content > h2 { margin: 0.5em 0 }
+#content > h1 { font-size: 2.6em }
+#content > h2 { font-size: 2em }
+#content > p  { font-size: 1.3em; margin: 0.5em 0; text-indent: 1em }
+#content a    { color: #f88a3f }
+#content p code { font-size: 90% }
+#content .wrap { min-width: 70%; position: relative }
+#content .wrap .handle { position: absolute; top: 0; right: 0 }
 
 #toc { margin: 3em 0 }
 #toc ol { counter-reset: li; margin-left: 130px }
@@ -109,7 +122,6 @@ p, li { font-family: 'ff-meta-web-pro-condensed' }
   background: -moz-linear-gradient(19% 75% 90deg,#fceaa1, #f8d43f);
 }
 #toc ol > li:hover aside { color: #000 }
-
 #toc ol > li:before {
   position: absolute;
   top: 0.3em; left: -2em;  
@@ -126,3 +138,4 @@ p, li { font-family: 'ff-meta-web-pro-condensed' }
 
 #toc li a   { font-size: 2em }
 #toc aside  { font-size: 1.4rem }
+
