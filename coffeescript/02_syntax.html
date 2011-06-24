@@ -48,8 +48,7 @@
 
         <p><span class="csscript"></span></p>
 
-        <pre><code>myVariable = "test"
-        </code></pre>
+        <pre><code>myVariable = "test"</code></pre>
 
         <p>Notice the dark grey box in the top right of the code example above. Give that a click, and the code will toggle between CoffeeScript and the compiled JavaScript. This is rendered right inside the page at runtime, so you assured the compiled output is accurate.</p>
 
@@ -60,8 +59,7 @@
         <p><span class="csscript"></span></p>
 
         <pre><code>exports = this
-          exports.MyVariable = "foo-bar"
-        </code></pre>
+exports.MyVariable = "foo-bar"</code></pre>
 
         <p>In the root context, <code>this</code> is equal to the global object, and by creating a local <code>exports</code> variable you're making it really obvious to anyone reading your code exactly which global variables a script is creating. Additionally, it paves the way for CommonJS modules, which we're going to cover later in the book.</p>
 
@@ -73,8 +71,7 @@
 
         <p><span class="csscript"></span></p>
 
-        <pre><code>func = -&gt; "bar"
-        </code></pre>
+        <pre><code>func = -&gt; "bar"</code></pre>
 
         <p>You can see in the resultant compilation, the <code>-&gt;</code> is turned into a <code>function</code> statement, and the <code>"bar"</code> string is automatically returned.</p>
 
@@ -83,9 +80,8 @@
         <p><span class="csscript"></span></p>
 
         <pre><code>func = -&gt;
-          # An extra line
-          "bar"
-        </code></pre>
+  # An extra line
+  "bar"</code></pre>
 
         <h3>Function arguments</h3>
 
@@ -93,34 +89,30 @@
 
         <p><span class="csscript"></span></p>
 
-        <pre><code>times = (a, b) -&gt; a * b
-        </code></pre>
+        <pre><code>times = (a, b) -&gt; a * b</code></pre>
 
         <p>CoffeeScript supports default arguments too, for example:</p>
 
         <p><span class="csscript"></span></p>
 
-        <pre><code>times = (a = 1, b = 2) -&gt; a * 2
-        </code></pre>
+        <pre><code>times = (a = 1, b = 2) -&gt; a * 2</code></pre>
 
         <p>You can also use splats to accept multiple arguments, denoted by <code>...</code></p>
 
         <p><span class="csscript"></span></p>
 
         <pre><code>sum = (nums...) -&gt; 
-          result = 0
-          nums.forEach (n) -&gt; result += n
-          result
-        </code></pre>
+  result = 0
+  nums.forEach (n) -&gt; result += n
+  result</code></pre>
 
         <p>In the example above, <code>nums</code> is an array of all the arguments passed to the function. It's not an <code>arguments</code> object, but rather a real array, so you don't need to concern yourself with <code>Array.prototype.splice</code> or <code>jQuery.makeArray()</code> if you want to manipulate it.</p>
 
         <p><span class="csscript"></span></p>
 
         <pre><code>trigger = (events...) -&gt;
-          events.splice(1, 0, this)
-          this.parent.trigger.apply(events)
-        </code></pre>
+  events.splice(1, 0, this)
+  this.parent.trigger.apply(events)</code></pre>
 
         <h3>Function invocation</h3>
 
@@ -129,22 +121,19 @@
         <p><span class="csscript"></span></p>
 
         <pre><code>a = "Howdy!"
+alert a
+# Equivalent to:
+alert(a)
 
-          alert a
-          # Equivalent to:
-          alert(a)
-
-          alert inspect a
-          # Equivalent to:
-          alert(inspect(a))
-        </code></pre>
+alert inspect a
+# Equivalent to:
+alert(inspect(a))</code></pre>
 
         <p>Although parenthesis is optional, I'd recommend using it if it's not immediately obvious what's being invoked, and with which arguments. In the last example, with <code>inspect</code>, I'd definitely recommend wrapping at least the <code>inspect</code> invocation in parens.</p>
 
         <p><span class="csscript"></span></p>
 
-        <pre><code>alert inspect(a)
-        </code></pre>
+        <pre><code>alert inspect(a)</code></pre>
 
         <p>If you don't pass any arguments with an invocation, CoffeeScript has no way of working out if you intend to invoke the function, or just treat it like a variable. In this respect, CoffeeScript's behavior differs from Ruby which always invokes references to functions, and more similar to Python's. This has been the source of a few errors in my CoffeeScript programs, so it's worth keeping an eye out for cases where you intend to call a function without any arguments, and include parenthesis.</p>
 
@@ -157,8 +146,7 @@
         <p><span class="csscript"></span></p>
 
         <pre><code>this.clickHandler = -&gt; alert "clicked"
-          element.addEventListener "click", (e) =&gt; this.clickHandler(e)
-        </code></pre>
+element.addEventListener "click", (e) =&gt; this.clickHandler(e)</code></pre>
 
         <p>The reason you might want to do this, is that callbacks from <code>addEventListener()</code> are executed in the context of the <code>element</code>, i.e. <code>this</code> equals the element. If you want to keep <code>this</code> equal to the local context, without doing a <code>self = this</code> dance, fat arrows are the way to go.</p>
 
@@ -172,16 +160,15 @@
 
         <pre><code>object1 = {one: 1, two: 2}
 
-          # Without braces
-          object2 = one: 1, two: 2
+# Without braces
+object2 = one: 1, two: 2
 
-          # Using new lines instead of commas
-          object3 = 
-          one: 1
-          two: 2
+# Using new lines instead of commas
+object3 = 
+one: 1
+two: 2
 
-          User.create(name: "John Smith")
-        </code></pre>
+User.create(name: "John Smith")</code></pre>
 
         <p>Likewise, arrays can use whitespace instead of comma separators, although the square brackets (<code>[]</code>) are still required.</p>
 
@@ -189,14 +176,13 @@
 
         <pre><code>array1 = [1, 2, 3]
 
-          array2 = [
-          1
-          2
-          3
-          ]
+array2 = [
+  1
+  2
+  3
+]
 
-          array3 = [1,2,3,]
-        </code></pre>
+array3 = [1,2,3,]</code></pre>
 
         <p>As you can see in the example above, CoffeeScript has also stripped the trailing comma in <code>array3</code>, another common source of cross-browser errors.</p>
 
@@ -207,14 +193,13 @@
         <p><span class="csscript"></span></p>
 
         <pre><code>if true == true
-          "We're ok"
+  "We're ok"
 
-          if true != true then "Panic"
+if true != true then "Panic"
 
-          # Equivalent to:
-          #  (1 &gt; 0) ? "Ok" : "Y2K!"
-          if 1 &gt; 0 then "Ok" else "Y2K!"
-        </code></pre>
+# Equivalent to:
+#  (1 &gt; 0) ? "Ok" : "Y2K!"
+if 1 &gt; 0 then "Ok" else "Y2K!"</code></pre>
 
         <p>As you can see above, if the <code>if</code> statement is on one line, you'll need to use the <code>then</code> keyword, so CoffeeScript knows when the block begins. Conditional operators (<code>?:</code>) are not supported, instead you should use a single line <code>if/else</code> statement.</p>
 
@@ -222,31 +207,27 @@
 
         <p><span class="csscript"></span></p>
 
-        <pre><code>alert "It's cold!" if heat &lt; 5
-        </code></pre>
+        <pre><code>alert "It's cold!" if heat &lt; 5</code></pre>
 
         <p>Instead of using the exclamation mark (<code>!</code>) for negation, you can also use the <code>not</code> keyword - which can sometimes make your code more readable as exclamation marks can be easy to miss.</p>
 
         <p><span class="csscript"></span></p>
 
-        <pre><code>if not true then "Panic"
-        </code></pre>
+        <pre><code>if not true then "Panic"</code></pre>
 
         <p>In the example above, we could also use the CoffeeScript's <code>unless</code> statement, the opposite of <code>if</code>.</p>
 
         <p><span class="csscript"></span></p>
 
         <pre><code>unless true
-          "Panic"
-        </code></pre>
+  "Panic"</code></pre>
 
         <p>In a similar fashion to <code>not</code>, CoffeeScript also introduces the <code>is</code> statement, which translates to <code>===</code>.</p>
 
         <p><span class="csscript"></span></p>
 
         <pre><code>if true is 1
-          "Type coercion fixed!"
-        </code></pre>
+  "Type coercion fixed!"</code></pre>
 
         <p>You may have noticed in the examples above, that CoffeeScript is converting <code>==</code> operators into <code>===</code> and <code>!=</code> into <code>!==</code>. This is one of my favorite features to the language, and yet one of the most simple. What's the reasoning behind this? Well frankly JavaScript's type coercion is a bit odd, and its equality operator coerces types in order to compare them, leading to some confusing behaviors and the source of many bugs.</p>
 
@@ -255,22 +236,20 @@
         <p><span class="csscript"></span></p>
 
         <pre><code>""           ==   "0"           // false
-          0            ==   ""            // true
-          0            ==   "0"           // true
-          false        ==   "false"       // false
-          false        ==   "0"           // true
-          false        ==   undefined     // false
-          false        ==   null          // false
-          null         ==   undefined     // true
-          " \t\r\n"    ==   0             // true
-        </code></pre>
+0            ==   ""            // true
+0            ==   "0"           // true
+false        ==   "false"       // false
+false        ==   "0"           // true
+false        ==   undefined     // false
+false        ==   null          // false
+null         ==   undefined     // true
+" \t\r\n"    ==   0             // true</code></pre>
 
         <p>The solution is to use the strict equality operator, which consists of three equal signs: <code>===</code>. It works exactly like the normal equality operator, but without any type coercion. It's recommended to always use the strict equality operator, and explicitly convert types if needs be. As mentioned earlier, this is the default in CoffeeScript, with any weak equality operators being converted into strict ones.</p>
 
         <p><span class="csscript"></span></p>
 
-        <pre><code>if 10 == "+10" then "type coercion fail"
-        </code></pre>
+        <pre><code>if 10 == "+10" then "type coercion fail"</code></pre>
 
         <h2>String interpolation</h2>
 
@@ -279,11 +258,10 @@
         <p><span class="csscript"></span></p>
 
         <pre><code>favourite_color = "Blue. No, yel..."
-          question = "Bridgekeeper: What... is your favourite color?
-          Galahad: #{favourite_color}
-          Bridgekeeper: Wrong!
-          "
-        </code></pre>
+question = "Bridgekeeper: What... is your favourite color?
+            Galahad: #{favourite_color}
+            Bridgekeeper: Wrong!
+            "</code></pre>
 
         <p>As you can see in the example above, multiline strings are also allowed, without having to prefix each line with a <code>+</code>:</p>
 
@@ -294,48 +272,42 @@
         <p><span class="csscript"></span></p>
 
         <pre><code>for name in ["Roger", "Roderick", "Brian"]
-          alert "Release #{name}"
-        </code></pre>
+  alert "Release #{name}"</code></pre>
 
         <p>If you need the current iteration index, just pass an extra argument:</p>
 
         <p><span class="csscript"></span></p>
 
         <pre><code>for name, i in ["Roger the pickpocket", "Roderick the robber"]
-          alert "#{i} - Release #{name}"
-        </code></pre>
+  alert "#{i} - Release #{name}"</code></pre>
 
         <p>You can also iterate on one line, using the postfix form.</p>
 
         <p><span class="csscript"></span></p>
 
-        <pre><code>release prisoner for prisoner in ["Roger", "Roderick", "Brian"]
-        </code></pre>
+        <pre><code>release prisoner for prisoner in ["Roger", "Roderick", "Brian"]</code></pre>
 
         <p>As with Python comprehensions, you can filter them:</p>
 
         <p><span class="csscript"></span></p>
 
         <pre><code>prisoners = ["Roger", "Roderick", "Brian"]
-          release prisoner for prisoner in prisoners when prisoner[0] is "R" 
-        </code></pre>
+  release prisoner for prisoner in prisoners when prisoner[0] is "R"</code></pre>
 
         <p>You can also use comprehensions for iterating over properties in objects. Instead of the <code>in</code> keyword, use <code>of</code>.</p>
 
         <p><span class="csscript"></span></p>
 
         <pre><code>names = sam: seaborn, donna: moss
-          alert("#{first} #{last}") for first, last of names
-        </code></pre>
+alert("#{first} #{last}") for first, last of names</code></pre>
 
         <p>The only low-level loop that CoffeeScript exposes is the <code>while</code> loop. This has similar behavior to the <code>while</code> loop in pure JavaScript, but has the added advantage that it returns an array of results, i.e. like the <code>Array.prototype.map()</code> function.</p>
 
         <p><span class="csscript"></span></p>
 
         <pre><code>num = 6
-          minstrel = while num -= 1
-          num + " Brave Sir Robin ran away"
-        </code></pre>
+minstrel = while num -= 1
+  num + " Brave Sir Robin ran away"</code></pre>
 
         <h2>Arrays</h2>
 
@@ -350,31 +322,27 @@
 
         <p><span class="csscript"></span></p>
 
-        <pre><code>firstTwo = ["one", "two", "three"][0..1]
-        </code></pre>
+        <pre><code>firstTwo = ["one", "two", "three"][0..1]</code></pre>
 
         <p>In the example above, the range returns a new array, containing only the first two elements of the original array. You can also use the same syntax for replacing an array segment with another array.</p>
 
         <p><span class="csscript"></span></p>
 
         <pre><code>numbers = [0..9]
-          numbers[3..5] = [-3, -4, -5]
-        </code></pre>
+numbers[3..5] = [-3, -4, -5]</code></pre>
 
         <p>What's neat, is that JavaScript allows you to call <code>slice()</code> on strings too, so you can use ranges with string to return a new subset of characters.</p>
 
         <p><span class="csscript"></span></p>
 
-        <pre><code>my = "my string"[0..2]
-        </code></pre>
+        <pre><code>my = "my string"[0..2]</code></pre>
 
         <p>Checking to see if a value exists inside an array is always a bore in JavaScript, particular as <code>indexOf()</code> doesn't yet have full cross-browser support (IE, I'm talking about you). CoffeeScript solves this with the <code>in</code> operator, for example.</p>
 
         <p><span class="csscript"></span></p>
 
         <pre><code>words = ["rattled", "roudy", "rebbles", "ranks"]
-          alert "Stop wagging me" if "ranks" in words 
-        </code></pre>
+alert "Stop wagging me" if "ranks" in words</code></pre>
 
         <h2>Aliases &amp; the Existential Operator</h2>
 
@@ -382,43 +350,37 @@
 
         <p><span class="csscript"></span></p>
 
-        <pre><code>@saviour = true
-        </code></pre>
+        <pre><code>@saviour = true</code></pre>
 
         <p>Another is <code>::</code>, which is an alias for <code>prototype</code></p>
 
         <p><span class="csscript"></span></p>
 
-        <pre><code>User::first = -&gt; @records[0]
-        </code></pre>
+        <pre><code>User::first = -&gt; @records[0]</code></pre>
 
         <p>Using <code>if</code> for <code>null</code> checks in JavaScript is common, but has a few pitfalls in that empty strings and zero are both coerced into <code>false</code>, which can catch you out. CoffeeScript existential operator <code>?</code> returns true unless a variable is <code>null</code> or <code>undefined</code>, similar to Ruby's <code>nil?</code>.</p>
 
         <p><span class="csscript"></span></p>
 
-        <pre><code>praise if brian?
-        </code></pre>
+        <pre><code>praise if brian?</code></pre>
 
         <p>You can also use it in place of the <code>||</code> operator:</p>
 
         <p><span class="csscript"></span></p>
 
-        <pre><code>velocity = southern ? 40
-        </code></pre>
+        <pre><code>velocity = southern ? 40</code></pre>
 
         <p>If you're using a <code>null</code> check before accessing a property, you can skip that by placing the existential operator right before the opening parens. This is similar to Ruby's <code>try</code> method.</p>
 
         <p><span class="csscript"></span></p>
 
-        <pre><code>blackKnight.getLegs()?.kick()
-        </code></pre>
+        <pre><code>blackKnight.getLegs()?.kick()</code></pre>
 
         <p>You can safely call a value in the same manner, checking function-ness beforehand.</p>
 
         <p><span class="csscript"></span></p>
 
-        <pre><code>whiteKnight.guard? us
-        </code></pre>
+        <pre><code>whiteKnight.guard? us</code></pre>
       </section>
     </section>
     <script src="site/jquery.js" type="text/javascript" charset="utf-8"></script>      

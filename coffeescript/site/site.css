@@ -51,7 +51,6 @@ sup { top: -0.5em; }
 sub { bottom: -0.25em; }
 pre {
   white-space: pre; white-space: pre-wrap; word-wrap: break-word;
-  padding: 15px;
 }
 textarea { overflow: auto; }
 .ie6 legend, .ie7 legend { margin-left: -7px; }
@@ -84,7 +83,7 @@ h1, h2, h3, h4, h5, h6 { font-weight: bold; }
 .clearfix { zoom: 1; }
 /* End reset */
 
-a { text-decoration: none }
+a { text-decoration: none; outline: none }
 
 body, a   { color: #000 }
 aside     { color: #ccc }
@@ -100,7 +99,7 @@ code  { font-family: 'Monaco', monospace; background: #f8f8ff }
 #book.toc > h1 svg    { margin-bottom: -7px; }
 #book.toc > h1 aside  { font-size: 1rem }
 
-#book.chapter > h1  { font-size: 1.4em; margin-bottom: 1em }
+#book.chapter > h1  { font-size: 1.4em; margin-bottom: 1em; text-align: right }
 #book.toc > h1 svg  { margin-bottom: -7px }
 
 #content > h1,
@@ -109,9 +108,21 @@ code  { font-family: 'Monaco', monospace; background: #f8f8ff }
 #content > h2 { font-size: 2em }
 #content > p  { font-size: 1.3em; margin: 0.5em 0; text-indent: 1em }
 #content a    { color: #f88a3f }
+
+/* Codes */
 #content p code { font-size: 90% }
+#content > pre code,
+#content .wrap code { width: 100%; -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box }
 #content .wrap { min-width: 70%; position: relative }
-#content .wrap .handle { position: absolute; top: 0; right: 0 }
+#content .wrap .handle {
+  position: absolute;
+  top: 0; right: 0;
+  width: 10px; height: 10px;
+  font-size: 0.8em;
+  content: '\2668';
+  background: #BFBDC9;
+  border: 0;
+}
 
 #toc { margin: 3em 0 }
 #toc ol { counter-reset: li; margin-left: 130px }
@@ -124,7 +135,7 @@ code  { font-family: 'Monaco', monospace; background: #f8f8ff }
 #toc ol > li:hover aside { color: #000 }
 #toc ol > li:before {
   position: absolute;
-  top: 0.3em; left: -2em;  
+  top: 0.3em; left: -2em;
   width: 1em;
   padding: 0.15em 0.25em;
   text-align: center;
@@ -136,6 +147,9 @@ code  { font-family: 'Monaco', monospace; background: #f8f8ff }
   border-radius: 0.75em  ;
 }
 
-#toc li a   { font-size: 2em }
+#toc li a   { display: block; font-size: 2em }
 #toc aside  { font-size: 1.4rem }
 
+@media all and (max-device-width) {
+  
+}
