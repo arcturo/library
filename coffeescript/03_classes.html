@@ -1,131 +1,117 @@
 <!DOCTYPE html>
 <html>
-<head>
-<meta charset=utf-8>
-<title>The Little Book on CoffeeScript - Classes</title>
-<link rel="stylesheet" href="site/site.css" type="text/css" charset="utf-8">
-<link rel="stylesheet" href="site/highlight.css" type="text/css" charset="utf-8">
-<script src="site/jquery.js" type="text/javascript" charset="utf-8"></script>      
-<script src="site/highlight.js" type="text/javascript" charset="utf-8"></script>
-<script src="site/coffee-script.js" type="text/javascript" charset="utf-8"></script>
-<script src="site/preview.js" type="text/javascript" charset="utf-8"></script>
-<script type="text/javascript" charset="utf-8">
-  hljs.initHighlightingOnLoad();
-</script>
-</head>
-<body>
-<div id="container">
-  <header>
-    <h1><a href="index.html">The Little Book on CoffeeScript</a></h1>
-  </header>
-  
-  <div id="content">
-    <div class="back"><a href="index.html">&laquo; Back to all chapters</a></div>
+  <head>
+    <meta charset=utf-8>
+    <title>The Little Book on CoffeeScript - Introduction</title>
+    <link rel="stylesheet" href="site/site.css" type="text/css" charset="utf-8">
+    <link rel="stylesheet" href="site/highlight.css" type="text/css" charset="utf-8">
+    <script type="text/javascript" src="http://use.typekit.com/wgs0gxl.js"></script>
+    <script type="text/javascript">try{Typekit.load();}catch(e){}</script>    
+  </head>
+  <body>
+    <section id="book" class="chapter">
+      <h1>
+        <svg version="1.0" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+        	 width="30px" height="15px" viewBox="0 0 100 61.67" enable-background="new 0 0 100 61.67" xml:space="preserve">
+        <path d="M100,51.058H0C0.007,58.293,5.523,61.65,9.963,61.67h80.076C95.335,61.65,99.976,57.486,100,51.058L100,51.058z"/>
+        <path d="M80.998,0H21.331v39.144c0.009,5.316,4.587,9.521,9.531,9.531h38.71c5.58-0.011,9.387-4.704,9.368-9.531v-3.247
+        	c11.047-0.009,19.062-8.303,19.058-17.974C98.002,8.08,90.145-0.007,80.998,0z M78.94,28.427V7.364h2.058
+        	c7.568-0.012,9.996,7.146,9.96,10.614C90.965,23.577,86.818,28.948,78.94,28.427z"/>
+        </svg>        
+        <a href="index.html">The Little Book on CoffeeScript</a>
+      </h1>      
+      <section id="content">
+        <h1>Classes</h1>
+        <p>Classes in JavaScript seem to have the kind of effect that cloves of garlic have to Dracula for some purists; although, let's be honest, if you're that way inclined, you're unlikely to be reading a book on CoffeeScript. However, it turns out that classes are just as damn useful in JavaScript as they are in other languages and CoffeeScript provides a great abstraction.</p>
+        <p>Behind the scenes, CoffeeScript is using JavaScript's native prototype to create classes; adding a bit of syntactic sugar for static property inheritance and context persistence. As a developer all that's exposed to you is the <code>class</code> keyword.</p>
+        <p><span class="csscript"></span></p>
 
+        <pre><code>class Animal</code></pre>
 
-<h1>Classes</h1>
+        <p>In the example above, <code>Animal</code> is the name of the class, and also the name of the resultant variable that you can use to create instances. Behind the scenes CoffeeScript is using construction functions, which means you can instantiate classes using the <code>new</code> operator.</p>
 
-<p>Classes in JavaScript seem to have the kind of effect that cloves of garlic have to Dracula for some purists; although, let's be honest, if you're that way inclined, you're unlikely to be reading a book on CoffeeScript. However, it turns out that classes are just as damn useful in JavaScript as they are in other languages and CoffeeScript provides a great abstraction.</p>
+        <p><span class="csscript"></span></p>
 
-<p>Behind the scenes, CoffeeScript is using JavaScript's native prototype to create classes; adding a bit of syntactic sugar for static property inheritance and context persistence. As a developer all that's exposed to you is the <code>class</code> keyword.</p>
+        <pre><code>animal = new Animal</code></pre>
 
-<p><span class="csscript"></span></p>
+        <p>Defining constructors (functions that get invoked upon instantiation) is simple, just use a function named <code>constructor</code>. This is akin to using Ruby's <code>initialize</code> or Python's <code>__init__</code>.</p>
 
-<pre><code>class Animal
-</code></pre>
+        <p><span class="csscript"></span></p>
 
-<p>In the example above, <code>Animal</code> is the name of the class, and also the name of the resultant variable that you can use to create instances. Behind the scenes CoffeeScript is using construction functions, which means you can instantiate classes using the <code>new</code> operator.</p>
-
-<p><span class="csscript"></span></p>
-
-<pre><code>animal = new Animal
-</code></pre>
-
-<p>Defining constructors (functions that get invoked upon instantiation) is simple, just use a function named <code>constructor</code>. This is akin to using Ruby's <code>initialize</code> or Python's <code>__init__</code>.</p>
-
-<p><span class="csscript"></span></p>
-
-<pre><code>class Animal
+        <pre><code>class Animal
   constructor: (name) -&gt;
-    @name = name
-</code></pre>
+    @name = name</code></pre>
 
-<p>In fact, CoffeeScript provides a shorthand for the common pattern of setting instance properties. By prefixing argument's with <code>@</code>, CoffeeScript will automatically set the arguments as instance properties in the constructor. Indeed, this shorthand will also work for normal functions outside classes. The example below is equivalent to the last example, where we set the instance properties manually.</p>
+        <p>In fact, CoffeeScript provides a shorthand for the common pattern of setting instance properties. By prefixing argument's with <code>@</code>, CoffeeScript will automatically set the arguments as instance properties in the constructor. Indeed, this shorthand will also work for normal functions outside classes. The example below is equivalent to the last example, where we set the instance properties manually.</p>
 
-<p><span class="csscript"></span></p>
+        <p><span class="csscript"></span></p>
 
-<pre><code>class Animal
-  constructor: (@name) -&gt;
-</code></pre>
+        <pre><code>class Animal
+  constructor: (@name) -&gt;</code></pre>
 
-<p>As you'd expect, any arguments passed on instantiation are proxied to the constructor function.</p>
+        <p>As you'd expect, any arguments passed on instantiation are proxied to the constructor function.</p>
 
-<p><span class="csscript"></span></p>
+        <p><span class="csscript"></span></p>
 
-<pre><code>animal = new Animal("Parrot")
-alert "Animal is a #{animal.name}"
-</code></pre>
+        <pre><code>animal = new Animal("Parrot")
+alert "Animal is a #{animal.name}"</code></pre>
 
-<h2>Instance properties</h2>
+        <h2>Instance properties</h2>
 
-<p>Adding additional instance properties to a class is very straightforward, it's exactly the syntax as adding properties onto an object. Just make sure properties are indented correctly inside the class body.</p>
+        <p>Adding additional instance properties to a class is very straightforward, it's exactly the syntax as adding properties onto an object. Just make sure properties are indented correctly inside the class body.</p>
 
-<p><span class="csscript"></span></p>
+        <p><span class="csscript"></span></p>
 
-<pre><code>class Animal
+        <pre><code>class Animal
   price: 5
 
   sell: (customer) -&gt;
 
 animal = new Animal
-animal.sell(new Customer)
-</code></pre>
+animal.sell(new Customer)</code></pre>
 
-<p>Context changes are rife within JavaScript, and earlier in the Syntax chapter we talked about how CoffeeScript can lock the value of <code>this</code> to a particular context using a fat arrow function: <code>=&gt;</code>. This ensures that whatever context a function is called under, it'll always execute inside the context it was created in. CoffeeScript has extended support for fat arrows to classes, so by using a fat arrow for an instance method you'll ensure that it's invoked in the correct context, and that <code>this</code> is always equal to the current instance.</p>
+        <p>Context changes are rife within JavaScript, and earlier in the Syntax chapter we talked about how CoffeeScript can lock the value of <code>this</code> to a particular context using a fat arrow function: <code>=&gt;</code>. This ensures that whatever context a function is called under, it'll always execute inside the context it was created in. CoffeeScript has extended support for fat arrows to classes, so by using a fat arrow for an instance method you'll ensure that it's invoked in the correct context, and that <code>this</code> is always equal to the current instance.</p>
 
-<p><span class="csscript"></span></p>
+        <p><span class="csscript"></span></p>
 
-<pre><code>class Animal
+        <pre><code>class Animal
   price: 5
 
   sell: =&gt;
     alert "Give me #{@price} shillings!"
 
 animal = new Animal
-$("#sell").click(animal.sell)
-</code></pre>
+$("#sell").click(animal.sell)</code></pre>
 
-<p>As demonstrated in the example above, this is especially useful in event callbacks. Normally the <code>sell()</code> function would be invoked in the context of the <code>#sell</code> element. However, by using fat arrows for <code>sell()</code>, we're ensuring the correct context is being maintained, and that <code>this.price</code> equals <code>5</code>.</p>
+        <p>As demonstrated in the example above, this is especially useful in event callbacks. Normally the <code>sell()</code> function would be invoked in the context of the <code>#sell</code> element. However, by using fat arrows for <code>sell()</code>, we're ensuring the correct context is being maintained, and that <code>this.price</code> equals <code>5</code>.</p>
 
-<h2>Static properties</h2>
+        <h2>Static properties</h2>
 
-<p>How about defining class (i.e. static) properties? Well, it turns out that inside a class definition, <code>this</code> refers to the class object. In other words you can set class properties by setting them directly on <code>this</code>.</p>
+        <p>How about defining class (i.e. static) properties? Well, it turns out that inside a class definition, <code>this</code> refers to the class object. In other words you can set class properties by setting them directly on <code>this</code>.</p>
 
-<p><span class="csscript"></span></p>
+        <p><span class="csscript"></span></p>
 
-<pre><code>class Animal
+        <pre><code>class Animal
   this.find = (name) -&gt;      
 
-Animal.find("Parrot")
-</code></pre>
+Animal.find("Parrot")</code></pre>
 
-<p>In fact, as you may remember, CoffeeScript aliases <code>this</code> to <code>@</code>, which lets you write static properties even more succinctly:</p>
+        <p>In fact, as you may remember, CoffeeScript aliases <code>this</code> to <code>@</code>, which lets you write static properties even more succinctly:</p>
 
-<p><span class="csscript"></span></p>
+        <p><span class="csscript"></span></p>
 
-<pre><code>class Animal
+        <pre><code>class Animal
   @find: (name) -&gt;
 
-Animal.find("Parrot")
-</code></pre>
+Animal.find("Parrot")</code></pre>
 
-<h2>Inheritance &amp; Super</h2>
+        <h2>Inheritance &amp; Super</h2>
 
-<p>It wouldn't be a proper class implementation without some form of inheritance, and CoffeeScript doesn't disappoint. You can inherit from another class by using the <code>extends</code> keyword. In the example below, <code>Parrot</code> extends from <code>Animal</code>, inheriting all of its instance properties, such as <code>alive()</code></p>
+        <p>It wouldn't be a proper class implementation without some form of inheritance, and CoffeeScript doesn't disappoint. You can inherit from another class by using the <code>extends</code> keyword. In the example below, <code>Parrot</code> extends from <code>Animal</code>, inheriting all of its instance properties, such as <code>alive()</code></p>
 
-<p><span class="csscript"></span></p>
+        <p><span class="csscript"></span></p>
 
-<pre><code>class Animal
+        <pre><code>class Animal
   constructor: (@name) -&gt;
 
   alive: -&gt;
@@ -136,18 +122,17 @@ class Parrot extends Animal
     super("Parrot")
 
   dead: -&gt;
-    not @alive()
-</code></pre>
+    not @alive()</code></pre>
 
-<p>You'll notice that in the example above, we're using the <code>super()</code> keyword. Behind the scenes, this is translated into a function call on the class' parent prototype, invoked in the current context. In this case, it'll be <code>Parrot.__super__.constructor.call(this, "Parrot");</code>. In practice, this will have exactly the same effect as invoking <code>super</code> in Ruby or Python, invoking the overridden inherited function.</p>
+        <p>You'll notice that in the example above, we're using the <code>super()</code> keyword. Behind the scenes, this is translated into a function call on the class' parent prototype, invoked in the current context. In this case, it'll be <code>Parrot.__super__.constructor.call(this, "Parrot");</code>. In practice, this will have exactly the same effect as invoking <code>super</code> in Ruby or Python, invoking the overridden inherited function.</p>
 
-<p>Unless you override the <code>constructor</code>, by default CoffeeScript will invoke the parent's constructor when instances are created.</p>
+        <p>Unless you override the <code>constructor</code>, by default CoffeeScript will invoke the parent's constructor when instances are created.</p>
 
-<p>CoffeeScript uses prototypal inheritance to automatically inherit all of a class's instance properties. This ensures that classes are dynamic; even if you add properties to a parent class after a child has been created, the property will still be propagated to all of its inherited children.</p>
+        <p>CoffeeScript uses prototypal inheritance to automatically inherit all of a class's instance properties. This ensures that classes are dynamic; even if you add properties to a parent class after a child has been created, the property will still be propagated to all of its inherited children.</p>
 
-<p><span class="csscript"></span></p>
+        <p><span class="csscript"></span></p>
 
-<pre><code>class Animal
+        <pre><code>class Animal
   constructor: (@name) -&gt;
 
 class Parrot extends Animal
@@ -155,18 +140,17 @@ class Parrot extends Animal
 Animal::rip = true
 
 parrot = new Parrot("Macaw")
-alert("This parrot is no more") if parrot.rip
-</code></pre>
+alert("This parrot is no more") if parrot.rip</code></pre>
 
-<p>It's worth pointing out though that static properties are copied to subclasses, rather than inherited using prototype as instance properties are. This is due to implementation details with JavaScript's prototypal architecture, and is a difficult problem to work around.</p>
+        <p>It's worth pointing out though that static properties are copied to subclasses, rather than inherited using prototype as instance properties are. This is due to implementation details with JavaScript's prototypal architecture, and is a difficult problem to work around.</p>
 
-<h2>Mixins</h2>
+        <h2>Mixins</h2>
 
-<p><a href="http://en.wikipedia.org/wiki/Mixin">Mixins</a> are not something supported natively by CoffeeScript, for the good reason that they can be trivially implemented. For example, here's two functions, <code>extend()</code> and <code>include()</code> that'll add class and instance properties respectively to a class.</p>
+        <p><a href="http://en.wikipedia.org/wiki/Mixin">Mixins</a> are not something supported natively by CoffeeScript, for the good reason that they can be trivially implemented. For example, here's two functions, <code>extend()</code> and <code>include()</code> that'll add class and instance properties respectively to a class.</p>
 
-<p><span class="csscript"></span></p>
+        <p><span class="csscript"></span></p>
 
-<pre><code>extend = (obj, mixin) -&gt;
+        <pre><code>extend = (obj, mixin) -&gt;
   obj[name] = method for name, method of mixin        
   obj
 
@@ -177,12 +161,18 @@ include = (klass, mixin) -&gt;
 include Parrot,
   isDeceased: true
 
-(new Parrot).isDeceased
-</code></pre>
+(new Parrot).isDeceased</code></pre>
 
-<p>Mixins are a great pattern for sharing common logic between modules when inheritance is not suited. The advantage of mixins, is that you can include multiple ones, compared to inheritance where only one class can be inherited from.</p>
-
-  </div>
-</div>
-</body>
+        <p>Mixins are a great pattern for sharing common logic between modules when inheritance is not suited. The advantage of mixins, is that you can include multiple ones, compared to inheritance where only one class can be inherited from.</p>        
+      </section>
+    </section>
+    <script src="site/jquery.js" type="text/javascript" charset="utf-8"></script>      
+    <script src="site/highlight.js" type="text/javascript" charset="utf-8"></script>
+    <script src="site/coffee-script.js" type="text/javascript" charset="utf-8"></script>
+    <script src="site/preview.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript" charset="utf-8">
+    hljs.initHighlightingOnLoad();
+    </script>
+  </body>
 </html>
+

@@ -1,78 +1,72 @@
 <!DOCTYPE html>
 <html>
-<head>
-<meta charset=utf-8>
-<title>The Little Book on CoffeeScript - Applications</title>
-<link rel="stylesheet" href="site/site.css" type="text/css" charset="utf-8">
-<link rel="stylesheet" href="site/highlight.css" type="text/css" charset="utf-8">
-<script src="site/jquery.js" type="text/javascript" charset="utf-8"></script>      
-<script src="site/highlight.js" type="text/javascript" charset="utf-8"></script>
-<script src="site/coffee-script.js" type="text/javascript" charset="utf-8"></script>
-<script src="site/preview.js" type="text/javascript" charset="utf-8"></script>
-<script type="text/javascript" charset="utf-8">
-  hljs.initHighlightingOnLoad();
-</script>
-</head>
-<body>
-<div id="container">
-  <header>
-    <h1><a href="index.html">The Little Book on CoffeeScript</a></h1>
-  </header>
-  
-  <div id="content">
-    <div class="back"><a href="index.html">&laquo; Back to all chapters</a></div>
+  <head>
+    <meta charset=utf-8>
+    <title>The Little Book on CoffeeScript - Introduction</title>
+    <link rel="stylesheet" href="site/site.css" type="text/css" charset="utf-8">
+    <link rel="stylesheet" href="site/highlight.css" type="text/css" charset="utf-8">
+    <script type="text/javascript" src="http://use.typekit.com/wgs0gxl.js"></script>
+    <script type="text/javascript">try{Typekit.load();}catch(e){}</script>    
+  </head>
+  <body>
+    <section id="book" class="chapter">
+      <h1>
+        <svg version="1.0" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+        	 width="30px" height="15px" viewBox="0 0 100 61.67" enable-background="new 0 0 100 61.67" xml:space="preserve">
+        <path d="M100,51.058H0C0.007,58.293,5.523,61.65,9.963,61.67h80.076C95.335,61.65,99.976,57.486,100,51.058L100,51.058z"/>
+        <path d="M80.998,0H21.331v39.144c0.009,5.316,4.587,9.521,9.531,9.531h38.71c5.58-0.011,9.387-4.704,9.368-9.531v-3.247
+        	c11.047-0.009,19.062-8.303,19.058-17.974C98.002,8.08,90.145-0.007,80.998,0z M78.94,28.427V7.364h2.058
+        	c7.568-0.012,9.996,7.146,9.96,10.614C90.965,23.577,86.818,28.948,78.94,28.427z"/>
+        </svg>        
+        <a href="index.html">The Little Book on CoffeeScript</a>
+      </h1>      
+      <section id="content">
+        <h1>Creating Applications</h1>
 
+        <p>Now you've been given an overview of the syntax, lets explore actually structuring and creating CoffeeScript applications. This section aims to be useful to all CoffeeScript developers, novice or advanced. Indeed, it should be relevant to pure JavaScript developers too.</p>
 
-<h1>Creating Applications</h1>
+        <p>For some reason, when developers are building client side JavaScript applications, tried and tested patterns and conventions often fly out the window, and the end result is a spaghetti mess of un-maintainable coupled JavaScript. I can't stress enough how important application architecture is; if you're writing any JavaScript/CoffeeScript beyond simple form validation you should implement a form of application structure, such as <a href="http://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller">MVC</a>.</p>
 
-<p>Now you've been given an overview of the syntax, lets explore actually structuring and creating CoffeeScript applications. This section aims to be useful to all CoffeeScript developers, novice or advanced. Indeed, it should be relevant to pure JavaScript developers too.</p>
+        <p>The secret to building maintainable large applications is not to build large applications. In other words, build a series of modular de-coupled components. Keep application logic as generic as possible, abstracting it out as appropriate. Lastly separate out your logic into views, models and controllers (MVC). Implementing MVC is beyond the scope of this chapter, for that I recommend you check out my book on <a href="http://oreilly.com/catalog/9781449307530/">JavaScript Web Applications</a> and use a framework like <a href="http://documentcloud.github.com/backbone/">Backbone</a> or <a href="https://github.com/maccman/spine">Spine</a>. Rather than that, here we're going to cover structuring applications using CommonJS modules.</p>
 
-<p>For some reason, when developers are building client side JavaScript applications, tried and tested patterns and conventions often fly out the window, and the end result is a spaghetti mess of un-maintainable coupled JavaScript. I can't stress enough how important application architecture is; if you're writing any JavaScript/CoffeeScript beyond simple form validation you should implement a form of application structure, such as <a href="http://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller">MVC</a>.</p>
+        <h2>Structure &amp; CommonJS</h2>
 
-<p>The secret to building maintainable large applications is not to build large applications. In other words, build a series of modular de-coupled components. Keep application logic as generic as possible, abstracting it out as appropriate. Lastly separate out your logic into views, models and controllers (MVC). Implementing MVC is beyond the scope of this chapter, for that I recommend you check out my book on <a href="http://oreilly.com/catalog/9781449307530/">JavaScript Web Applications</a> and use a framework like <a href="http://documentcloud.github.com/backbone/">Backbone</a> or <a href="https://github.com/maccman/spine">Spine</a>. Rather than that, here we're going to cover structuring applications using CommonJS modules.</p>
+        <p>So what exactly are CommonJS modules? Well, If you've used <a href="http://nodejs.org/">NodeJS</a> before you've used CommonJS modules, probably without realizing it. CommonJS modules were initially developed for writing server side JavaScript libraries, in an attempt to deal with loading, namespacing and scoping issues. They were a common format that would be compatible across all JavaScript implementations. The aim was that a library written for <a href="http://www.mozilla.org/rhino/">Rhino</a> would work for Node. Eventually these ideas transitioned back to browsers, and now we have great libraries like <a href="http://requirejs.org">RequireJS</a> and <a href="https://github.com/jbrantly/yabble">Yabble</a> to use modules client-side.</p>
 
-<h2>Structure &amp; CommonJS</h2>
+        <p>Practically speaking, modules ensure that your code is run in a local namespace (code encapsulation), that you can load other modules with the <code>require()</code> function, and expose module properties via <code>module.exports</code>. Let's dive into that in a bit more depth now.</p>
 
-<p>So what exactly are CommonJS modules? Well, If you've used <a href="http://nodejs.org/">NodeJS</a> before you've used CommonJS modules, probably without realizing it. CommonJS modules were initially developed for writing server side JavaScript libraries, in an attempt to deal with loading, namespacing and scoping issues. They were a common format that would be compatible across all JavaScript implementations. The aim was that a library written for <a href="http://www.mozilla.org/rhino/">Rhino</a> would work for Node. Eventually these ideas transitioned back to browsers, and now we have great libraries like <a href="http://requirejs.org">RequireJS</a> and <a href="https://github.com/jbrantly/yabble">Yabble</a> to use modules client-side.</p>
+        <h3>Requiring files</h3>
 
-<p>Practically speaking, modules ensure that your code is run in a local namespace (code encapsulation), that you can load other modules with the <code>require()</code> function, and expose module properties via <code>module.exports</code>. Let's dive into that in a bit more depth now.</p>
+        <p>You can load in other modules and libraries using <code>require()</code>. Simply pass a module name and, if it's in the load path, it'll return an object representing that module. For example:</p>
 
-<h3>Requiring files</h3>
+        <pre><code>var User = require("models/user");</code></pre>
 
-<p>You can load in other modules and libraries using <code>require()</code>. Simply pass a module name and, if it's in the load path, it'll return an object representing that module. For example:</p>
+        <p>Synchronous require support is a contentious issue, but has mostly been resolved with the mainstream loader libraries and latest CommonJS <a href="http://wiki.commonjs.org/wiki/Modules/AsynchronousDefinition">proposals</a>. It may be something you'll have to look into if you decided to take a separate route than the one I'm advocating with Stitch below.</p>
 
-<pre><code>var User = require("models/user");
-</code></pre>
+        <h3>Exporting properties</h3>
 
-<p>Synchronous require support is a contentious issue, but has mostly been resolved with the mainstream loader libraries and latest CommonJS <a href="http://wiki.commonjs.org/wiki/Modules/AsynchronousDefinition">proposals</a>. It may be something you'll have to look into if you decided to take a separate route than the one I'm advocating with Stitch below.</p>
+        <p>By default, modules don't expose any properties so their contents are completely invisible to <code>require()</code> calls. If you want a particular property to be accessible from your module, you'll need to set it on <code>module.exports</code>:</p>
 
-<h3>Exporting properties</h3>
-
-<p>By default, modules don't expose any properties so their contents are completely invisible to <code>require()</code> calls. If you want a particular property to be accessible from your module, you'll need to set it on <code>module.exports</code>:</p>
-
-<pre><code>// random_module.js
+        <pre><code>// random_module.js
 module.exports.myFineProperty = function(){
   // Some shizzle
-}
-</code></pre>
+}</code></pre>
 
-<p>Now, whenever this module is required then <code>myFineProperty</code> will be exposed:</p>
+        <p>Now, whenever this module is required then <code>myFineProperty</code> will be exposed:</p>
 
-<pre><code>var myFineProperty = require("random_module").myFineProperty;
-</code></pre>
+        <pre><code>var myFineProperty = require("random_module").myFineProperty;</code></pre>
 
-<h2>Stitch it up</h2>
+        <h2>Stitch it up</h2>
 
-<p>Formatting your code as CommonJS modules is all fine and dandy, but how do you actually get this working on the client in practice? Well, my method of choice is the rather unheard of <a href="https://github.com/sstephenson/stitch">Stitch</a> library. Stitch is by Sam Stephenson, the mind behind <a href="http://www.prototypejs.org">Prototype.js</a> amongst other things, and solves the module problem so elegantly it makes me want to dance for joy! Rather than try and dynamically resolve dependencies, Stitch simply bundles up all your JavaScript files into one, wrapping them in some CommonJS magic. Oh, and did I mention it'll compile your CoffeeScript, JS templates, <a href="http://lesscss.org">LESS CSS</a> and <a href="http://sass-lang.com">Sass</a> files too!</p>
+        <p>Formatting your code as CommonJS modules is all fine and dandy, but how do you actually get this working on the client in practice? Well, my method of choice is the rather unheard of <a href="https://github.com/sstephenson/stitch">Stitch</a> library. Stitch is by Sam Stephenson, the mind behind <a href="http://www.prototypejs.org">Prototype.js</a> amongst other things, and solves the module problem so elegantly it makes me want to dance for joy! Rather than try and dynamically resolve dependencies, Stitch simply bundles up all your JavaScript files into one, wrapping them in some CommonJS magic. Oh, and did I mention it'll compile your CoffeeScript, JS templates, <a href="http://lesscss.org">LESS CSS</a> and <a href="http://sass-lang.com">Sass</a> files too!</p>
 
-<p>First things first, let's get Stitch installed. You'll need to install <a href="http://nodejs.org/">Node.js</a> and <a href="http://npmjs.org/">npm</a> if you haven't already, then run:</p>
+        <p>First things first, let's get Stitch installed. You'll need to install <a href="http://nodejs.org/">Node.js</a> and <a href="http://npmjs.org/">npm</a> if you haven't already, then run:</p>
 
-<pre><code>npm install stitch
-</code></pre>
+        <pre><code>npm install stitch</code></pre>
 
-<p>Now let's create our application structure. If you're using <a href="https://github.com/maccman/spine">Spine</a>, you can automate this with <a href="http://github.com/maccman/spine.app">Spine.App</a>, otherwise it's something you'll need to do manually. I usually have an <code>app</code> folder for all the application specific code, and a <code>lib</code> folder for general libraries. Then anything else, including static assets, goes in the <code>public</code> directory.</p>
+        <p>Now let's create our application structure. If you're using <a href="https://github.com/maccman/spine">Spine</a>, you can automate this with <a href="http://github.com/maccman/spine.app">Spine.App</a>, otherwise it's something you'll need to do manually. I usually have an <code>app</code> folder for all the application specific code, and a <code>lib</code> folder for general libraries. Then anything else, including static assets, goes in the <code>public</code> directory.</p>
 
-<pre><code>app/controllers
+        <pre><code>app/controllers
 app/views
 app/models
 app/lib
@@ -80,12 +74,11 @@ lib
 public
 public/index.html
 public/css
-public/css/views
-</code></pre>
+public/css/views</code></pre>
 
-<p>Now to actually boot up the Stitch server. Let's create a file called <code>server.js</code> and fill it with the following script:</p>
+        <p>Now to actually boot up the Stitch server. Let's create a file called <code>server.js</code> and fill it with the following script:</p>
 
-<pre><code>#!/usr/bin/env node
+        <pre><code>#!/usr/bin/env node
 var stitch  = require('stitch'),
     express = require('express'),
     util    = require('util'),
@@ -121,21 +114,19 @@ app.configure(function() {
 
 var port = argv[0] || process.env.PORT || 9294;
 util.puts("Starting server on port: " + port);
-app.listen(port);
-</code></pre>
+app.listen(port);</code></pre>
 
-<p>Rightio, we're almost there. Now if you invoke <code>server.js</code> with Node you'll hopefully have a Stitch server up and running. Let's go ahead and test it out by putting an <code>app.coffee</code> script in the <code>app</code> folder. This will be the file that'll bootstrap our application.</p>
+        <p>Rightio, we're almost there. Now if you invoke <code>server.js</code> with Node you'll hopefully have a Stitch server up and running. Let's go ahead and test it out by putting an <code>app.coffee</code> script in the <code>app</code> folder. This will be the file that'll bootstrap our application.</p>
 
-<p><span class="csscript"></span></p>
+        <p><span class="csscript"></span></p>
 
-<pre><code>module.exports = App =
-  init: -&gt;
-    # Bootstrap this mofo
-</code></pre>
+        <pre><code>module.exports = App =
+init: -&gt;
+  # Bootstrap this mofo</code></pre>
 
-<p>Now let's create our main page <code>index.html</code> which, if we're building a single page app, will be the only page the user actually navigates to. This is a static asset, so it's under the <code>public</code> directory.</p>
+        <p>Now let's create our main page <code>index.html</code> which, if we're building a single page app, will be the only page the user actually navigates to. This is a static asset, so it's under the <code>public</code> directory.</p>
 
-<pre><code>&lt;!DOCTYPE html&gt;
+        <pre><code>&lt;!DOCTYPE html&gt;
 &lt;html&gt;
 &lt;head&gt;
   &lt;meta charset=utf-8&gt;
@@ -152,72 +143,79 @@ app.listen(port);
 &lt;/head&gt;
 &lt;body&gt;
 &lt;/body&gt;
-&lt;/html&gt;
-</code></pre>
+&lt;/html&gt;</code></pre>
 
-<p>When the page loads, our inline jQuery callback is requiring the <code>app.coffee</code> script (which is automatically compiled), and invoking our <code>init()</code> function. That's all there is to it, we've got CommonJS modules up and running, as well as a HTTP server and CoffeeScript compiler. If, say, we wanted to include a module, it's just a case of calling <code>require()</code>.</p>
+        <p>When the page loads, our inline jQuery callback is requiring the <code>app.coffee</code> script (which is automatically compiled), and invoking our <code>init()</code> function. That's all there is to it, we've got CommonJS modules up and running, as well as a HTTP server and CoffeeScript compiler. If, say, we wanted to include a module, it's just a case of calling <code>require()</code>.</p>
 
-<p><span class="csscript"></span></p>
+        <p><span class="csscript"></span></p>
 
-<pre><code># models/user.coffee
+        <pre><code># models/user.coffee
 module.exports = class User
   constructor: (@name) -&gt;
 
 # app.coffee
-User = require("models/user")
-</code></pre>
+User = require("models/user")</code></pre>
 
-<h2>JavaScript templates</h2>
+        <h2>JavaScript templates</h2>
 
-<p>If you're moving logic to the client side, then you'll definitely need some sort of templating library. JavaScript templating is very similar to templates on the server, such as Ruby's ERB or Python's text interpolation, expect of course it runs client side. There are a whole host of templating libraries out there, so I encourage you to do some research and check them out. By default, Stitch comes with support for <a href="https://github.com/sstephenson/eco">eco</a> templates baked right in. However, if you're using another templating library don't despair. Stitch has a rather neat feature that lets you add custom compilers for particular extensions.</p>
+        <p>If you're moving logic to the client side, then you'll definitely need some sort of templating library. JavaScript templating is very similar to templates on the server, such as Ruby's ERB or Python's text interpolation, expect of course it runs client side. There are a whole host of templating libraries out there, so I encourage you to do some research and check them out. By default, Stitch comes with support for <a href="https://github.com/sstephenson/eco">eco</a> templates baked right in. However, if you're using another templating library don't despair. Stitch has a rather neat feature that lets you add custom compilers for particular extensions.</p>
 
-<p>For example, let's add support for the <a href="http://api.jquery.com/jquery.tmpl/">jQuery.tmpl</a> library, which I often use instead of eco due to a few implementation details:</p>
+        <p>For example, let's add support for the <a href="http://api.jquery.com/jquery.tmpl/">jQuery.tmpl</a> library, which I often use instead of eco due to a few implementation details:</p>
 
-<pre><code>stitch.compilers.tmpl = function(module, filename) {
+        <pre><code>stitch.compilers.tmpl = function(module, filename) {
   var content = fs.readFileSync(filename, 'utf8');
   content = ["var template = jQuery.template(", JSON.stringify(content), ");", 
              "module.exports = (function(data){ return jQuery.tmpl(template, data); });\n"].join("");
   return module._compile(content, filename);
-};
-</code></pre>
+};</code></pre>
 
-<p>Notice that above we're setting a function on <code>module.exports</code> which, when called, will render our template. Now, let's define a template in <code>views/users/show.tmpl</code>:</p>
+        <p>Notice that above we're setting a function on <code>module.exports</code> which, when called, will render our template. Now, let's define a template in <code>views/users/show.tmpl</code>:</p>
 
-<pre><code>&lt;label&gt;Name: ${name}&lt;/label&gt;
-</code></pre>
+        <pre><code>&lt;label&gt;Name: ${name}&lt;/label&gt;</code></pre>
 
-<p>Since we defined a <code>tmpl</code> compiler handler, Stitch will automatically compile our template and include it in <code>application.js</code>. Then, in our application's controllers we can require the template, like it was a module, and execute it passing any data required.</p>
+        <p>Since we defined a <code>tmpl</code> compiler handler, Stitch will automatically compile our template and include it in <code>application.js</code>. Then, in our application's controllers we can require the template, like it was a module, and execute it passing any data required.</p>
 
-<pre><code>require("views/users/show")(new User("name"))
-</code></pre>
+        <pre><code>require("views/users/show")(new User("name"))</code></pre>
 
-<h2>Bonus - 30 second deployment with Heroku</h2>
+        <h2>Bonus - 30 second deployment with Heroku</h2>
 
-<p><a href="http://heroku.com/">Heroku</a> is an incredibly awesome web host that manages all the servers and scaling for you, letting you get on with the exciting stuff (building awesome JavaScript applications). You'll need an account with Heroku for this tutorial to work, but the great news is that their basic plan is completely free. While traditionally a Ruby host, Heroku have recently released their Cedar stack, which includes Node support.</p>
+        <p><a href="http://heroku.com/">Heroku</a> is an incredibly awesome web host that manages all the servers and scaling for you, letting you get on with the exciting stuff (building awesome JavaScript applications). You'll need an account with Heroku for this tutorial to work, but the great news is that their basic plan is completely free. While traditionally a Ruby host, Heroku have recently released their Cedar stack, which includes Node support.</p>
 
-<p>Firstly we need to make a <code>Procfile</code>, which will inform Heroku about our application.</p>
+        <p>Firstly we need to make a <code>Procfile</code>, which will inform Heroku about our application.</p>
 
-<pre><code>echo "web: node server.js" &gt; Procfile
-</code></pre>
+        <pre><code>echo "web: node server.js" &gt; Procfile</code></pre>
 
-<p>Now, if you haven't already, you'll need to create a local git repository for your application.</p>
+        <p>Now, if you haven't already, you'll need to create a local git repository for your application.</p>
 
-<pre><code>git init
+        <pre><code>git init
 git add .
-git commit -m "First commit"    
-</code></pre>
+git commit -m "First commit"</code></pre>
 
-<p>And now to deploy the application, we'll use the <code>heroku</code> gem (which you'll need to install if you haven't already).</p>
+        <p>And now to deploy the application, we'll use the <code>heroku</code> gem (which you'll need to install if you haven't already).</p>
 
-<pre><code>heroku create myAppName --stack cedar
+        <pre><code>heroku create myAppName --stack cedar
 git push heroku master
 heroku ps:scale web=1
-heroku open
-</code></pre>
+heroku open</code></pre>
 
-<p>That's it! Seriously, that's all there is to it. Hosting Node applications has never been easier.</p>
-
-  </div>
-</div>
-</body>
+        <p>That's it! Seriously, that's all there is to it. Hosting Node applications has never been easier.</p>   
+      </section>
+    </section>
+    <script src="site/jquery.js" type="text/javascript" charset="utf-8"></script>      
+    <script src="site/highlight.js" type="text/javascript" charset="utf-8"></script>
+    <script src="site/coffee-script.js" type="text/javascript" charset="utf-8"></script>
+    <script src="site/preview.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript" charset="utf-8">
+    hljs.initHighlightingOnLoad();
+    </script>
+  </body>
 </html>
+
+
+
+
+
+
+
+
+
