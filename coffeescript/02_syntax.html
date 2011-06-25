@@ -1,200 +1,180 @@
 <!DOCTYPE html>
 <html>
-<head>
-<meta charset=utf-8>
-<title>The Little Book on CoffeeScript - Syntax</title>
-<link rel="stylesheet" href="site/site.css" type="text/css" charset="utf-8">
-<link rel="stylesheet" href="site/highlight.css" type="text/css" charset="utf-8">
-<script src="site/jquery.js" type="text/javascript" charset="utf-8"></script>      
-<script src="site/highlight.js" type="text/javascript" charset="utf-8"></script>
-<script src="site/coffee-script.js" type="text/javascript" charset="utf-8"></script>
-<script src="site/preview.js" type="text/javascript" charset="utf-8"></script>
-<script type="text/javascript" charset="utf-8">
-  hljs.initHighlightingOnLoad();
-</script>
-</head>
-<body>
-<div id="container">
-  <header>
-    <h1><a href="index.html">The Little Book on CoffeeScript</a></h1>
-  </header>
-  
-  <div id="content">
-    <div class="back"><a href="index.html">&laquo; Back to all chapters</a></div>
+  <head>
+    <meta charset=utf-8>
+    <title>The Little Book on CoffeeScript - Introduction</title>
+    <link rel="stylesheet" href="site/site.css" type="text/css" charset="utf-8">
+    <link rel="stylesheet" href="site/highlight.css" type="text/css" charset="utf-8">
+    <script type="text/javascript" src="http://use.typekit.com/wgs0gxl.js"></script>
+    <script type="text/javascript">try{Typekit.load();}catch(e){}</script>    
+  </head>
+  <body>
+    <section id="book" class="chapter">
+      <h1>
+        <svg version="1.0" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+        	 width="30px" height="15px" viewBox="0 0 100 61.67" enable-background="new 0 0 100 61.67" xml:space="preserve">
+        <path d="M100,51.058H0C0.007,58.293,5.523,61.65,9.963,61.67h80.076C95.335,61.65,99.976,57.486,100,51.058L100,51.058z"/>
+        <path d="M80.998,0H21.331v39.144c0.009,5.316,4.587,9.521,9.531,9.531h38.71c5.58-0.011,9.387-4.704,9.368-9.531v-3.247
+        	c11.047-0.009,19.062-8.303,19.058-17.974C98.002,8.08,90.145-0.007,80.998,0z M78.94,28.427V7.364h2.058
+        	c7.568-0.012,9.996,7.146,9.96,10.614C90.965,23.577,86.818,28.948,78.94,28.427z"/>
+        </svg>        
+        <a href="index.html">The Little Book on CoffeeScript</a>
+      </h1>      
+      <section id="content">
+        <h1>CoffeeScript Syntax</h1>
+        <p>Firstly, before we get any further into this section, I want to reiterate that while CoffeeScript's syntax is often identical with JavaScript's, it's not a superset, and therefore some JavaScript keywords, such as <code>function</code> and <code>var</code> aren't permitted, and will throw syntax errors. If you're writing a CoffeeScript file, it needs to be pure CoffeeScript; you can't intermingle the two languages.</p>
+        <p>Why isn't CoffeeScript a superset? Well, the very fact that whitespace is significant in CoffeeScript programs prevents it being a superset. And, once that's decision's been made, the team decided you might as well go the full hog and deprecate some JavaScript keywords and features in the name of simplicity and in an effort to reduce many commonly occurring bugs.</p>
+        <p>What I find mind-blowing, in a meta sort of way, is that the CoffeeScript interpreter itself is actually written in CoffeeScript. It looks like the chicken or egg paradox has finally been solved!</p>
 
+        <p>Right, so firstly let's tackle the basic stuff. There are no semicolons in CoffeeScript, it'll add them automatically for you upon compilation. Semicolons were the cause of much debate in the JavaScript community, and behind some weird interpreter <a href="http://bonsaiden.github.com/JavaScript-Garden/#core.semicolon">behavior</a>. Anyway, CoffeeScript resolves this problem for you by simply removing semi-colons from its syntax, adding them as needed behind the scenes.</p>
 
-<h1>CoffeeScript Syntax</h1>
+        <p>Comments are in the same format as Ruby comments, starting with a hash character.</p>
 
-<p>Firstly, before we get any further into this section, I want to reiterate that while CoffeeScript's syntax is often identical with JavaScript's, it's not a superset, and therefore some JavaScript keywords, such as <code>function</code> and <code>var</code> aren't permitted, and will throw syntax errors. If you're writing a CoffeeScript file, it needs to be pure CoffeeScript; you can't intermingle the two languages.</p>
+        <pre><code># A comment</code></pre>
 
-<p>Why isn't CoffeeScript a superset? Well, the very fact that whitespace is significant in CoffeeScript programs prevents it being a superset. And, once that's decision's been made, the team decided you might as well go the full hog and deprecate some JavaScript keywords and features in the name of simplicity and in an effort to reduce many commonly occurring bugs.</p>
+        <p>Multiline comments are also supported, and are brought forward to the generated JavaScript. They're enclosed by three hash characters.</p>
 
-<p>What I find mind-blowing, in a meta sort of way, is that the CoffeeScript interpreter itself is actually written in CoffeeScript. It looks like the chicken or egg paradox has finally been solved!</p>
+        <p><span class="csscript"></span></p>
 
-<p>Right, so firstly let's tackle the basic stuff. There are no semicolons in CoffeeScript, it'll add them automatically for you upon compilation. Semicolons were the cause of much debate in the JavaScript community, and behind some weird interpreter <a href="http://bonsaiden.github.com/JavaScript-Garden/#core.semicolon">behavior</a>. Anyway, CoffeeScript resolves this problem for you by simply removing semi-colons from its syntax, adding them as needed behind the scenes.</p>
-
-<p>Comments are in the same format as Ruby comments, starting with a hash character.</p>
-
-<pre><code># A comment
-</code></pre>
-
-<p>Multiline comments are also supported, and are brought forward to the generated JavaScript. They're enclosed by three hash characters.</p>
-
-<p><span class="csscript"></span></p>
-
-<pre><code>###
+        <pre><code>###
   A multiline comment, perhaps a LICENSE.
-###
-</code></pre>
+###</code></pre>
 
-<p>As I briefly alluded to, whitespace is significant in CoffeeScript. In practice, this means that you can replace curly brackets (<code>{}</code>) with a tab. This takes inspiration from Python's syntax, and has the excellent side effect of ensuring that your script is formatted in a sane manner, otherwise it won't even compile!</p>
+        <p>As I briefly alluded to, whitespace is significant in CoffeeScript. In practice, this means that you can replace curly brackets (<code>{}</code>) with a tab. This takes inspiration from Python's syntax, and has the excellent side effect of ensuring that your script is formatted in a sane manner, otherwise it won't even compile!</p>
 
-<h2>Variables &amp; Scope</h2>
+        <h2>Variables &amp; Scope</h2>
 
-<p>CoffeeScript fixes one of the major bugbears with JavaScript, global variables. In JavaScript, it's all too easy to accidentally declare a global variable by forgetting to include <code>var</code> before the variable assignment. CoffeeScript solves this by simply removing global variables. Behind the scenes, CoffeeScript wraps up scripts with an anonymous function, keeping the local context, and automatically prefixes all variable assignments with <code>var</code>. For example, take this simple variable assignment in CoffeeScript:</p>
+        <p>CoffeeScript fixes one of the major bugbears with JavaScript, global variables. In JavaScript, it's all too easy to accidentally declare a global variable by forgetting to include <code>var</code> before the variable assignment. CoffeeScript solves this by simply removing global variables. Behind the scenes, CoffeeScript wraps up scripts with an anonymous function, keeping the local context, and automatically prefixes all variable assignments with <code>var</code>. For example, take this simple variable assignment in CoffeeScript:</p>
 
-<p><span class="csscript"></span></p>
+        <p><span class="csscript"></span></p>
 
-<pre><code>myVariable = "test"
-</code></pre>
+        <pre><code>myVariable = "test"</code></pre>
 
-<p>Notice the dark grey box in the top right of the code example above. Give that a click, and the code will toggle between CoffeeScript and the compiled JavaScript. This is rendered right inside the page at runtime, so you assured the compiled output is accurate.</p>
+        <p>Notice the dark grey box in the top right of the code example above. Give that a click, and the code will toggle between CoffeeScript and the compiled JavaScript. This is rendered right inside the page at runtime, so you assured the compiled output is accurate.</p>
 
-<p>As you can see, the variable assignment is kept completely local, it's impossible to accidentally create a global variable. CoffeeScript actually takes this a step further, and makes it impossible to shadow a higher-level variable. This goes a great deal to prevent some of the most common mistakes developers make in JavaScript.</p>
+        <p>As you can see, the variable assignment is kept completely local, it's impossible to accidentally create a global variable. CoffeeScript actually takes this a step further, and makes it impossible to shadow a higher-level variable. This goes a great deal to prevent some of the most common mistakes developers make in JavaScript.</p>
 
-<p>However, sometimes it's useful to create global variables. You can either do this by directly setting them as properties on the global object (<code>window</code> in browsers), or with the following pattern:</p>
+        <p>However, sometimes it's useful to create global variables. You can either do this by directly setting them as properties on the global object (<code>window</code> in browsers), or with the following pattern:</p>
 
-<p><span class="csscript"></span></p>
+        <p><span class="csscript"></span></p>
 
-<pre><code>exports = this
-exports.MyVariable = "foo-bar"
-</code></pre>
+        <pre><code>exports = this
+exports.MyVariable = "foo-bar"</code></pre>
 
-<p>In the root context, <code>this</code> is equal to the global object, and by creating a local <code>exports</code> variable you're making it really obvious to anyone reading your code exactly which global variables a script is creating. Additionally, it paves the way for CommonJS modules, which we're going to cover later in the book.</p>
+        <p>In the root context, <code>this</code> is equal to the global object, and by creating a local <code>exports</code> variable you're making it really obvious to anyone reading your code exactly which global variables a script is creating. Additionally, it paves the way for CommonJS modules, which we're going to cover later in the book.</p>
 
-<h2>Functions</h2>
+        <h2>Functions</h2>
 
-<p>CoffeeScript removes the rather verbose <code>function</code> statement, and replaces it with a thin arrow: <code>-&gt;</code>. Functions can be one liners or indented on multiple lines. The last expression in the function is implicitly returned. In other words, you don't need to use the <code>return</code> statement unless you want to return earlier inside the function.</p>
+        <p>CoffeeScript removes the rather verbose <code>function</code> statement, and replaces it with a thin arrow: <code>-&gt;</code>. Functions can be one liners or indented on multiple lines. The last expression in the function is implicitly returned. In other words, you don't need to use the <code>return</code> statement unless you want to return earlier inside the function.</p>
 
-<p>With that in mind, let's take a look at an example:</p>
+        <p>With that in mind, let's take a look at an example:</p>
 
-<p><span class="csscript"></span></p>
+        <p><span class="csscript"></span></p>
 
-<pre><code>func = -&gt; "bar"
-</code></pre>
+        <pre><code>func = -&gt; "bar"</code></pre>
 
-<p>You can see in the resultant compilation, the <code>-&gt;</code> is turned into a <code>function</code> statement, and the <code>"bar"</code> string is automatically returned.</p>
+        <p>You can see in the resultant compilation, the <code>-&gt;</code> is turned into a <code>function</code> statement, and the <code>"bar"</code> string is automatically returned.</p>
 
-<p>As mentioned earlier, there's no reason why we can't use multiple lines, as long we indent the function body properly.</p>
+        <p>As mentioned earlier, there's no reason why we can't use multiple lines, as long we indent the function body properly.</p>
 
-<p><span class="csscript"></span></p>
+        <p><span class="csscript"></span></p>
 
-<pre><code>func = -&gt;
+        <pre><code>func = -&gt;
   # An extra line
-  "bar"
-</code></pre>
+  "bar"</code></pre>
 
-<h3>Function arguments</h3>
+        <h3>Function arguments</h3>
 
-<p>How about specifying arguments? Well, CoffeeScript lets you do that by specifying arguments in parentheses before the arrow.</p>
+        <p>How about specifying arguments? Well, CoffeeScript lets you do that by specifying arguments in parentheses before the arrow.</p>
 
-<p><span class="csscript"></span></p>
+        <p><span class="csscript"></span></p>
 
-<pre><code>times = (a, b) -&gt; a * b
-</code></pre>
+        <pre><code>times = (a, b) -&gt; a * b</code></pre>
 
-<p>CoffeeScript supports default arguments too, for example:</p>
+        <p>CoffeeScript supports default arguments too, for example:</p>
 
-<p><span class="csscript"></span></p>
+        <p><span class="csscript"></span></p>
 
-<pre><code>times = (a = 1, b = 2) -&gt; a * 2
-</code></pre>
+        <pre><code>times = (a = 1, b = 2) -&gt; a * 2</code></pre>
 
-<p>You can also use splats to accept multiple arguments, denoted by <code>...</code></p>
+        <p>You can also use splats to accept multiple arguments, denoted by <code>...</code></p>
 
-<p><span class="csscript"></span></p>
+        <p><span class="csscript"></span></p>
 
-<pre><code>sum = (nums...) -&gt; 
+        <pre><code>sum = (nums...) -&gt; 
   result = 0
   nums.forEach (n) -&gt; result += n
-  result
-</code></pre>
+  result</code></pre>
 
-<p>In the example above, <code>nums</code> is an array of all the arguments passed to the function. It's not an <code>arguments</code> object, but rather a real array, so you don't need to concern yourself with <code>Array.prototype.splice</code> or <code>jQuery.makeArray()</code> if you want to manipulate it.</p>
+        <p>In the example above, <code>nums</code> is an array of all the arguments passed to the function. It's not an <code>arguments</code> object, but rather a real array, so you don't need to concern yourself with <code>Array.prototype.splice</code> or <code>jQuery.makeArray()</code> if you want to manipulate it.</p>
 
-<p><span class="csscript"></span></p>
+        <p><span class="csscript"></span></p>
 
-<pre><code>trigger = (events...) -&gt;
+        <pre><code>trigger = (events...) -&gt;
   events.splice(1, 0, this)
-  this.parent.trigger.apply(events)
-</code></pre>
+  this.parent.trigger.apply(events)</code></pre>
 
-<h3>Function invocation</h3>
+        <h3>Function invocation</h3>
 
-<p>Functions can be invoked exactly as in JavaScript, with parens <code>()</code>, <code>apply()</code> or <code>call()</code>. However, like Ruby, CoffeeScript will automatically call functions if they are invoked with at least one argument.</p>
+        <p>Functions can be invoked exactly as in JavaScript, with parens <code>()</code>, <code>apply()</code> or <code>call()</code>. However, like Ruby, CoffeeScript will automatically call functions if they are invoked with at least one argument.</p>
 
-<p><span class="csscript"></span></p>
+        <p><span class="csscript"></span></p>
 
-<pre><code>a = "Howdy!"
-
+        <pre><code>a = "Howdy!"
 alert a
 # Equivalent to:
 alert(a)
 
 alert inspect a
 # Equivalent to:
-alert(inspect(a))
-</code></pre>
+alert(inspect(a))</code></pre>
 
-<p>Although parenthesis is optional, I'd recommend using it if it's not immediately obvious what's being invoked, and with which arguments. In the last example, with <code>inspect</code>, I'd definitely recommend wrapping at least the <code>inspect</code> invocation in parens.</p>
+        <p>Although parenthesis is optional, I'd recommend using it if it's not immediately obvious what's being invoked, and with which arguments. In the last example, with <code>inspect</code>, I'd definitely recommend wrapping at least the <code>inspect</code> invocation in parens.</p>
 
-<p><span class="csscript"></span></p>
+        <p><span class="csscript"></span></p>
 
-<pre><code>alert inspect(a)
-</code></pre>
+        <pre><code>alert inspect(a)</code></pre>
 
-<p>If you don't pass any arguments with an invocation, CoffeeScript has no way of working out if you intend to invoke the function, or just treat it like a variable. In this respect, CoffeeScript's behavior differs from Ruby which always invokes references to functions, and more similar to Python's. This has been the source of a few errors in my CoffeeScript programs, so it's worth keeping an eye out for cases where you intend to call a function without any arguments, and include parenthesis.</p>
+        <p>If you don't pass any arguments with an invocation, CoffeeScript has no way of working out if you intend to invoke the function, or just treat it like a variable. In this respect, CoffeeScript's behavior differs from Ruby which always invokes references to functions, and more similar to Python's. This has been the source of a few errors in my CoffeeScript programs, so it's worth keeping an eye out for cases where you intend to call a function without any arguments, and include parenthesis.</p>
 
-<h3>Function context</h3>
+        <h3>Function context</h3>
 
-<p>Context changes are rife within JavaScript, especially with event callbacks, so CoffeeScript provides a few helpers to manage this. One such helper is a variation on <code>-&gt;</code>, the fat arrow function: <code>=&gt;</code></p>
+        <p>Context changes are rife within JavaScript, especially with event callbacks, so CoffeeScript provides a few helpers to manage this. One such helper is a variation on <code>-&gt;</code>, the fat arrow function: <code>=&gt;</code></p>
 
-<p>Using the fat arrow instead of the thin arrow ensures that the function context will be bound to the local one. For example:</p>
+        <p>Using the fat arrow instead of the thin arrow ensures that the function context will be bound to the local one. For example:</p>
 
-<p><span class="csscript"></span></p>
+        <p><span class="csscript"></span></p>
 
-<pre><code>this.clickHandler = -&gt; alert "clicked"
-element.addEventListener "click", (e) =&gt; this.clickHandler(e)
-</code></pre>
+        <pre><code>this.clickHandler = -&gt; alert "clicked"
+element.addEventListener "click", (e) =&gt; this.clickHandler(e)</code></pre>
 
-<p>The reason you might want to do this, is that callbacks from <code>addEventListener()</code> are executed in the context of the <code>element</code>, i.e. <code>this</code> equals the element. If you want to keep <code>this</code> equal to the local context, without doing a <code>self = this</code> dance, fat arrows are the way to go.</p>
+        <p>The reason you might want to do this, is that callbacks from <code>addEventListener()</code> are executed in the context of the <code>element</code>, i.e. <code>this</code> equals the element. If you want to keep <code>this</code> equal to the local context, without doing a <code>self = this</code> dance, fat arrows are the way to go.</p>
 
-<p>This binding idea is a similar concept to jQuery's <a href="http://api.jquery.com/jQuery.proxy/"><code>proxy()</code></a> or <a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Function/bind">ES5's</a> <code>bind()</code> functions.</p>
+        <p>This binding idea is a similar concept to jQuery's <a href="http://api.jquery.com/jQuery.proxy/"><code>proxy()</code></a> or <a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Function/bind">ES5's</a> <code>bind()</code> functions.</p>
 
-<h2>Object literals &amp; array definition</h2>
+        <h2>Object literals &amp; array definition</h2>
 
-<p>Object literals can be specified exactly as in JavaScript, with a pair of braces and key/value statements. However, like with function invocation, CoffeeScript makes the braces optional. In fact, you can also use indentation and new lines instead of comma separation.</p>
+        <p>Object literals can be specified exactly as in JavaScript, with a pair of braces and key/value statements. However, like with function invocation, CoffeeScript makes the braces optional. In fact, you can also use indentation and new lines instead of comma separation.</p>
 
-<p><span class="csscript"></span></p>
+        <p><span class="csscript"></span></p>
 
-<pre><code>object1 = {one: 1, two: 2}
+        <pre><code>object1 = {one: 1, two: 2}
 
 # Without braces
 object2 = one: 1, two: 2
 
 # Using new lines instead of commas
 object3 = 
-  one: 1
-  two: 2
+one: 1
+two: 2
 
-User.create(name: "John Smith")
-</code></pre>
+User.create(name: "John Smith")</code></pre>
 
-<p>Likewise, arrays can use whitespace instead of comma separators, although the square brackets (<code>[]</code>) are still required.</p>
+        <p>Likewise, arrays can use whitespace instead of comma separators, although the square brackets (<code>[]</code>) are still required.</p>
 
-<p><span class="csscript"></span></p>
+        <p><span class="csscript"></span></p>
 
-<pre><code>array1 = [1, 2, 3]
+        <pre><code>array1 = [1, 2, 3]
 
 array2 = [
   1
@@ -202,66 +182,60 @@ array2 = [
   3
 ]
 
-array3 = [1,2,3,]
-</code></pre>
+array3 = [1,2,3,]</code></pre>
 
-<p>As you can see in the example above, CoffeeScript has also stripped the trailing comma in <code>array3</code>, another common source of cross-browser errors.</p>
+        <p>As you can see in the example above, CoffeeScript has also stripped the trailing comma in <code>array3</code>, another common source of cross-browser errors.</p>
 
-<h2>Flow control</h2>
+        <h2>Flow control</h2>
 
-<p>The convention of optional parentheses continues with CoffeeScript's <code>if</code> and <code>else</code> keywords.</p>
+        <p>The convention of optional parentheses continues with CoffeeScript's <code>if</code> and <code>else</code> keywords.</p>
 
-<p><span class="csscript"></span></p>
+        <p><span class="csscript"></span></p>
 
-<pre><code>if true == true
+        <pre><code>if true == true
   "We're ok"
 
 if true != true then "Panic"
 
 # Equivalent to:
 #  (1 &gt; 0) ? "Ok" : "Y2K!"
-if 1 &gt; 0 then "Ok" else "Y2K!"
-</code></pre>
+if 1 &gt; 0 then "Ok" else "Y2K!"</code></pre>
 
-<p>As you can see above, if the <code>if</code> statement is on one line, you'll need to use the <code>then</code> keyword, so CoffeeScript knows when the block begins. Conditional operators (<code>?:</code>) are not supported, instead you should use a single line <code>if/else</code> statement.</p>
+        <p>As you can see above, if the <code>if</code> statement is on one line, you'll need to use the <code>then</code> keyword, so CoffeeScript knows when the block begins. Conditional operators (<code>?:</code>) are not supported, instead you should use a single line <code>if/else</code> statement.</p>
 
-<p>CoffeeScript also includes a Ruby idiom of allowing suffixed <code>if</code> statements.</p>
+        <p>CoffeeScript also includes a Ruby idiom of allowing suffixed <code>if</code> statements.</p>
 
-<p><span class="csscript"></span></p>
+        <p><span class="csscript"></span></p>
 
-<pre><code>alert "It's cold!" if heat &lt; 5
-</code></pre>
+        <pre><code>alert "It's cold!" if heat &lt; 5</code></pre>
 
-<p>Instead of using the exclamation mark (<code>!</code>) for negation, you can also use the <code>not</code> keyword - which can sometimes make your code more readable as exclamation marks can be easy to miss.</p>
+        <p>Instead of using the exclamation mark (<code>!</code>) for negation, you can also use the <code>not</code> keyword - which can sometimes make your code more readable as exclamation marks can be easy to miss.</p>
 
-<p><span class="csscript"></span></p>
+        <p><span class="csscript"></span></p>
 
-<pre><code>if not true then "Panic"
-</code></pre>
+        <pre><code>if not true then "Panic"</code></pre>
 
-<p>In the example above, we could also use the CoffeeScript's <code>unless</code> statement, the opposite of <code>if</code>.</p>
+        <p>In the example above, we could also use the CoffeeScript's <code>unless</code> statement, the opposite of <code>if</code>.</p>
 
-<p><span class="csscript"></span></p>
+        <p><span class="csscript"></span></p>
 
-<pre><code>unless true
-  "Panic"
-</code></pre>
+        <pre><code>unless true
+  "Panic"</code></pre>
 
-<p>In a similar fashion to <code>not</code>, CoffeeScript also introduces the <code>is</code> statement, which translates to <code>===</code>.</p>
+        <p>In a similar fashion to <code>not</code>, CoffeeScript also introduces the <code>is</code> statement, which translates to <code>===</code>.</p>
 
-<p><span class="csscript"></span></p>
+        <p><span class="csscript"></span></p>
 
-<pre><code>if true is 1
-  "Type coercion fixed!"
-</code></pre>
+        <pre><code>if true is 1
+  "Type coercion fixed!"</code></pre>
 
-<p>You may have noticed in the examples above, that CoffeeScript is converting <code>==</code> operators into <code>===</code> and <code>!=</code> into <code>!==</code>. This is one of my favorite features to the language, and yet one of the most simple. What's the reasoning behind this? Well frankly JavaScript's type coercion is a bit odd, and its equality operator coerces types in order to compare them, leading to some confusing behaviors and the source of many bugs.</p>
+        <p>You may have noticed in the examples above, that CoffeeScript is converting <code>==</code> operators into <code>===</code> and <code>!=</code> into <code>!==</code>. This is one of my favorite features to the language, and yet one of the most simple. What's the reasoning behind this? Well frankly JavaScript's type coercion is a bit odd, and its equality operator coerces types in order to compare them, leading to some confusing behaviors and the source of many bugs.</p>
 
-<p>The example below is taken from <a href="http://bonsaiden.github.com/JavaScript-Garden/#types.equality">JavaScript Garden's equality section</a> which delves into the issue in some depth.</p>
+        <p>The example below is taken from <a href="http://bonsaiden.github.com/JavaScript-Garden/#types.equality">JavaScript Garden's equality section</a> which delves into the issue in some depth.</p>
 
-<p><span class="csscript"></span></p>
+        <p><span class="csscript"></span></p>
 
-<pre><code>""           ==   "0"           // false
+        <pre><code>""           ==   "0"           // false
 0            ==   ""            // true
 0            ==   "0"           // true
 false        ==   "false"       // false
@@ -269,165 +243,152 @@ false        ==   "0"           // true
 false        ==   undefined     // false
 false        ==   null          // false
 null         ==   undefined     // true
-" \t\r\n"    ==   0             // true
-</code></pre>
+" \t\r\n"    ==   0             // true</code></pre>
 
-<p>The solution is to use the strict equality operator, which consists of three equal signs: <code>===</code>. It works exactly like the normal equality operator, but without any type coercion. It's recommended to always use the strict equality operator, and explicitly convert types if needs be. As mentioned earlier, this is the default in CoffeeScript, with any weak equality operators being converted into strict ones.</p>
+        <p>The solution is to use the strict equality operator, which consists of three equal signs: <code>===</code>. It works exactly like the normal equality operator, but without any type coercion. It's recommended to always use the strict equality operator, and explicitly convert types if needs be. As mentioned earlier, this is the default in CoffeeScript, with any weak equality operators being converted into strict ones.</p>
 
-<p><span class="csscript"></span></p>
+        <p><span class="csscript"></span></p>
 
-<pre><code>if 10 == "+10" then "type coercion fail"
-</code></pre>
+        <pre><code>if 10 == "+10" then "type coercion fail"</code></pre>
 
-<h2>String interpolation</h2>
+        <h2>String interpolation</h2>
 
-<p>CoffeeScript brings Ruby style string interpolation to JavaScript. Double quotes strings can contain <code>#{}</code> tags, which contain expressions to be interpolated into the string.</p>
+        <p>CoffeeScript brings Ruby style string interpolation to JavaScript. Double quotes strings can contain <code>#{}</code> tags, which contain expressions to be interpolated into the string.</p>
 
-<p><span class="csscript"></span></p>
+        <p><span class="csscript"></span></p>
 
-<pre><code>favourite_color = "Blue. No, yel..."
+        <pre><code>favourite_color = "Blue. No, yel..."
 question = "Bridgekeeper: What... is your favourite color?
             Galahad: #{favourite_color}
             Bridgekeeper: Wrong!
-            "
-</code></pre>
+            "</code></pre>
 
-<p>As you can see in the example above, multiline strings are also allowed, without having to prefix each line with a <code>+</code>:</p>
+        <p>As you can see in the example above, multiline strings are also allowed, without having to prefix each line with a <code>+</code>:</p>
 
-<h2>Loops and Comprehensions</h2>
+        <h2>Loops and Comprehensions</h2>
 
-<p>Array iteration in JavaScript has a rather archaic syntax, reminiscent of an older language like C rather than a modern object orientated one. The introduction of ES5 improved that situation somewhat, with the <code>forEach()</code> function, but that still requires a function call every iteration and is therefore much slower. Again, CoffeeScript comes to the rescue, with a beautiful syntax:</p>
+        <p>Array iteration in JavaScript has a rather archaic syntax, reminiscent of an older language like C rather than a modern object orientated one. The introduction of ES5 improved that situation somewhat, with the <code>forEach()</code> function, but that still requires a function call every iteration and is therefore much slower. Again, CoffeeScript comes to the rescue, with a beautiful syntax:</p>
 
-<p><span class="csscript"></span></p>
+        <p><span class="csscript"></span></p>
 
-<pre><code>for name in ["Roger", "Roderick", "Brian"]
-  alert "Release #{name}"
-</code></pre>
+        <pre><code>for name in ["Roger", "Roderick", "Brian"]
+  alert "Release #{name}"</code></pre>
 
-<p>If you need the current iteration index, just pass an extra argument:</p>
+        <p>If you need the current iteration index, just pass an extra argument:</p>
 
-<p><span class="csscript"></span></p>
+        <p><span class="csscript"></span></p>
 
-<pre><code>for name, i in ["Roger the pickpocket", "Roderick the robber"]
-  alert "#{i} - Release #{name}"
-</code></pre>
+        <pre><code>for name, i in ["Roger the pickpocket", "Roderick the robber"]
+  alert "#{i} - Release #{name}"</code></pre>
 
-<p>You can also iterate on one line, using the postfix form.</p>
+        <p>You can also iterate on one line, using the postfix form.</p>
 
-<p><span class="csscript"></span></p>
+        <p><span class="csscript"></span></p>
 
-<pre><code>release prisoner for prisoner in ["Roger", "Roderick", "Brian"]
-</code></pre>
+        <pre><code>release prisoner for prisoner in ["Roger", "Roderick", "Brian"]</code></pre>
 
-<p>As with Python comprehensions, you can filter them:</p>
+        <p>As with Python comprehensions, you can filter them:</p>
 
-<p><span class="csscript"></span></p>
+        <p><span class="csscript"></span></p>
 
-<pre><code>prisoners = ["Roger", "Roderick", "Brian"]
-release prisoner for prisoner in prisoners when prisoner[0] is "R" 
-</code></pre>
+        <pre><code>prisoners = ["Roger", "Roderick", "Brian"]
+  release prisoner for prisoner in prisoners when prisoner[0] is "R"</code></pre>
 
-<p>You can also use comprehensions for iterating over properties in objects. Instead of the <code>in</code> keyword, use <code>of</code>.</p>
+        <p>You can also use comprehensions for iterating over properties in objects. Instead of the <code>in</code> keyword, use <code>of</code>.</p>
 
-<p><span class="csscript"></span></p>
+        <p><span class="csscript"></span></p>
 
-<pre><code>names = sam: seaborn, donna: moss
-alert("#{first} #{last}") for first, last of names
-</code></pre>
+        <pre><code>names = sam: seaborn, donna: moss
+alert("#{first} #{last}") for first, last of names</code></pre>
 
-<p>The only low-level loop that CoffeeScript exposes is the <code>while</code> loop. This has similar behavior to the <code>while</code> loop in pure JavaScript, but has the added advantage that it returns an array of results, i.e. like the <code>Array.prototype.map()</code> function.</p>
+        <p>The only low-level loop that CoffeeScript exposes is the <code>while</code> loop. This has similar behavior to the <code>while</code> loop in pure JavaScript, but has the added advantage that it returns an array of results, i.e. like the <code>Array.prototype.map()</code> function.</p>
 
-<p><span class="csscript"></span></p>
+        <p><span class="csscript"></span></p>
 
-<pre><code>num = 6
+        <pre><code>num = 6
 minstrel = while num -= 1
-  num + " Brave Sir Robin ran away"
-</code></pre>
+  num + " Brave Sir Robin ran away"</code></pre>
 
-<h2>Arrays</h2>
+        <h2>Arrays</h2>
 
-<p>CoffeeScript takes inspiration from Ruby when it comes to array slicing by using ranges. Ranges are created by two numerical values, the first and last positions in the range, separated by <code>..</code> or <code>...</code>. If a range isn't prefixed by anything, CoffeeScript expands it out into an array.</p>
+        <p>CoffeeScript takes inspiration from Ruby when it comes to array slicing by using ranges. Ranges are created by two numerical values, the first and last positions in the range, separated by <code>..</code> or <code>...</code>. If a range isn't prefixed by anything, CoffeeScript expands it out into an array.</p>
 
-<p><span class="csscript"></span></p>
+        <p><span class="csscript"></span></p>
 
-<pre><code>range = [1..5]
-</code></pre>
+        <pre><code>range = [1..5]
+        </code></pre>
 
-<p>If, however, the range is specified immediately after a variable, CoffeeScript converts it into a <code>slice()</code> method call.</p>
+        <p>If, however, the range is specified immediately after a variable, CoffeeScript converts it into a <code>slice()</code> method call.</p>
 
-<p><span class="csscript"></span></p>
+        <p><span class="csscript"></span></p>
 
-<pre><code>firstTwo = ["one", "two", "three"][0..1]
-</code></pre>
+        <pre><code>firstTwo = ["one", "two", "three"][0..1]</code></pre>
 
-<p>In the example above, the range returns a new array, containing only the first two elements of the original array. You can also use the same syntax for replacing an array segment with another array.</p>
+        <p>In the example above, the range returns a new array, containing only the first two elements of the original array. You can also use the same syntax for replacing an array segment with another array.</p>
 
-<p><span class="csscript"></span></p>
+        <p><span class="csscript"></span></p>
 
-<pre><code>numbers = [0..9]
-numbers[3..5] = [-3, -4, -5]
-</code></pre>
+        <pre><code>numbers = [0..9]
+numbers[3..5] = [-3, -4, -5]</code></pre>
 
-<p>What's neat, is that JavaScript allows you to call <code>slice()</code> on strings too, so you can use ranges with string to return a new subset of characters.</p>
+        <p>What's neat, is that JavaScript allows you to call <code>slice()</code> on strings too, so you can use ranges with string to return a new subset of characters.</p>
 
-<p><span class="csscript"></span></p>
+        <p><span class="csscript"></span></p>
 
-<pre><code>my = "my string"[0..2]
-</code></pre>
+        <pre><code>my = "my string"[0..2]</code></pre>
 
-<p>Checking to see if a value exists inside an array is always a bore in JavaScript, particular as <code>indexOf()</code> doesn't yet have full cross-browser support (IE, I'm talking about you). CoffeeScript solves this with the <code>in</code> operator, for example.</p>
+        <p>Checking to see if a value exists inside an array is always a bore in JavaScript, particular as <code>indexOf()</code> doesn't yet have full cross-browser support (IE, I'm talking about you). CoffeeScript solves this with the <code>in</code> operator, for example.</p>
 
-<p><span class="csscript"></span></p>
+        <p><span class="csscript"></span></p>
 
-<pre><code>words = ["rattled", "roudy", "rebbles", "ranks"]
-alert "Stop wagging me" if "ranks" in words 
-</code></pre>
+        <pre><code>words = ["rattled", "roudy", "rebbles", "ranks"]
+alert "Stop wagging me" if "ranks" in words</code></pre>
 
-<h2>Aliases &amp; the Existential Operator</h2>
+        <h2>Aliases &amp; the Existential Operator</h2>
 
-<p>CoffeeScript includes some useful aliases to save some typing. One of which is <code>@</code>, which is an alias for <code>this</code>.</p>
+        <p>CoffeeScript includes some useful aliases to save some typing. One of which is <code>@</code>, which is an alias for <code>this</code>.</p>
 
-<p><span class="csscript"></span></p>
+        <p><span class="csscript"></span></p>
 
-<pre><code>@saviour = true
-</code></pre>
+        <pre><code>@saviour = true</code></pre>
 
-<p>Another is <code>::</code>, which is an alias for <code>prototype</code></p>
+        <p>Another is <code>::</code>, which is an alias for <code>prototype</code></p>
 
-<p><span class="csscript"></span></p>
+        <p><span class="csscript"></span></p>
 
-<pre><code>User::first = -&gt; @records[0]
-</code></pre>
+        <pre><code>User::first = -&gt; @records[0]</code></pre>
 
-<p>Using <code>if</code> for <code>null</code> checks in JavaScript is common, but has a few pitfalls in that empty strings and zero are both coerced into <code>false</code>, which can catch you out. CoffeeScript existential operator <code>?</code> returns true unless a variable is <code>null</code> or <code>undefined</code>, similar to Ruby's <code>nil?</code>.</p>
+        <p>Using <code>if</code> for <code>null</code> checks in JavaScript is common, but has a few pitfalls in that empty strings and zero are both coerced into <code>false</code>, which can catch you out. CoffeeScript existential operator <code>?</code> returns true unless a variable is <code>null</code> or <code>undefined</code>, similar to Ruby's <code>nil?</code>.</p>
 
-<p><span class="csscript"></span></p>
+        <p><span class="csscript"></span></p>
 
-<pre><code>praise if brian?
-</code></pre>
+        <pre><code>praise if brian?</code></pre>
 
-<p>You can also use it in place of the <code>||</code> operator:</p>
+        <p>You can also use it in place of the <code>||</code> operator:</p>
 
-<p><span class="csscript"></span></p>
+        <p><span class="csscript"></span></p>
 
-<pre><code>velocity = southern ? 40
-</code></pre>
+        <pre><code>velocity = southern ? 40</code></pre>
 
-<p>If you're using a <code>null</code> check before accessing a property, you can skip that by placing the existential operator right before the opening parens. This is similar to Ruby's <code>try</code> method.</p>
+        <p>If you're using a <code>null</code> check before accessing a property, you can skip that by placing the existential operator right before the opening parens. This is similar to Ruby's <code>try</code> method.</p>
 
-<p><span class="csscript"></span></p>
+        <p><span class="csscript"></span></p>
 
-<pre><code>blackKnight.getLegs()?.kick()
-</code></pre>
+        <pre><code>blackKnight.getLegs()?.kick()</code></pre>
 
-<p>You can safely call a value in the same manner, checking function-ness beforehand.</p>
+        <p>You can safely call a value in the same manner, checking function-ness beforehand.</p>
 
-<p><span class="csscript"></span></p>
+        <p><span class="csscript"></span></p>
 
-<pre><code>whiteKnight.guard? us
-</code></pre>
-
-  </div>
-</div>
-</body>
+        <pre><code>whiteKnight.guard? us</code></pre>
+      </section>
+    </section>
+    <script src="site/jquery.js" type="text/javascript" charset="utf-8"></script>      
+    <script src="site/highlight.js" type="text/javascript" charset="utf-8"></script>
+    <script src="site/coffee-script.js" type="text/javascript" charset="utf-8"></script>
+    <script src="site/preview.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript" charset="utf-8">
+    hljs.initHighlightingOnLoad();
+    </script>
+  </body>
 </html>
