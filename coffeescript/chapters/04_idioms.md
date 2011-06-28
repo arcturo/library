@@ -106,6 +106,27 @@ This technique is not specific to CoffeeScript, but I thought it useful to demon
 
     Math.max [14, 35, -7, 46, 98]... # 98
     Math.min [14, 35, -7, 46, 98]... # -7
+    
+##Multiple arguments
+
+In the `Math.max` example above, we're  using `...` to de-structure the array and passing it as multiple arguments to `max`. Behind the scenes, CoffeeScript is converting the function call to use `apply()`, ensuring the array is passed as multiple arguments to `max`. We can use this feature in other ways to, such as proxying function calls:
+
+    Log =
+      log: ->
+        return if typeof console is "undefined"
+        console.log(arguments...)
+      
+Or you can alter the arguments before they're passed onwards:
+
+    Log =
+      logPrefix: "(App)"
+
+      log: (args...) ->
+        return if typeof console is "undefined"
+        if @logPrefix then args.unshift(@logPrefix)
+        console.log(args...)
+        
+Bear in mind though, that CoffeeScript will automatically set the function invocation context to the object the function is being invoked on. In the example above, that would be `console`. If you want to set the context specifically, then you'll need to call `apply()` manually. 
 
 ##And/or
 
