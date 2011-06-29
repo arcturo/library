@@ -65,7 +65,7 @@ Now to actually boot up the Stitch server. Let's create a file called `server.js
 
     var package = stitch.createPackage({
       // Specify the paths you want Stitch to automatically bundle up
-      paths: [__dirname + '/lib', __dirname + '/app'],
+      paths: [__dirname + '/app'],
       
       // Specify your base libraries
       dependencies: [
