@@ -4,7 +4,6 @@
 
 Every language has a set of idioms and practices, and CoffeeScript is no exception. This chapter will explore those conventions, and show you some JavaScript to CoffeeScript comparisons so you can get a practical sense of the language. 
 
-
 ##Each
 
 In JavaScript to iterate over every item in an array, we could either use the newly added [`forEach()`](https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/array/foreach) function, or an old C style `for` loop. If you're planning to use some of JavaScript's latest features introduced in ECMAScript 5, I advise you also include a [shim](https://github.com/kriskowal/es5-shim) in the page to emulate support in older browsers.
@@ -111,12 +110,16 @@ This technique is not specific to CoffeeScript, but I thought it useful to demon
 
 In the `Math.max` example above, we're  using `...` to de-structure the array and passing it as multiple arguments to `max`. Behind the scenes, CoffeeScript is converting the function call to use `apply()`, ensuring the array is passed as multiple arguments to `max`. We can use this feature in other ways to, such as proxying function calls:
 
+<span class="csscript"></span>
+
     Log =
       log: ->
         return if typeof console is "undefined"
         console.log(arguments...)
       
 Or you can alter the arguments before they're passed onwards:
+
+<span class="csscript"></span>
 
     Log =
       logPrefix: "(App)"

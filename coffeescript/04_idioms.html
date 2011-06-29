@@ -145,6 +145,8 @@ Math.min [14, 35, -7, 46, 98]... # -7
 
 <p>In the <code>Math.max</code> example above, we're  using <code>...</code> to de-structure the array and passing it as multiple arguments to <code>max</code>. Behind the scenes, CoffeeScript is converting the function call to use <code>apply()</code>, ensuring the array is passed as multiple arguments to <code>max</code>. We can use this feature in other ways to, such as proxying function calls:</p>
 
+<p><span class="csscript"></span></p>
+
 <pre><code>Log =
   log: -&gt;
     return if typeof console is "undefined"
@@ -152,6 +154,8 @@ Math.min [14, 35, -7, 46, 98]... # -7
 </code></pre>
 
 <p>Or you can alter the arguments before they're passed onwards:</p>
+
+<p><span class="csscript"></span></p>
 
 <pre><code>Log =
   logPrefix: "(App)"
