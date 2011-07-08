@@ -122,3 +122,13 @@ header h1 a {
 .pages li a {
   text-decoration: none;
 }
+
+@media print {
+  #content .wrap pre {
+    display: block !important;
+  }
+
+  #content .wrap .handle {
+    display: none !important;
+  }
+}
