@@ -123,6 +123,10 @@ header h1 a {
   text-decoration: none;
 }
 
+.print_only {
+  display: none;
+}
+
 @media print {
   #content .wrap pre {
     display: block !important;
@@ -130,5 +134,9 @@ header h1 a {
 
   #content .wrap .handle {
     display: none !important;
+  }
+
+  .print_only {
+    display: inherit !important;
   }
 }
