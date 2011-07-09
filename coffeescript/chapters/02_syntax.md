@@ -57,7 +57,7 @@ With that in mind, let's take a look at an example:
 
 You can see in the resultant compilation, the `->` is turned into a `function` statement, and the `"bar"` string is automatically returned.
 
-As mentioned earlier, there's no reason why we can't use multiple lines, as long we indent the function body properly.
+As mentioned earlier, there's no reason why we can't use multiple lines, as long as we indent the function body properly.
 
 <span class="csscript"></span>
 

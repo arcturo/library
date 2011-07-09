@@ -122,3 +122,21 @@ header h1 a {
 .pages li a {
   text-decoration: none;
 }
+
+.print_only {
+  display: none;
+}
+
+@media print {
+  #content .wrap pre {
+    display: block !important;
+  }
+
+  #content .wrap .handle {
+    display: none !important;
+  }
+
+  .print_only {
+    display: inherit !important;
+  }
+}
