@@ -159,6 +159,8 @@ If hash evaluates to `false`, then it's set to an empty object. It's important t
 
 Destructuring assignments can be used with any depth of array and object nesting, to help pull out deeply nested properties.
 
+<span class="csscript"></span>
+
     someObject = { a: 'value for a', b: 'value for b' }
     { a, b } = someObject
     console.log "a is '#{a}', b is '#{b}'"
