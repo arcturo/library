@@ -77,7 +77,7 @@ CoffeeScript supports default arguments too, for example:
 
 <span class="csscript"></span>
 
-    times = (a = 1, b = 2) -> a * 2
+    times = (a = 1, b = 2) -> a * b
     
 You can also use splats to accept multiple arguments, denoted by `...`
 
