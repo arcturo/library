@@ -41,7 +41,7 @@ Formatting your code as CommonJS modules is all fine and dandy, but how do you a
 
 First things first, let's get Stitch installed. You'll need to install [Node.js](http://nodejs.org/) and [npm](http://npmjs.org/) if you haven't already, then run:
 
-    npm install stitch
+    npm install -g stitch
     
 Now let's create our application structure. If you're using [Spine](https://github.com/maccman/spine), you can automate this with [Spine.App](http://github.com/maccman/spine.app), otherwise it's something you'll need to do manually. I usually have an `app` folder for all the application specific code, and a `lib` folder for general libraries. Then anything else, including static assets, goes in the `public` directory.
 

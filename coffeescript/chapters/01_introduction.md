@@ -35,7 +35,7 @@ Obviously, in production, you don't want to be interpreting CoffeeScript at runt
 
 To install it, first make sure you have a working copy of the latest stable version of [Node.js](http://nodejs.org), and [npm](http://npmjs.org/) (the Node Package Manager). You can then install CoffeeScript with npm:
 
-    npm install coffee-script
+    npm install -g coffee-script
     
 This will give you a `coffee` executable. If you execute it without any command line options, it'll give you the CoffeeScript console, which you can use to quickly execute CoffeeScript statements. To pre-process files, pass the `--compile` option.
 
