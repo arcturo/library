@@ -31,7 +31,7 @@ In fact you can use browser-based compiler yourself, by including [this script](
       # Some CoffeeScript
     </script>
     
-Obviously, in production, you don't want to be interpreting CoffeeScript at runtime, as it'll slow thing up for your clients, so CoffeeScript offers a [Node.js](http://nodejs.org) compiler to pre-process CoffeeScript files.
+Obviously, in production, you don't want to be interpreting CoffeeScript at runtime, as it'll slow things up for your clients, so CoffeeScript offers a [Node.js](http://nodejs.org) compiler to pre-process CoffeeScript files.
 
 To install it, first make sure you have a working copy of the latest stable version of [Node.js](http://nodejs.org), and [npm](http://npmjs.org/) (the Node Package Manager). You can then install CoffeeScript with npm:
 
@@ -45,4 +45,4 @@ If `--output` is not specified, CoffeeScript will write to a JavaScript file wit
 
 As you can see above, the default extension of CoffeeScript files is `.coffee`. Amongst other things, this will allow text editors like [TextMate](http://macromates.com/) to work out which language the file contains, giving it the appropriate syntax highlighting. By default, TextMate doesn't include support for CoffeeScript, but you can easily install the [bundle to do so](https://github.com/jashkenas/coffee-script-tmbundle).
 
-If all this compilation seems like a bit of an inconvenience and bother, that's because it is. We'll be getting onto ways to solve this by automatically compiling CoffeeScript files when they're first requested, but first lets take a look at the languages's syntax. 
+If all this compilation seems like a bit of an inconvenience and bother, that's because it is. We'll be getting onto ways to solve this by automatically compiling CoffeeScript files when they're first requested, but first lets take a look at the language's syntax. 
