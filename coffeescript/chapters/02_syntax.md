@@ -352,14 +352,14 @@ You can also use it in place of the `||` operator:
 
     velocity = southern ? 40
     
-If you're using a `null` check before accessing a property, you can skip that by placing the existential operator right before the opening parens. This is similar to Ruby's `try` method. 
+If you're using a `null` check before accessing a property, you can skip that by placing the existential operator right before it. This is similar to Ruby's `try` method. 
 
 <span class="csscript"></span>
 
     blackKnight.getLegs()?.kick()
-
-You can safely call a value in the same manner, checking function-ness beforehand.
+    
+Similarly you can check that a property is actually a function, and callable, by placing the existential operator right before the parens. If the property doesn't exist, or isn't a function, it simply won't get called. 
 
 <span class="csscript"></span>
 
-    whiteKnight.guard? us
+    blackKnight.getLegs().kick?()

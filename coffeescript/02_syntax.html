@@ -413,18 +413,18 @@ alert "Stop wagging me" if "ranks" in words
 <pre><code>velocity = southern ? 40
 </code></pre>
 
-<p>If you're using a <code>null</code> check before accessing a property, you can skip that by placing the existential operator right before the opening parens. This is similar to Ruby's <code>try</code> method.</p>
+<p>If you're using a <code>null</code> check before accessing a property, you can skip that by placing the existential operator right before it. This is similar to Ruby's <code>try</code> method.</p>
 
 <p><span class="csscript"></span></p>
 
 <pre><code>blackKnight.getLegs()?.kick()
 </code></pre>
 
-<p>You can safely call a value in the same manner, checking function-ness beforehand.</p>
+<p>Similarly you can check that a property is actually a function, and callable, by placing the existential operator right before the parens. If the property doesn't exist, or isn't a function, it simply won't get called.</p>
 
 <p><span class="csscript"></span></p>
 
-<pre><code>whiteKnight.guard? us
+<pre><code>blackKnight.getLegs().kick?()
 </code></pre>
 
   </div>
