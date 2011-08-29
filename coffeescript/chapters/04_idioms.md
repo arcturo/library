@@ -164,6 +164,12 @@ Destructuring assignments can be used with any depth of array and object nesting
     someObject = { a: 'value for a', b: 'value for b' }
     { a, b } = someObject
     console.log "a is '#{a}', b is '#{b}'"
+    
+This is especially useful in Node applications, when requiring modules:
+
+<span class="csscript"></span>
+
+    {join, resolve} = require('path')
 
 ##External libraries
 

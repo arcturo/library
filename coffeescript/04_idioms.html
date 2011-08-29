@@ -206,6 +206,13 @@ string is string # true
 console.log "a is '#{a}', b is '#{b}'"
 </code></pre>
 
+<p>This is especially useful in Node applications, when requiring modules:</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>{join, resolve} = require('path')
+</code></pre>
+
 <h2>External libraries</h2>
 
 <p>Using external libraries is exactly the same as calling functions on CoffeeScript libraries; since at the end of the day everything is compiled down to JavaScript. Using CoffeeScript with <a href="http://jquery.com">jQuery</a> is especially elegant, due to the amount of callbacks in jQuery's API.</p>
