@@ -352,7 +352,7 @@ You can also use it in place of the `||` operator:
 
     velocity = southern ? 40
     
-If you're using a `null` check before accessing a property, you can skip that by placing the existential operator right before it. This is similar to Ruby's `try` method. 
+If you're using a `null` check before accessing a property, you can skip that by placing the existential operator right before it. This is similar to Active Support's [`try`](http://guides.rubyonrails.org/active_support_core_extensions.html#try) method. 
 
 <span class="csscript"></span>
 
