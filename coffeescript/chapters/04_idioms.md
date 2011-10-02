@@ -108,7 +108,7 @@ This technique is not specific to CoffeeScript, but I thought it useful to demon
     
 ##Multiple arguments
 
-In the `Math.max` example above, we're  using `...` to de-structure the array and passing it as multiple arguments to `max`. Behind the scenes, CoffeeScript is converting the function call to use `apply()`, ensuring the array is passed as multiple arguments to `max`. We can use this feature in other ways to, such as proxying function calls:
+In the `Math.max` example above, we're  using `...` to de-structure the array and passing it as multiple arguments to `max`. Behind the scenes, CoffeeScript is converting the function call to use `apply()`, ensuring the array is passed as multiple arguments to `max`. We can use this feature in other ways too, such as proxying function calls:
 
 <span class="csscript"></span>
 
