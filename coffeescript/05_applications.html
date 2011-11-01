@@ -65,66 +65,76 @@ module.exports.myFineProperty = function(){
 
 <p>Formatting your code as CommonJS modules is all fine and dandy, but how do you actually get this working on the client in practice? Well, my method of choice is the rather unheard of <a href="https://github.com/sstephenson/stitch">Stitch</a> library. Stitch is by Sam Stephenson, the mind behind <a href="http://www.prototypejs.org">Prototype.js</a> amongst other things, and solves the module problem so elegantly it makes me want to dance for joy! Rather than try and dynamically resolve dependencies, Stitch simply bundles up all your JavaScript files into one, wrapping them in some CommonJS magic. Oh, and did I mention it'll compile your CoffeeScript, JS templates, <a href="http://lesscss.org">LESS CSS</a> and <a href="http://sass-lang.com">Sass</a> files too!</p>
 
-<p>First things first, let's get Stitch installed. You'll need to install <a href="http://nodejs.org/">Node.js</a> and <a href="http://npmjs.org/">npm</a> if you haven't already, then run:</p>
-
-<pre><code>npm install -g stitch
-</code></pre>
+<p>First things first, you'll need to install <a href="http://nodejs.org/">Node.js</a> and <a href="http://npmjs.org/">npm</a> if you haven't already, we'll be using those throughout this chapter.</p>
 
 <p>Now let's create our application structure. If you're using <a href="https://github.com/maccman/spine">Spine</a>, you can automate this with <a href="http://github.com/maccman/spine.app">Spine.App</a>, otherwise it's something you'll need to do manually. I usually have an <code>app</code> folder for all the application specific code, and a <code>lib</code> folder for general libraries. Then anything else, including static assets, goes in the <code>public</code> directory.</p>
 
-<pre><code>app/controllers
+<pre><code>app
+app/controllers
 app/views
 app/models
 app/lib
 lib
 public
 public/index.html
-public/css
-public/css/views
 </code></pre>
 
-<p>Now to actually boot up the Stitch server. Let's create a file called <code>server.js</code> and fill it with the following script:</p>
+<p>Now to actually boot up the Stitch server. Let's create a file called <code>index.coffee</code> and fill it with the following script:</p>
 
-<pre><code>#!/usr/bin/env node
-var stitch  = require('stitch'),
-    express = require('express'),
-    util    = require('util'),
-    argv    = process.argv.slice(2);
+<p><span class="csscript"></span></p>
 
-var package = stitch.createPackage({
-  // Specify the paths you want Stitch to automatically bundle up
-  paths: [__dirname + '/app'],
+<pre><code>require("coffee-script")
+stitch  = require("stitch")
+express = require("express")
+argv    = process.argv.slice(2)
 
-  // Specify your base libraries
+package = stitch.createPackage(
+  # Specify the paths you want Stitch to automatically bundle up
+  paths: [ __dirname + "/app" ]
+
+  # Specify your base libraries
   dependencies: [
-    __dirname + '/lib/json2.js',
-    __dirname + '/lib/shim.js',
-    __dirname + '/lib/jquery.js',
-    __dirname + '/lib/jquery.tmpl.js',
-    __dirname + '/lib/spine.tmpl.js',
-    __dirname + '/lib/spine.js'
+    # __dirname + '/lib/jquery.js'
   ]
-});
+)
+app = express.createServer()
 
-var app = express.createServer();
+app.configure -&gt;
+  app.set "views", __dirname + "/views"
+  app.use app.router
+  app.use express.static(__dirname + "/public")
+  app.get "/application.js", package.createServer()
 
-app.configure(function() {
-  app.set('views', __dirname + '/views');
-  // Compile Less CSS files
-  app.use(express.compiler({ src: __dirname + '/public', enable: ['less'] }));
-  app.use(app.router);
-  // Set the static route, in this case `public`
-  app.use(express.static(__dirname + '/public'));
-  // And invoke Stitch when application.js is requested
-  app.get('/application.js', package.createServer());
-});
-
-var port = argv[0] || process.env.PORT || 9294;
-util.puts("Starting server on port: " + port);
-app.listen(port);
+port = argv[0] or process.env.PORT or 9294
+console.log "Starting server on port: #{port}"
+app.listen port
 </code></pre>
 
-<p>Rightio, we're almost there. Now if you invoke <code>server.js</code> with Node you'll hopefully have a Stitch server up and running. Let's go ahead and test it out by putting an <code>app.coffee</code> script in the <code>app</code> folder. This will be the file that'll bootstrap our application.</p>
+<p>You can see some dependencies listed: <code>coffee-script</code>, <code>stitch</code> and <code>express</code>. We need to create a <code>package.json</code> file, listing these dependencies so npm can pick them up. Our <code>./package.json</code> file will look like this:</p>
+
+<pre><code>{
+  "name": "app",
+  "version": "0.0.1",
+  "dependencies": { 
+    "coffee-script": "~1.1.2",
+    "stitch": "~0.3.2",
+    "express": "~2.5.0"
+  }
+}
+</code></pre>
+
+<p>And let's install those dependencies with npm:</p>
+
+<pre><code>npm install .
+npm install -g coffee-script
+</code></pre>
+
+<p>Rightio, we're almost there. Now run:</p>
+
+<pre><code>coffee index.coffee
+</code></pre>
+
+<p>You'll hopefully have a Stitch server up and running. Let's go ahead and test it out by putting an <code>app.coffee</code> script in the <code>app</code> folder. This will be the file that'll bootstrap our application.</p>
 
 <p><span class="csscript"></span></p>
 
@@ -133,21 +143,20 @@ app.listen(port);
     # Bootstrap the app
 </code></pre>
 
-<p>Now let's create our main page <code>index.html</code> which, if we're building a single page app, will be the only page the user actually navigates to. This is a static asset, so it's under the <code>public</code> directory.</p>
+<p>Now let's create our main page <code>index.html</code> which, if we're building a single page app, will be the only page the user actually navigates to. This is a static asset, so it's located under the <code>public</code> directory.</p>
 
 <pre><code>&lt;!DOCTYPE html&gt;
 &lt;html&gt;
 &lt;head&gt;
   &lt;meta charset=utf-8&gt;
   &lt;title&gt;Application&lt;/title&gt;
-  &lt;link rel="stylesheet" href="/css/application.css" type="text/css" charset="utf-8"&gt;
   &lt;!-- Require the main Stitch file --&gt;
   &lt;script src="/application.js" type="text/javascript" charset="utf-8"&gt;&lt;/script&gt;
   &lt;script type="text/javascript" charset="utf-8"&gt;
-    jQuery(function(){
+    document.addEventListener("DOMContentLoaded", function(){
       var App = require("app");
-      window.App = App.init({el: $("body")});      
-    });
+      App.init();
+    }, false);
   &lt;/script&gt;
 &lt;/head&gt;
 &lt;body&gt;
@@ -155,7 +164,7 @@ app.listen(port);
 &lt;/html&gt;
 </code></pre>
 
-<p>When the page loads, our inline jQuery callback is requiring the <code>app.coffee</code> script (which is automatically compiled), and invoking our <code>init()</code> function. That's all there is to it, we've got CommonJS modules up and running, as well as a HTTP server and CoffeeScript compiler. If, say, we wanted to include a module, it's just a case of calling <code>require()</code>.</p>
+<p>When the page loads, our <em>DOMContentLoaded</em> event callback is requiring the <code>app.coffee</code> script (which is automatically compiled), and invoking our <code>init()</code> function. That's all there is to it, we've got CommonJS modules up and running, as well as a HTTP server and CoffeeScript compiler. If, say, we wanted to include a module, it's just a case of calling <code>require()</code>.</p>
 
 <p><span class="csscript"></span></p>
 
@@ -221,7 +230,7 @@ Evaluate a CoffeeScript expression and print its return value without escaping i
 
 <p>Stitch will automatically compile our template and include it in <code>application.js</code>. Then, in our application's controllers we can require the template, like it was a module, and execute it passing any data required.</p>
 
-<pre><code>require("views/users/show")(new User("name"))
+<pre><code>require("views/users/show")(new User("Brian"))
 </code></pre>
 
 <h2>Bonus - 30 second deployment with Heroku</h2>
@@ -230,7 +239,7 @@ Evaluate a CoffeeScript expression and print its return value without escaping i
 
 <p>Firstly we need to make a <code>Procfile</code>, which will inform Heroku about our application.</p>
 
-<pre><code>echo "web: node server.js" &gt; Procfile
+<pre><code>echo "web: coffee index.coffee" &gt; Procfile
 </code></pre>
 
 <p>Now, if you haven't already, you'll need to create a local git repository for your application.</p>

@@ -97,6 +97,22 @@ Or even better, hijack the bitwise operator so we don't have to do a `-1` compar
     string   = "a long test string"
     included = !!~ string.indexOf "test"
     
+##Property iteration
+
+To iterate over a bunch of properties in JavaScript, you'd use the `in` operator, for example:
+
+    var object = {one: 1, two: 2}
+    for(var key in object) alert(key + " = " + object[key])
+    
+However, as you've seen in the previous section, CoffeeScript has already reserved `in` for use with arrays. Instead, the operator has been renamed `of`, and can be used like thus:
+
+<span class="csscript"></span>
+    
+    object = {one: 1, two: 2}
+    alert("#{key} = #{value}") for key, value of object
+    
+As you can see, you can specify variables for both the property name, and its value; rather convenient.
+    
 ##Min/Max
 
 This technique is not specific to CoffeeScript, but I thought it useful to demonstrate anyway. `Math.max` and `Math.min` take multiple arguments, so you can easily use `...` to pass an array to them, retrieving the maximum and minimum values in the array. 

@@ -39,12 +39,11 @@ Now, whenever this module is required then `myFineProperty` will be exposed:
 
 Formatting your code as CommonJS modules is all fine and dandy, but how do you actually get this working on the client in practice? Well, my method of choice is the rather unheard of [Stitch](https://github.com/sstephenson/stitch) library. Stitch is by Sam Stephenson, the mind behind [Prototype.js](http://www.prototypejs.org) amongst other things, and solves the module problem so elegantly it makes me want to dance for joy! Rather than try and dynamically resolve dependencies, Stitch simply bundles up all your JavaScript files into one, wrapping them in some CommonJS magic. Oh, and did I mention it'll compile your CoffeeScript, JS templates, [LESS CSS](http://lesscss.org) and [Sass](http://sass-lang.com) files too!
 
-First things first, let's get Stitch installed. You'll need to install [Node.js](http://nodejs.org/) and [npm](http://npmjs.org/) if you haven't already, then run:
-
-    npm install -g stitch
+First things first, you'll need to install [Node.js](http://nodejs.org/) and [npm](http://npmjs.org/) if you haven't already, we'll be using those throughout this chapter.
     
 Now let's create our application structure. If you're using [Spine](https://github.com/maccman/spine), you can automate this with [Spine.App](http://github.com/maccman/spine.app), otherwise it's something you'll need to do manually. I usually have an `app` folder for all the application specific code, and a `lib` folder for general libraries. Then anything else, including static assets, goes in the `public` directory.
 
+    app
     app/controllers
     app/views
     app/models
@@ -52,50 +51,59 @@ Now let's create our application structure. If you're using [Spine](https://gith
     lib
     public
     public/index.html
-    public/css
-    public/css/views
 
-Now to actually boot up the Stitch server. Let's create a file called `server.js` and fill it with the following script:
+Now to actually boot up the Stitch server. Let's create a file called `index.coffee` and fill it with the following script:
 
-    #!/usr/bin/env node
-    var stitch  = require('stitch'),
-        express = require('express'),
-        util    = require('util'),
-        argv    = process.argv.slice(2);
+<span class="csscript"></span>
 
-    var package = stitch.createPackage({
-      // Specify the paths you want Stitch to automatically bundle up
-      paths: [__dirname + '/app'],
+    require("coffee-script")
+    stitch  = require("stitch")
+    express = require("express")
+    argv    = process.argv.slice(2)
+    
+    package = stitch.createPackage(
+      # Specify the paths you want Stitch to automatically bundle up
+      paths: [ __dirname + "/app" ]
       
-      // Specify your base libraries
+      # Specify your base libraries
       dependencies: [
-        __dirname + '/lib/json2.js',
-        __dirname + '/lib/shim.js',
-        __dirname + '/lib/jquery.js',
-        __dirname + '/lib/jquery.tmpl.js',
-        __dirname + '/lib/spine.tmpl.js',
-        __dirname + '/lib/spine.js'
+        # __dirname + '/lib/jquery.js'
       ]
-    });
+    )
+    app = express.createServer()
+    
+    app.configure ->
+      app.set "views", __dirname + "/views"
+      app.use app.router
+      app.use express.static(__dirname + "/public")
+      app.get "/application.js", package.createServer()
 
-    var app = express.createServer();
+    port = argv[0] or process.env.PORT or 9294
+    console.log "Starting server on port: #{port}"
+    app.listen port
+    
+You can see some dependencies listed: `coffee-script`, `stitch` and `express`. We need to create a `package.json` file, listing these dependencies so npm can pick them up. Our `./package.json` file will look like this:
 
-    app.configure(function() {
-      app.set('views', __dirname + '/views');
-      // Compile Less CSS files
-      app.use(express.compiler({ src: __dirname + '/public', enable: ['less'] }));
-      app.use(app.router);
-      // Set the static route, in this case `public`
-      app.use(express.static(__dirname + '/public'));
-      // And invoke Stitch when application.js is requested
-      app.get('/application.js', package.createServer());
-    });
+    {
+      "name": "app",
+      "version": "0.0.1",
+      "dependencies": { 
+        "coffee-script": "~1.1.2",
+        "stitch": "~0.3.2",
+        "express": "~2.5.0"
+      }
+    }
+    
+And let's install those dependencies with npm:
 
-    var port = argv[0] || process.env.PORT || 9294;
-    util.puts("Starting server on port: " + port);
-    app.listen(port);
+    npm install .
+    npm install -g coffee-script
+    
+Rightio, we're almost there. Now run: 
 
-Rightio, we're almost there. Now if you invoke `server.js` with Node you'll hopefully have a Stitch server up and running. Let's go ahead and test it out by putting an `app.coffee` script in the `app` folder. This will be the file that'll bootstrap our application.
+    coffee index.coffee
+    
+You'll hopefully have a Stitch server up and running. Let's go ahead and test it out by putting an `app.coffee` script in the `app` folder. This will be the file that'll bootstrap our application.
 
 <span class="csscript"></span>
 
@@ -103,28 +111,27 @@ Rightio, we're almost there. Now if you invoke `server.js` with Node you'll hope
       init: ->
         # Bootstrap the app
         
-Now let's create our main page `index.html` which, if we're building a single page app, will be the only page the user actually navigates to. This is a static asset, so it's under the `public` directory.
+Now let's create our main page `index.html` which, if we're building a single page app, will be the only page the user actually navigates to. This is a static asset, so it's located under the `public` directory.
   
     <!DOCTYPE html>
     <html>
     <head>
       <meta charset=utf-8>
       <title>Application</title>
-      <link rel="stylesheet" href="/css/application.css" type="text/css" charset="utf-8">
       <!-- Require the main Stitch file -->
       <script src="/application.js" type="text/javascript" charset="utf-8"></script>
       <script type="text/javascript" charset="utf-8">
-        jQuery(function(){
+        document.addEventListener("DOMContentLoaded", function(){
           var App = require("app");
-          window.App = App.init({el: $("body")});      
-        });
+          App.init();
+        }, false);
       </script>
     </head>
     <body>
     </body>
     </html>
 
-When the page loads, our inline jQuery callback is requiring the `app.coffee` script (which is automatically compiled), and invoking our `init()` function. That's all there is to it, we've got CommonJS modules up and running, as well as a HTTP server and CoffeeScript compiler. If, say, we wanted to include a module, it's just a case of calling `require()`.
+When the page loads, our *DOMContentLoaded* event callback is requiring the `app.coffee` script (which is automatically compiled), and invoking our `init()` function. That's all there is to it, we've got CommonJS modules up and running, as well as a HTTP server and CoffeeScript compiler. If, say, we wanted to include a module, it's just a case of calling `require()`.
 
 <span class="csscript"></span>
 
@@ -183,7 +190,7 @@ Now we've got a handle on the syntax, let's define an Eco template in `views/use
     
 Stitch will automatically compile our template and include it in `application.js`. Then, in our application's controllers we can require the template, like it was a module, and execute it passing any data required. 
     
-    require("views/users/show")(new User("name"))
+    require("views/users/show")(new User("Brian"))
     
 ##Bonus - 30 second deployment with Heroku
 
@@ -191,7 +198,7 @@ Stitch will automatically compile our template and include it in `application.js
 
 Firstly we need to make a `Procfile`, which will inform Heroku about our application.
 
-    echo "web: node server.js" > Procfile
+    echo "web: coffee index.coffee" > Procfile
 
 Now, if you haven't already, you'll need to create a local git repository for your application. 
 

@@ -131,6 +131,24 @@ passed = (score for score in scores when score &gt; 60)
 included = !!~ string.indexOf "test"
 </code></pre>
 
+<h2>Property iteration</h2>
+
+<p>To iterate over a bunch of properties in JavaScript, you'd use the <code>in</code> operator, for example:</p>
+
+<pre><code>var object = {one: 1, two: 2}
+for(var key in object) alert(key + " = " + object[key])
+</code></pre>
+
+<p>However, as you've seen in the previous section, CoffeeScript has already reserved <code>in</code> for use with arrays. Instead, the operator has been renamed <code>of</code>, and can be used like thus:</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>object = {one: 1, two: 2}
+alert("#{key} = #{value}") for key, value of object
+</code></pre>
+
+<p>As you can see, you can specify variables for both the property name, and its value; rather convenient.</p>
+
 <h2>Min/Max</h2>
 
 <p>This technique is not specific to CoffeeScript, but I thought it useful to demonstrate anyway. <code>Math.max</code> and <code>Math.min</code> take multiple arguments, so you can easily use <code>...</code> to pass an array to them, retrieving the maximum and minimum values in the array.</p>
