@@ -216,8 +216,6 @@ class Module
   create: (attrs) -&gt;
 
 instanceProperties =
-  included: -&gt;
-    console.log('included in: ', @)
   save: -&gt; 
 
 class User extends Module
@@ -231,7 +229,21 @@ user = new User
 user.save()
 </code></pre>
 
-<p>So we've added some static properties, <code>find()</code> and <code>create()</code> to the <code>User</code> class, as well as some instance properties, <code>save()</code>. Notice also the included callback, invoked when <code>instanceProperties</code> is included in the class.</p>
+<p>As you can see, we've added some static properties, <code>find()</code> and <code>create()</code> to the <code>User</code> class, as well as some instance properties, <code>save()</code>.
+Since we've got callbacks whenever modules are extended, we can shortcut the process of applying both static and instance properties:</p>
+
+<pre><code>ORM = 
+  find: (id) -&gt;
+  create: (attrs) -&gt;
+  extended: -&gt;
+    @include
+      save: -&gt; 
+
+class User extends Module
+  @extend ORM
+</code></pre>
+
+<p>Super simple and elegant!</p>
 
   </div>
 </div>

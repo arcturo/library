@@ -180,8 +180,6 @@ The little dance around the `moduleKeywords` variable is to ensure we have callb
       create: (attrs) ->
       
     instanceProperties =
-      included: ->
-        console.log('included in: ', @)
       save: -> 
 
     class User extends Module
@@ -194,4 +192,17 @@ The little dance around the `moduleKeywords` variable is to ensure we have callb
     user = new User
     user.save()
     
-So we've added some static properties, `find()` and `create()` to the `User` class, as well as some instance properties, `save()`. Notice also the included callback, invoked when `instanceProperties` is included in the class.
+As you can see, we've added some static properties, `find()` and `create()` to the `User` class, as well as some instance properties, `save()`. 
+Since we've got callbacks whenever modules are extended, we can shortcut the process of applying both static and instance properties:
+
+    ORM = 
+      find: (id) ->
+      create: (attrs) ->
+      extended: ->
+        @include
+          save: -> 
+
+    class User extends Module
+      @extend ORM
+
+Super simple and elegant!
