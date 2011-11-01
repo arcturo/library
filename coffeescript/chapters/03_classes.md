@@ -146,3 +146,52 @@ It's worth pointing out though that static properties are copied to subclasses, 
     (new Parrot).isDeceased
     
 Mixins are a great pattern for sharing common logic between modules when inheritance is not suited. The advantage of mixins, is that you can include multiple ones, compared to inheritance where only one class can be inherited from.
+
+##Extending classes
+
+Mixins are pretty neat, but they're not very object orientated. Instead, let's integrate mixins into CoffeeScript's classes. We're going to define a class called `Module` that we can inherit from for mixin support. `Module` will have two static functions, `@extend()` and `@include()` which we can use for extending the class with static and instance properties respectively. 
+
+<span class="csscript"></span>
+
+    moduleKeywords = ['extended', 'included']
+
+    class Module
+      @extend: (obj) ->
+        for key, value of obj when key not in moduleKeywords
+          @[key] = value
+
+        obj.extended?.apply(@)
+        @
+        
+      @include: (obj) ->
+        for key, value of obj when key not in moduleKeywords
+          # Assign properties to the prototype
+          @::[key] = value
+
+        obj.included?.apply(@)
+        @
+
+The little dance around the `moduleKeywords` variable is to ensure we have callback support when mixins extend a class. Let's take a look at our `Module` class in action:
+
+<span class="csscript"></span>
+
+    classProperties = 
+      find: (id) ->
+      create: (attrs) ->
+      
+    instanceProperties =
+      included: ->
+        console.log('included in: ', @)
+      save: -> 
+
+    class User extends Module
+      @extend classProperties
+      @include instanceProperties
+    
+    # Usage:
+    user = User.find(1)
+    
+    user = new User
+    user.save()
+    
+So we've added some static properties, `find()` and `create()` to the `User` class, as well as some instance properties, `save()`. Notice also the included callback, invoked when `instanceProperties` is included in the class.
