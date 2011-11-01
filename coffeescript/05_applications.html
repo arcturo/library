@@ -130,7 +130,7 @@ app.listen(port);
 
 <pre><code>module.exports = App =
   init: -&gt;
-    # Bootstrap this mofo
+    # Bootstrap the app
 </code></pre>
 
 <p>Now let's create our main page <code>index.html</code> which, if we're building a single page app, will be the only page the user actually navigates to. This is a static asset, so it's under the <code>public</code> directory.</p>
@@ -169,24 +169,57 @@ User = require("models/user")
 
 <h2>JavaScript templates</h2>
 
-<p>If you're moving logic to the client side, then you'll definitely need some sort of templating library. JavaScript templating is very similar to templates on the server, such as Ruby's ERB or Python's text interpolation, expect of course it runs client side. There are a whole host of templating libraries out there, so I encourage you to do some research and check them out. By default, Stitch comes with support for <a href="https://github.com/sstephenson/eco">eco</a> templates baked right in. However, if you're using another templating library don't despair. Stitch has a rather neat feature that lets you add custom compilers for particular extensions.</p>
+<p>If you're moving logic to the client side, then you'll definitely need some sort of templating library. JavaScript templating is very similar to templates on the server, such as Ruby's ERB or Python's text interpolation, expect of course it runs client side. There are a whole host of templating libraries out there, so I encourage you to do some research and check them out. By default, Stitch comes with support for <a href="https://github.com/sstephenson/eco">Eco</a> templates baked right in.</p>
 
-<p>For example, let's add support for the <a href="http://api.jquery.com/jquery.tmpl/">jQuery.tmpl</a> library, which I often use instead of eco due to a few implementation details:</p>
+<p>JavaScript templates are very similar to server side ones. You have template tags interoperated with HTML, and during rendering those tags get evaluated and replaced. The great thing about <a href="https://github.com/sstephenson/eco">Eco</a> templates, is they're actually written in CoffeeScript.</p>
 
-<pre><code>stitch.compilers.tmpl = function(module, filename) {
-  var content = fs.readFileSync(filename, 'utf8');
-  content = ["var template = jQuery.template(", JSON.stringify(content), ");", 
-             "module.exports = (function(data){ return jQuery.tmpl(template, data); });\n"].join("");
-  return module._compile(content, filename);
-};
+<p>Here's an example:</p>
+
+<pre><code>&lt;% if @projects.length: %&gt;
+  &lt;% for project in @projects: %&gt;
+    &lt;a href="&lt;%= project.url %&gt;"&gt;&lt;%= project.name %&gt;&lt;/a&gt;
+    &lt;p&gt;&lt;%= project.description %&gt;&lt;/p&gt;
+  &lt;% end %&gt;
+&lt;% else: %&gt;
+  No projects
+&lt;% end %&gt;
 </code></pre>
 
-<p>Notice that above we're setting a function on <code>module.exports</code> which, when called, will render our template. Now, let's define a template in <code>views/users/show.tmpl</code>:</p>
+<p>As you can see, the syntax is remarkably straightforward. Just use <code>&lt;%</code> tags for evaluating expressions, and <code>&lt;%=</code> tags for printing them. A partial list of template tags is as follows:</p>
 
-<pre><code>&lt;label&gt;Name: ${name}&lt;/label&gt;
+<ul>
+<li><p><code>&lt;% expression %&gt;</code><br/>
+Evaluate a CoffeeScript expression without printing its return value.</p></li>
+<li><p><code>&lt;%= expression %&gt;</code><br/>
+Evaluate a CoffeeScript expression, escape its return value, and print it.</p></li>
+<li><p><code>&lt;%- expression %&gt;</code><br/>
+Evaluate a CoffeeScript expression and print its return value without escaping it.</p></li>
+</ul>
+
+
+<p>You can use any CoffeeScript expression inside the templating tags, but there's one thing to look out for. CoffeeScript is whitespace-sensitive, but your Eco templates aren't. Therefore, Eco template tags that begin an indented CoffeeScript block must be suffixed with a colon. To indicate the end of an indented block, use the special tag <code>&lt;% end %&gt;</code>. For example:</p>
+
+<pre><code>&lt;% if @project.isOnHold(): %&gt;
+  On Hold
+&lt;% end %&gt;
 </code></pre>
 
-<p>Since we defined a <code>tmpl</code> compiler handler, Stitch will automatically compile our template and include it in <code>application.js</code>. Then, in our application's controllers we can require the template, like it was a module, and execute it passing any data required.</p>
+<p>You don't need to write the <code>if</code> and <code>end</code> tags on separate lines:</p>
+
+<pre><code>&lt;% if @project.isOnHold(): %&gt; On Hold &lt;% end %&gt;
+</code></pre>
+
+<p>And you can use the single-line postfix form of <code>if</code> as you'd expect:</p>
+
+<pre><code>&lt;%= "On Hold" if @project.isOnHold() %&gt;
+</code></pre>
+
+<p>Now we've got a handle on the syntax, let's define an Eco template in <code>views/users/show.eco</code>:</p>
+
+<pre><code>&lt;label&gt;Name: &lt;%= @name %&gt;&lt;/label&gt;
+</code></pre>
+
+<p>Stitch will automatically compile our template and include it in <code>application.js</code>. Then, in our application's controllers we can require the template, like it was a module, and execute it passing any data required.</p>
 
 <pre><code>require("views/users/show")(new User("name"))
 </code></pre>
@@ -211,7 +244,6 @@ git commit -m "First commit"
 
 <pre><code>heroku create myAppName --stack cedar
 git push heroku master
-heroku ps:scale web=1
 heroku open
 </code></pre>
 

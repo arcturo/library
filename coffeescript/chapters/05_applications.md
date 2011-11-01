@@ -101,7 +101,7 @@ Rightio, we're almost there. Now if you invoke `server.js` with Node you'll hope
 
     module.exports = App =
       init: ->
-        # Bootstrap this mofo
+        # Bootstrap the app
         
 Now let's create our main page `index.html` which, if we're building a single page app, will be the only page the user actually navigates to. This is a static asset, so it's under the `public` directory.
   
@@ -137,22 +137,51 @@ When the page loads, our inline jQuery callback is requiring the `app.coffee` sc
 
 ##JavaScript templates
 
-If you're moving logic to the client side, then you'll definitely need some sort of templating library. JavaScript templating is very similar to templates on the server, such as Ruby's ERB or Python's text interpolation, expect of course it runs client side. There are a whole host of templating libraries out there, so I encourage you to do some research and check them out. By default, Stitch comes with support for [eco](https://github.com/sstephenson/eco) templates baked right in. However, if you're using another templating library don't despair. Stitch has a rather neat feature that lets you add custom compilers for particular extensions.
+If you're moving logic to the client side, then you'll definitely need some sort of templating library. JavaScript templating is very similar to templates on the server, such as Ruby's ERB or Python's text interpolation, expect of course it runs client side. There are a whole host of templating libraries out there, so I encourage you to do some research and check them out. By default, Stitch comes with support for [Eco](https://github.com/sstephenson/eco) templates baked right in. 
 
-For example, let's add support for the [jQuery.tmpl](http://api.jquery.com/jquery.tmpl/) library, which I often use instead of eco due to a few implementation details:
+JavaScript templates are very similar to server side ones. You have template tags interoperated with HTML, and during rendering those tags get evaluated and replaced. The great thing about [Eco](https://github.com/sstephenson/eco) templates, is they're actually written in CoffeeScript. 
 
-    stitch.compilers.tmpl = function(module, filename) {
-      var content = fs.readFileSync(filename, 'utf8');
-      content = ["var template = jQuery.template(", JSON.stringify(content), ");", 
-                 "module.exports = (function(data){ return jQuery.tmpl(template, data); });\n"].join("");
-      return module._compile(content, filename);
-    };
+Here's an example:
 
-Notice that above we're setting a function on `module.exports` which, when called, will render our template. Now, let's define a template in `views/users/show.tmpl`:
+    <% if @projects.length: %>
+      <% for project in @projects: %>
+        <a href="<%= project.url %>"><%= project.name %></a>
+        <p><%= project.description %></p>
+      <% end %>
+    <% else: %>
+      No projects
+    <% end %>
+
+As you can see, the syntax is remarkably straightforward. Just use `<%` tags for evaluating expressions, and `<%=` tags for printing them. A partial list of template tags is as follows:
     
-    <label>Name: ${name}</label>
+* `<% expression %>`  
+  Evaluate a CoffeeScript expression without printing its return value.
+
+* `<%= expression %>`  
+  Evaluate a CoffeeScript expression, escape its return value, and print it.
+
+* `<%- expression %>`  
+  Evaluate a CoffeeScript expression and print its return value without escaping it.
+
+You can use any CoffeeScript expression inside the templating tags, but there's one thing to look out for. CoffeeScript is whitespace-sensitive, but your Eco templates aren't. Therefore, Eco template tags that begin an indented CoffeeScript block must be suffixed with a colon. To indicate the end of an indented block, use the special tag `<% end %>`. For example:
+
+    <% if @project.isOnHold(): %>
+      On Hold
+    <% end %>
     
-Since we defined a `tmpl` compiler handler, Stitch will automatically compile our template and include it in `application.js`. Then, in our application's controllers we can require the template, like it was a module, and execute it passing any data required. 
+You don't need to write the `if` and `end` tags on separate lines:
+
+    <% if @project.isOnHold(): %> On Hold <% end %>
+
+And you can use the single-line postfix form of `if` as you'd expect:
+
+    <%= "On Hold" if @project.isOnHold() %>
+
+Now we've got a handle on the syntax, let's define an Eco template in `views/users/show.eco`:
+    
+    <label>Name: <%= @name %></label>
+    
+Stitch will automatically compile our template and include it in `application.js`. Then, in our application's controllers we can require the template, like it was a module, and execute it passing any data required. 
     
     require("views/users/show")(new User("name"))
     
@@ -174,7 +203,6 @@ And now to deploy the application, we'll use the `heroku` gem (which you'll need
 
     heroku create myAppName --stack cedar
     git push heroku master
-    heroku ps:scale web=1
     heroku open
     
 That's it! Seriously, that's all there is to it. Hosting Node applications has never been easier.
