@@ -12,3 +12,23 @@ TODO:
 
 * The Max/Min trick is great, but will fail for really large arrays, which is worth mentioning. (Functions can only take so many arguments in certain browsers).
 
+
+Extras:
+
+JavaScript to CoffeeScript convertor
+Cakefiles
+Shims
+Embedding Raw JavaScript
+Everything is an expression in CoffeeScript - look at 'returns' and chaining?
+Hacking on the compiler. https://github.com/jashkenas/coffee-script/wiki/%5BHowto%5D-Hacking-on-the-CoffeeScript-Compiler
+Type checking: http://coffeescriptcookbook.com/chapters/classes_and_objects/type-function
+Semicolons discussion
+Reserved words discussion
+How browsers are updating to support CS debugging
+parseInt radix
+Advanced inheritance
+hasOwnProperty
+getters/setters
+The function Statement Versus the function Expression
+Strict checking
+Spine?

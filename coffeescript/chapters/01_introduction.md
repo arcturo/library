@@ -10,7 +10,7 @@ If you have any errata or suggestions, please don't hesitate to open a ticket on
 
 So let's dive right into it; why is CoffeeScript better than writing pure JavaScript? Well for a start, there's less code to write - CoffeeScript is very succinct, and takes white-space into account. In my experience this reduces code by a third to a half of the original pure JavaScript. In addition, CoffeeScript has some neat features, such as array comprehensions, prototype aliases and classes that further reduce the amount of typing you need to do. 
 
-More importantly though, JavaScript has a lot of [skeletons in its closet](http://bonsaiden.github.com/JavaScript-Garden/) which can often trip up inexperienced developers. CoffeeScript neatly sidesteps these, by only exposing a curated selection of JavaScript features, fixing many of the language's oddities. 
+More importantly though, JavaScript has a lot of [skeletons in its closet](http://bonsaiden.github.com/JavaScript-Garden/) which can often trip up inexperienced developers. CoffeeScript neatly sidesteps these by only exposing a curated selection of JavaScript features, fixing many of the language's oddities. 
 
 CoffeeScript is *not* a superset of JavaScript, so although you can use external JavaScript libraries from inside CoffeeScript, you'll get syntax errors if you compile JavaScript as-is, without converting it. The compiler converts CoffeeScript code into its counterpart JavaScript, there's no interpretation at runtime. 
 

@@ -130,8 +130,7 @@ In the `Math.max` example above, we're  using `...` to de-structure the array an
 
     Log =
       log: ->
-        return if typeof console is "undefined"
-        console.log(arguments...)
+        console?.log(arguments...)
       
 Or you can alter the arguments before they're passed onwards:
 
@@ -141,9 +140,8 @@ Or you can alter the arguments before they're passed onwards:
       logPrefix: "(App)"
 
       log: (args...) ->
-        return if typeof console is "undefined"
-        if @logPrefix then args.unshift(@logPrefix)
-        console.log(args...)
+        args.unshift(@logPrefix) if @logPrefix
+        console?.log(args...)
         
 Bear in mind though, that CoffeeScript will automatically set the function invocation context to the object the function is being invoked on. In the example above, that would be `console`. If you want to set the context specifically, then you'll need to call `apply()` manually. 
 

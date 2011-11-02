@@ -195,6 +195,8 @@ The little dance around the `moduleKeywords` variable is to ensure we have callb
 As you can see, we've added some static properties, `find()` and `create()` to the `User` class, as well as some instance properties, `save()`. 
 Since we've got callbacks whenever modules are extended, we can shortcut the process of applying both static and instance properties:
 
+<span class="csscript"></span>
+
     ORM = 
       find: (id) ->
       create: (attrs) ->
