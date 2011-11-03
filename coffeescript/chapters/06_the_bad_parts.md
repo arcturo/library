@@ -137,7 +137,19 @@ This doesn't mean you can't blah coerciion TODO
 
 ##Function definition
 
-TODO
+Oddly enough in JavaScript, functions can be defined after they're used. For example, the following runs absolutely fine, even though `wem` is defined after it's called:
+
+    wem();
+    function wem() {}
+
+The is because of function scope. Functions get hoisted before the programs execution and as such are available everywhere in the scope they were defined in, even if called before the actual definition in the source. Future versions of JavaScript may remove this behavior, and indeed it already fails in *strict* mode. 
+
+Best to steer clear of this issue by assigning an anonymous functions to a variable:
+
+    var wem = function(){};
+    wem();
+
+CoffeeScript's approach to this is to remove named functions entirely, using only anonymous ones. 
 
 #The un-fixed parts
 
@@ -167,7 +179,7 @@ The `typeof` operator is probably the biggest design flaw of JavaScript, simply 
 
 For all other types of type checking, `typeof` fails rather miserably, returning inconsistent results depending on the browser and how instances were instantiated. This isn't something that CoffeeScript can help you either, since the language uses static analysis and has no runtime type checking. You're on your own here.
 
-To illustrate the problem, here's a table taken from [JavaScript Garden](TODO) which shows some of the major inconstancies in the keyword's type checking. 
+To illustrate the problem, here's a table taken from [JavaScript Garden](http://bonsaiden.github.com/JavaScript-Garden/) which shows some of the major inconstancies in the keyword's type checking. 
   
     Value               Class      Type
     -------------------------------------

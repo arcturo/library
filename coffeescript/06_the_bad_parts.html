@@ -171,7 +171,21 @@ null         ==   undefined     // true
 
 <h2>Function definition</h2>
 
-<p>TODO</p>
+<p>Oddly enough in JavaScript, functions can be defined after they're used. For example, the following runs absolutely fine, even though <code>wem</code> is defined after it's called:</p>
+
+<pre><code>wem();
+function wem() {}
+</code></pre>
+
+<p>The is because of function scope. Functions get hoisted before the programs execution and as such are available everywhere in the scope they were defined in, even if called before the actual definition in the source. Future versions of JavaScript may remove this behavior, and indeed it already fails in <em>strict</em> mode.</p>
+
+<p>Best to steer clear of this issue by assigning an anonymous functions to a variable:</p>
+
+<pre><code>var wem = function(){};
+wem();
+</code></pre>
+
+<p>CoffeeScript's approach to this is to remove named functions entirely, using only anonymous ones.</p>
 
 <h1>The un-fixed parts</h1>
 
@@ -203,7 +217,7 @@ model = window[modelName]
 
 <p>For all other types of type checking, <code>typeof</code> fails rather miserably, returning inconsistent results depending on the browser and how instances were instantiated. This isn't something that CoffeeScript can help you either, since the language uses static analysis and has no runtime type checking. You're on your own here.</p>
 
-<p>To illustrate the problem, here's a table taken from <a href="TODO">JavaScript Garden</a> which shows some of the major inconstancies in the keyword's type checking.</p>
+<p>To illustrate the problem, here's a table taken from <a href="http://bonsaiden.github.com/JavaScript-Garden/">JavaScript Garden</a> which shows some of the major inconstancies in the keyword's type checking.</p>
 
 <pre><code>Value               Class      Type
 -------------------------------------
