@@ -10,7 +10,7 @@ Behind the scenes, CoffeeScript is using JavaScript's native prototype to create
 
     class Animal
     
-In the example above, `Animal` is the name of the class, and also the name of the resultant variable that you can use to create instances. Behind the scenes CoffeeScript is using construction functions, which means you can instantiate classes using the `new` operator.
+In the example above, `Animal` is the name of the class, and also the name of the resultant variable that you can use to create instances. Behind the scenes CoffeeScript is using constructor functions, which means you can instantiate classes using the `new` operator.
 
 <span class="csscript"></span>
 
@@ -161,7 +161,7 @@ Mixins are pretty neat, but they're not very object orientated. Instead, let's i
           @[key] = value
 
         obj.extended?.apply(@)
-        @
+        this
         
       @include: (obj) ->
         for key, value of obj when key not in moduleKeywords
@@ -169,7 +169,7 @@ Mixins are pretty neat, but they're not very object orientated. Instead, let's i
           @::[key] = value
 
         obj.included?.apply(@)
-        @
+        this
 
 The little dance around the `moduleKeywords` variable is to ensure we have callback support when mixins extend a class. Let's take a look at our `Module` class in action:
 
