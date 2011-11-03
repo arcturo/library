@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset=utf-8>
+<title>The Little Book on CoffeeScript - The Bad Parts</title>
+<link rel="stylesheet" href="site/site.css" type="text/css" charset="utf-8">
+<link rel="stylesheet" href="site/highlight.css" type="text/css" charset="utf-8">
+<script src="site/jquery.js" type="text/javascript" charset="utf-8"></script>      
+<script src="site/highlight.js" type="text/javascript" charset="utf-8"></script>
+<script src="site/coffee-script.js" type="text/javascript" charset="utf-8"></script>
+<script src="site/preview.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript" charset="utf-8">
+  hljs.initHighlightingOnLoad();
+</script>
+</head>
+<body>
+<div id="container">
+  <header>
+    <h1><a href="index.html">The Little Book on CoffeeScript</a></h1>
+  </header>
+  
+  <div id="content">
+    <div class="back"><a href="index.html">&laquo; Back to all chapters</a></div>
+
+
+<h1>The Bad Parts</h1>
+
+<p>JavaScript is a tricky beast, and knowing the parts that you should avoid is just as important as knowing about the parts you should use. As Sun Tzu says, "know your enemy", and that's exactly what we're going to do in the chapter, exploring the dark side of JavaScript and revealing all the lurking monsters ready to pounce on the unsuspecting developer.</p>
+
+<p>As I mentioned in the introduction, CoffeeScript's awesomeness lies not only in it's syntax, but in it's ability to fix some of JavaScript's warts. However, due to the fact CoffeeScript uses static analysis and has no runtime type checking, it's not a silver bullet to all of JavaScript's bugbears and there's still some issues you need to be aware about.</p>
+
+<p>First, let's talk about what things the language does solve.</p>
+
+<h2>A JavaScript Subset</h2>
+
+<p>CoffeeScript's syntax is already a subset of JavaScript's, so already there's less to fix. Let's take the <code>with</code> statement for example. This statement has for a long time been "considered harmful", and should be avoided. <code>with</code> was intended to provide a shorthand for writing recurring property lookups on objects. For example, instead of writing:</p>
+
+<pre><code>dataObj.users.alex.email = "info@eribium.org";
+</code></pre>
+
+<p>You could write:</p>
+
+<pre><code>with(dataObj.users.alex) {
+  email = "info@eribium.org";
+}
+</code></pre>
+
+<p>Setting aside the fact that we shouldn't have such a deep object in the first place, the syntax is quite cleaner. Except for one thing. It's damn confusing to the JavaScript interpreter - it doesn't know exactly what you're going to do in the <code>with</code> context, and forces the specified object to be searched first for all name lookups.</p>
+
+<p>This really hurts performance and means the interpreter has to turn off all sorts of JIT optimizations. Additionally <code>with</code> statements can't be minified using tools like <a href="https://github.com/mishoo/UglifyJS">uglify-js</a>. All things considered, it's much better just to avoid using them, and CoffeeScript takes this a step further by eliminating them from it's syntax. In other words, using <code>with</code> in CoffeeScript will throw a syntax error.</p>
+
+<h2>Global variables</h2>
+
+<p>By default, your JavaScript programs run in a global scope, and by default any variables created are in that global scope. If you want to create a variable in the local scope, JavaScript requires explicitly indicating that fact using the <code>var</code> keyword.</p>
+
+<pre><code>usersCount = 1;        // Global
+var groupsCount = 2;   // Global
+
+(function(){              
+  pagesCount = 3;      // Global
+  var postsCount = 4;  // Local
+})()
+</code></pre>
+
+<p>This is a bit of an odd decision decision since the vast majority of the time you'll be creating local variables not global, so why not make that the default? As it stands, developers have to remember to put <code>var</code> statements before any variables they're initializing, or face weird bugs when variables accidentally conflict and overwrite each other.</p>
+
+<p>Luckily CoffeeScript comes to your rescue here by eliminating implicit global variable assignment entirely. In other words, the <code>var</code> keyword is reserved in CoffeeScript, and will trigger a syntax error if used. Local variables are created implicitly by default, and it's impossible to create global variables without explicitly assigning them as properties on <code>window</code>.</p>
+
+<p>Let's have a look at an example of CoffeeScript's variable assignment:</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>outerScope = true
+do -&gt;
+  innerScope = true
+</code></pre>
+
+<p>Compiles down to:</p>
+
+<pre><code>var outerScope;
+outerScope = true;
+(function() {
+  var innerScope;
+  return innerScope = true;
+})();
+</code></pre>
+
+<p>Notice how CoffeeScript initializes variables (using <code>var</code>) automatically in the context their first used. Whilst it's impossible to shadow outer variables, you can still refer to and access them. You need to watch out for this, be careful that you're not reusing the name of an external variable accidentally if you're writing a deeply nested function or class. For example, here we're accidentally overwriting the <code>package</code> variable in a Class function:</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>package = require('./package')
+
+class Hem
+  build: -&gt;
+    # Overwrites outer variable!
+    package = @hemPackage.compile()
+
+  hemPackage: -&gt;
+    package.create()
+</code></pre>
+
+<p>Global variables are needed from time to time, and to create those you need to set them as properties on <code>window</code>:</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>  class window.Asset
+    constructor: -&gt;
+</code></pre>
+
+<p>By ensuring global variables are explicit, rather than implicit, CoffeeScript removes one of the major sources of bugs in JavaScript programs.</p>
+
+<h2>Semicolons</h2>
+
+<p>JavaScript does not enforce the use of semicolons in source code, so it's possible to omit them. However, behind the scenes the JavaScript compiler still needs them, so the parser automatically inserts them whenever it encounters a parse error due to a missing semicolon. In other words, it'll try to evaluate a statement without semicolons and, if that fails, try again using semicolons.</p>
+
+<p>Unfortunately this is a tremendously bad idea, and can actually change the behavior of your code. Take the following example, seems valid JavaScript, right?</p>
+
+<pre><code>function() {}
+(window.options || {}).property
+</code></pre>
+
+<p>Wrong, well at least according to the parser; it raises a syntax error. In case of a leading parenthesis, the parser will not insert a semicolon. The code gets transformed onto one line:</p>
+
+<pre><code>function() {}(window.options || {}).property
+</code></pre>
+
+<p>Now you can see the issue, and why the parser is complaining. When you're writing JavaScript, you should always include semicolons after statements. Fortunately CoffeeScript gets round all this hassle by not having semicolons in its syntax. Rather the semicolons are inserted automatically (at the right places) when the CoffeeScript is compiled down to JavaScript.</p>
+
+<h2>Reserved words</h2>
+
+<p>Certain keywords in JavaScript are reserved for future versions of JavaScript, such as <code>const</code>, <code>enum</code> and <code>class</code>. Using these as variable names in your JavaScript programs can unpredictable results; some browsers will cope with them just fine, and others will choke. CoffeeScript neatly sidesteps this issue, by detecting if you're using a reserved keyword, and escaping it if necessary.</p>
+
+<p>For example, let's say you were to use the reserved keyword <code>class</code> as a property on an object, your CoffeeScript might look like this:</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>myObj = {
+  delete: "I am a keyword!"
+}
+myObj.class = -&gt;
+</code></pre>
+
+<p>The CoffeeScript parser notices you're using a reserved keyword, and quotes it for you:</p>
+
+<pre><code>var myObj;
+myObj = {
+  "delete": "I am a keyword!"
+};
+myObj["class"] = function() {};
+</code></pre>
+
+<h2>Equality comparisons</h2>
+
+<p>The weak equality comparison in JavaScript is broken.</p>
+
+<pre><code>""           ==   "0"           // false
+0            ==   ""            // true
+0            ==   "0"           // true
+false        ==   "false"       // false
+false        ==   "0"           // true
+false        ==   undefined     // false
+false        ==   null          // false
+null         ==   undefined     // true
+" \t\r\n"    ==   0             // true
+</code></pre>
+
+<p>CoffeeScript solves this by simply replacing all weak comparisons with strict ones.</p>
+
+<p>This doesn't mean you can't blah coerciion TODO</p>
+
+<h1>The un-fixed parts</h1>
+
+<p>Whilst CoffeeScript goes some length to solving some of JavaScript's design flaws, it can only go so far.</p>
+
+<h2>Using eval</h2>
+
+<p>Whilst CoffeeScript removes some of JavaScript's foibles, other features are a necessary evil, you just need to be aware of their shortcomings. A case in point, is the <code>eval()</code> function. Whilst undoubtedly it has its uses, you should know about its drawbacks, and avoid it if possible. The <code>eval()</code> function will execute a string of JavaScript code in the local scope, and functions like <code>setTimeout()</code> and <code>setInterval()</code> can also both take a string as their first argument to be evaluated.</p>
+
+<p>However, like <code>with</code>, <code>eval()</code> throws the compiler off track, and is a major performance hog. As the compiler has no idea what's inside until runtime, it can't perform any optimizations like inlining. Another concern is with security. If you give it dirty input, <code>eval</code> can easily open up your code for injection attacks. 99% of the time when you're using <code>eval</code>, there are better &amp; safer alternatives (such as square brackets).</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code># Don't do this
+model = eval(modelName)
+
+# Use square brackets instead
+model = window[modelName]
+</code></pre>
+
+<h2>Using typeof</h2>
+
+<p>The <code>typeof</code> operator is probably the biggest design flaw of JavaScript, simply because it's basically completely broken. In fact, it really has only one use, checking to see if a value is <code>undefined</code>.</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>typeof undefinedVar is "undefined"
+</code></pre>
+
+<p>For all other types of type checking, <code>typeof</code> fails rather miserably, returning inconsistent results depending on the browser and how instances were instantiated. This isn't something that CoffeeScript can help you either, since the language uses static analysis and has no runtime type checking. You're on your own here.</p>
+
+<p>To illustrate the problem, here's a table taken from <a href="TODO">JavaScript Garden</a> which shows some of the major inconstancies in the keyword's type checking.</p>
+
+<pre><code>Value               Class      Type
+-------------------------------------
+"foo"               String     string
+new String("foo")   String     object
+1.2                 Number     number
+new Number(1.2)     Number     object
+true                Boolean    boolean
+new Boolean(true)   Boolean    object
+new Date()          Date       object
+new Error()         Error      object
+[1,2,3]             Array      object
+new Array(1, 2, 3)  Array      object
+new Function("")    Function   function
+/abc/g              RegExp     object
+new RegExp("meow")  RegExp     object
+{}                  Object     object
+new Object()        Object     object
+</code></pre>
+
+<p>As you can see, depending on if you define a string with quotes or with the <code>String</code> class affects the result of <code>typeof</code>. Logically <code>typeof</code> should return <code>"string"</code> for both checks, but for the latter it returns <code>"object"</code>. Unfortunately the inconstancies only get worse from there.</p>
+
+<p>So what can we use for type checking in JavaScript? Well, luckily <code>Object.prototype.toString()</code> comes to the rescue here. If we invoke that function in the context of a particular object, it'll return the correct type. All we need to do is massage the string it returns, so we end up with the sort of string <code>typeof</code> should be returning. Here's an example implementation ported from jQuery's <code>$.type</code>:</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>type = do -&gt;
+  classToType = {}
+  for name in "Boolean Number String Function Array Date RegExp Undefined Null".split(" ")
+    classToType["[object " + name + "]"] = name.toLowerCase()
+
+  (obj) -&gt;
+    strType = Object::toString.call(obj)
+    classToType[strType] or "object"
+
+# Returns the sort of types we'd expect:
+type("")         # "string"
+type(new String) # "string"
+type([])         # "array"
+type(/\d/)       # "regexp"
+type(new Date)   # "date"
+type(true)       # "boolean"
+type(null)       # "null"
+type({})         # "object"
+</code></pre>
+
+<p>If you're checking to see if an variable has been defined, you'll still need to use <code>typeof</code> otherwise you'll get a <code>ReferenceError</code>.</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>if typeof aVar isnt "undefined"
+  objectType = type(aVar)
+</code></pre>
+
+<p>As an alternative to type checking, you can often use duck typing and the CoffeeScript existential operator together to eliminating the need to resolve an object's type. For example, let's say we're pushing a value onto an array. We could say that, as long as the 'array like' object implements <code>push()</code>, we should treat it like an array:</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>anArray?.push? aValue
+</code></pre>
+
+<p>If <code>anArray</code> is an object other than an array than the existential operator will ensure that <code>push()</code> is never called.</p>
+
+<h2>Using instanceof</h2>
+
+<p>JavaScript's <code>instanceof</code> keyword is nearly as broken as <code>typeof</code>. Ideally <code>instanceof</code> would compare the constructor of two object, returning a boolean if one was an instance of the other. However, in reality <code>instanceof</code> only works when comparing custom made objects. When it comes to comparing built-in types, it's as useless as <code>typeof</code>.</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>new String("foo") instanceof String # true
+"foo" instanceof String             # false
+</code></pre>
+
+<p>It only returns a correct result for custom made objects.</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>class Parent
+class Child extends Parent
+
+child = new Child
+child instanceof Child  # true
+child instanceof Parent # true
+</code></pre>
+
+<p>Make sure you only use it for your own objects or, even better, stick clear of it.</p>
+
+<h2>Using delete</h2>
+
+<p>The <code>delete</code> keyword can only safely be used for removing properties inside objects.</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>anObject = {one: 1, two: 2}
+delete anObject.one
+anObject.hasOwnProperty("one") # false
+</code></pre>
+
+<p>Any other use, such as deleting variables or function's won't work.</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>aVar = 1
+delete aVar
+typeof Var # "integer"
+</code></pre>
+
+<p>It's rather peculiar behavior, but there you have it. If you want to remove a reference to a variable, just assign it to <code>null</code> instead.</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>aVar = 1
+aVar = null
+</code></pre>
+
+<h2>Using parseInt</h2>
+
+<pre><code>2.toString()
+</code></pre>
+
+<h2>Strict checking</h2>
+
+<p>All you need to do to enable strict checking, is start your script or function with the following string:</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>"use strict"
+
+# rest of script ...
+</code></pre>
+
+<hr />
+
+<p>==
+global variables (and overwriting issue)
+typeof
+instanceof
+parseInt
+hasOwnProperty
+The function Statement Versus the function Expression
+shimming
+Strict checking
+Semicolons
+reserved words
+jslint</p>
+
+<p>"use strict"</p>
+
+  </div>
+</div>
+</body>
+</html>

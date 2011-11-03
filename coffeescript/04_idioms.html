@@ -167,8 +167,7 @@ Math.min [14, 35, -7, 46, 98]... # -7
 
 <pre><code>Log =
   log: -&gt;
-    return if typeof console is "undefined"
-    console.log(arguments...)
+    console?.log(arguments...)
 </code></pre>
 
 <p>Or you can alter the arguments before they're passed onwards:</p>
@@ -179,9 +178,8 @@ Math.min [14, 35, -7, 46, 98]... # -7
   logPrefix: "(App)"
 
   log: (args...) -&gt;
-    return if typeof console is "undefined"
-    if @logPrefix then args.unshift(@logPrefix)
-    console.log(args...)
+    args.unshift(@logPrefix) if @logPrefix
+    console?.log(args...)
 </code></pre>
 
 <p>Bear in mind though, that CoffeeScript will automatically set the function invocation context to the object the function is being invoked on. In the example above, that would be <code>console</code>. If you want to set the context specifically, then you'll need to call <code>apply()</code> manually.</p>
