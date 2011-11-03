@@ -34,7 +34,7 @@
 <pre><code>class Animal
 </code></pre>
 
-<p>In the example above, <code>Animal</code> is the name of the class, and also the name of the resultant variable that you can use to create instances. Behind the scenes CoffeeScript is using construction functions, which means you can instantiate classes using the <code>new</code> operator.</p>
+<p>In the example above, <code>Animal</code> is the name of the class, and also the name of the resultant variable that you can use to create instances. Behind the scenes CoffeeScript is using constructor functions, which means you can instantiate classes using the <code>new</code> operator.</p>
 
 <p><span class="csscript"></span></p>
 
@@ -196,7 +196,7 @@ class Module
       @[key] = value
 
     obj.extended?.apply(@)
-    @
+    this
 
   @include: (obj) -&gt;
     for key, value of obj when key not in moduleKeywords
@@ -204,7 +204,7 @@ class Module
       @::[key] = value
 
     obj.included?.apply(@)
-    @
+    this
 </code></pre>
 
 <p>The little dance around the <code>moduleKeywords</code> variable is to ensure we have callback support when mixins extend a class. Let's take a look at our <code>Module</code> class in action:</p>
