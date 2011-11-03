@@ -169,6 +169,10 @@ null         ==   undefined     // true
 
 <p>This doesn't mean you can't blah coerciion TODO</p>
 
+<h2>Function definition</h2>
+
+<p>TODO</p>
+
 <h1>The un-fixed parts</h1>
 
 <p>Whilst CoffeeScript goes some length to solving some of JavaScript's design flaws, it can only go so far.</p>
@@ -320,15 +324,95 @@ aVar = null
 <pre><code>2.toString()
 </code></pre>
 
-<h2>Strict checking</h2>
+<h2>Strict mode</h2>
 
-<p>All you need to do to enable strict checking, is start your script or function with the following string:</p>
+<p>Strict mode is a new feature of ECMAScript 5 that allows you to run a JavaScript program or function in a <em>strict</em> context. This strict context throws more exceptions and warnings than the normal context, giving developers some indication when they're straying from best practices, writing un-optimizable code or making common mistakes. In other words, strict mode reduces bugs, increases security, improves performance and eliminates some difficult to use language features. What's not to like?</p>
+
+<p>Strict mode is currently supported in the following browsers:</p>
+
+<ul>
+<li>Chrome >= 13.0</li>
+<li>Safari >= 5.0</li>
+<li>Opera >= 12.0</li>
+<li>Firefox >= 4.0</li>
+<li>IE >= 10.0</li>
+</ul>
+
+
+<p>Having said that, strict mode is completely backwards compatible with older browsers. Programs using it should run fine in either a strict or normal context.</p>
+
+<p>Most of the changes strict mode introduces pertain to JavaScript's syntax:</p>
+
+<ul>
+<li>Errors on duplicate property names</li>
+<li>Errors on duplicate function argument names</li>
+<li>Errors on incorrect use of the <code>delete</code> operator</li>
+<li>Access to <code>arguments.caller</code> &amp; <code>arguments.callee</code> throws an error (for performance reasons)</li>
+<li>Using the <code>with</code> operator will raise a syntax error</li>
+<li>Certain variables such as <code>undefined</code> are no longer writeable</li>
+<li>Introduces additional reserved keywords, such as <code>implements</code>, <code>interface</code>, <code>let</code>, <code>package</code>, <code>private</code>, <code>protected</code>, <code>public</code>, <code>static</code>, and <code>yield</code></li>
+</ul>
+
+
+<p>However, strict mode also changes some runtime behavior:</p>
+
+<ul>
+<li>Global variables are explicit (<code>var</code> always required). The global value of <code>this</code> is <code>undefined</code>.</li>
+<li><code>eval</code> can't introduce new variables into the local context</li>
+<li>Function statements have to be defined before they're used (previously functions could be <a href="http://whereswalden.com/2011/01/24/new-es5-strict-mode-requirement-function-statements-not-at-top-level-of-a-program-or-function-are-prohibited/">defined anywhere</a>).</li>
+<li><code>arguments</code> is immutable</li>
+</ul>
+
+
+<p>CoffeeScript already abides by a lot of strict mode's requirements, such as always using <code>var</code> when defining variables, but it's still very useful to enable strict mode in your CoffeeScript programs. Indeed, CoffeeScript is taking this a step further and in <a href="https://github.com/jashkenas/coffee-script/issues/1547">future versions</a> will check a program's compliance to strict mode at compile time.</p>
+
+<p>All you need to do to enable strict checking is start your script or function with the following string:</p>
 
 <p><span class="csscript"></span></p>
 
-<pre><code>"use strict"
+<pre><code>-&gt;
+  "use strict"
 
-# rest of script ...
+  # ... your code ...
+</code></pre>
+
+<p>That's it, just the <code>'use strict'</code> string. Couldn't be simpler and it's completely backwards compatible. Let's take a look at strict mode in action. The following function will raise a syntax error in strict mode, but run fine in the usual mode:</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>do -&gt;
+  "use strict"
+  console.log(arguments.callee)
+</code></pre>
+
+<p>Strict mode has removed access to <code>arguments.caller</code> &amp; <code>arguments.callee</code> as they're major performance hogs, and is now throwing syntax errors whenever they're used.</p>
+
+<p>There's a particular gotcha you should look out for when using strict mode, namely creating global variables with <code>this</code>. The following example will throw a <code>TypeError</code> in strict mode, but run fine normally:</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>do -&gt;
+  "use strict"
+  class @Spine
+</code></pre>
+
+<p>The reason behind this disparity is that in strict mode <code>this</code> is <code>undefined</code>, whereas normally it refers to the <code>window</code> object. The solution to this is to explicitly set global variables on the <code>window</code> object.</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>do -&gt;
+  "use strict"
+  class window.Spine
+</code></pre>
+
+<h2>JSLint</h2>
+
+<p><a href="http://www.jslint.com/">JSLint</a> is a JavaScript code quality tool, and running your programs through it is a great way of improving code quality and best practices. The project's site has a <a href="http://www.jslint.com/lint.html">great list</a> of issues that JSLint checks for, including global variables, missing semicolons and weak equality comparisons.</p>
+
+<p>The good news is that CoffeeScript already 'lints' all of its output, so CoffeeScript generated JavaScript is already JSLint compatible. In fact, the <code>coffee</code> tool has support for a <code>--lint</code> option:</p>
+
+<pre><code>coffee --line index.coffee
+  index.coffee: 0 error(s), 0 warning(s)
 </code></pre>
 
 <hr />
@@ -337,16 +421,16 @@ aVar = null
 global variables (and overwriting issue)
 typeof
 instanceof
-parseInt
-hasOwnProperty
-The function Statement Versus the function Expression
 shimming
 Strict checking
 Semicolons
 reserved words
 jslint</p>
 
-<p>"use strict"</p>
+<p>parseInt
+hasOwnProperty
+The function Statement Versus the function Expression
+weak equality</p>
 
   </div>
 </div>

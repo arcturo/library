@@ -135,6 +135,10 @@ CoffeeScript solves this by simply replacing all weak comparisons with strict on
 
 This doesn't mean you can't blah coerciion TODO
 
+##Function definition
+
+TODO
+
 #The un-fixed parts
 
 Whilst CoffeeScript goes some length to solving some of JavaScript's design flaws, it can only go so far.
@@ -275,15 +279,82 @@ It's rather peculiar behavior, but there you have it. If you want to remove a re
 
     2.toString()
     
-##Strict checking
+##Strict mode
 
-All you need to do to enable strict checking, is start your script or function with the following string:
+Strict mode is a new feature of ECMAScript 5 that allows you to run a JavaScript program or function in a *strict* context. This strict context throws more exceptions and warnings than the normal context, giving developers some indication when they're straying from best practices, writing un-optimizable code or making common mistakes. In other words, strict mode reduces bugs, increases security, improves performance and eliminates some difficult to use language features. What's not to like?
+
+Strict mode is currently supported in the following browsers:
+
+* Chrome >= 13.0
+* Safari >= 5.0
+* Opera >= 12.0
+* Firefox >= 4.0
+* IE >= 10.0
+
+Having said that, strict mode is completely backwards compatible with older browsers. Programs using it should run fine in either a strict or normal context. 
+
+Most of the changes strict mode introduces pertain to JavaScript's syntax:
+
+* Errors on duplicate property names
+* Errors on duplicate function argument names
+* Errors on incorrect use of the `delete` operator
+* Access to `arguments.caller` & `arguments.callee` throws an error (for performance reasons)
+* Using the `with` operator will raise a syntax error
+* Certain variables such as `undefined` are no longer writeable 
+* Introduces additional reserved keywords, such as `implements`, `interface`, `let`, `package`, `private`, `protected`, `public`, `static`, and `yield`
+
+However, strict mode also changes some runtime behavior:
+
+* Global variables are explicit (`var` always required). The global value of `this` is `undefined`.
+* `eval` can't introduce new variables into the local context
+* Function statements have to be defined before they're used (previously functions could be [defined anywhere](http://whereswalden.com/2011/01/24/new-es5-strict-mode-requirement-function-statements-not-at-top-level-of-a-program-or-function-are-prohibited/)).
+* `arguments` is immutable
+
+CoffeeScript already abides by a lot of strict mode's requirements, such as always using `var` when defining variables, but it's still very useful to enable strict mode in your CoffeeScript programs. Indeed, CoffeeScript is taking this a step further and in [future versions](https://github.com/jashkenas/coffee-script/issues/1547) will check a program's compliance to strict mode at compile time.
+
+All you need to do to enable strict checking is start your script or function with the following string:
+
+<span class="csscript"></span>
+    
+    ->
+      "use strict"
+    
+      # ... your code ...
+      
+That's it, just the `'use strict'` string. Couldn't be simpler and it's completely backwards compatible. Let's take a look at strict mode in action. The following function will raise a syntax error in strict mode, but run fine in the usual mode:
 
 <span class="csscript"></span>
 
-    "use strict"
-    
-    # rest of script ...
+    do ->
+      "use strict"
+      console.log(arguments.callee)
+      
+Strict mode has removed access to `arguments.caller` & `arguments.callee` as they're major performance hogs, and is now throwing syntax errors whenever they're used.
+
+There's a particular gotcha you should look out for when using strict mode, namely creating global variables with `this`. The following example will throw a `TypeError` in strict mode, but run fine normally:
+
+<span class="csscript"></span>
+
+    do ->
+      "use strict"
+      class @Spine
+      
+The reason behind this disparity is that in strict mode `this` is `undefined`, whereas normally it refers to the `window` object. The solution to this is to explicitly set global variables on the `window` object.
+
+<span class="csscript"></span>
+
+    do ->
+      "use strict"
+      class window.Spine
+
+##JSLint
+
+[JSLint](http://www.jslint.com/) is a JavaScript code quality tool, and running your programs through it is a great way of improving code quality and best practices. The project's site has a [great list](http://www.jslint.com/lint.html) of issues that JSLint checks for, including global variables, missing semicolons and weak equality comparisons.
+
+The good news is that CoffeeScript already 'lints' all of its output, so CoffeeScript generated JavaScript is already JSLint compatible. In fact, the `coffee` tool has support for a `--lint` option:
+
+    coffee --line index.coffee
+      index.coffee:	0 error(s), 0 warning(s)
 
 ---------
 
@@ -291,13 +362,13 @@ All you need to do to enable strict checking, is start your script or function w
 global variables (and overwriting issue)
 typeof
 instanceof
-parseInt
-hasOwnProperty
-The function Statement Versus the function Expression
 shimming
 Strict checking
 Semicolons
 reserved words
 jslint
 
-"use strict"
+parseInt
+hasOwnProperty
+The function Statement Versus the function Expression
+weak equality
