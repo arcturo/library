@@ -62,7 +62,7 @@ var groupsCount = 2;   // Global
 })()
 </code></pre>
 
-<p>This is a bit of an odd decision decision since the vast majority of the time you'll be creating local variables not global, so why not make that the default? As it stands, developers have to remember to put <code>var</code> statements before any variables they're initializing, or face weird bugs when variables accidentally conflict and overwrite each other.</p>
+<p>This is a bit of an odd decision since the vast majority of the time you'll be creating local variables not global, so why not make that the default? As it stands, developers have to remember to put <code>var</code> statements before any variables they're initializing, or face weird bugs when variables accidentally conflict and overwrite each other.</p>
 
 <p>Luckily CoffeeScript comes to your rescue here by eliminating implicit global variable assignment entirely. In other words, the <code>var</code> keyword is reserved in CoffeeScript, and will trigger a syntax error if used. Local variables are created implicitly by default, and it's impossible to create global variables without explicitly assigning them as properties on <code>window</code>.</p>
 
