@@ -71,6 +71,15 @@ CoffeeScript's comprehensions are so flexible that they allow you to do powerful
     
     # Or
     passed = (score for score in scores when score > 60)
+    
+If comprehensions get too long, you can split them onto multiple lines.
+
+<span class="csscript"></span>
+
+    passed = []
+    failed = []
+    for score in [49, 58, 76, 82, 88, 90]
+      (if score > 60 then passed else failed).push score
 
 ##Includes
 
@@ -121,6 +130,8 @@ This technique is not specific to CoffeeScript, but I thought it useful to demon
 
     Math.max [14, 35, -7, 46, 98]... # 98
     Math.min [14, 35, -7, 46, 98]... # -7
+    
+It's worth noting that this trick will fail with really large arrays as browsers have a limitation on the amount of arguments you can pass to functions.
     
 ##Multiple arguments
 
@@ -179,11 +190,13 @@ Destructuring assignments can be used with any depth of array and object nesting
     { a, b } = someObject
     console.log "a is '#{a}', b is '#{b}'"
     
-This is especially useful in Node applications, when requiring modules:
+This is especially useful in Node applications when requiring modules:
 
 <span class="csscript"></span>
 
     {join, resolve} = require('path')
+    
+    join('/Users', 'Alex')
 
 ##External libraries
 
@@ -200,3 +213,20 @@ Using external libraries is exactly the same as calling functions on CoffeeScrip
         alert("Clicked!")
     
 Since all of CoffeeScript's output is wrapped in an anonymous function, we can set a local `$` alias for `jQuery`. This will make sure that even if jQuery's no conflict mode is enabled and the `$` re-defined, our script will still function as intended. 
+
+##Private variables
+
+The `do` keyword in CoffeeScript lets us execute functions immediately, a great way of encapsulating scope & protecting variables. In the example below, we're defining a variable `classToType` in the context of an anonymous function which's immediately called by `do`. That anonymous function
+
+<span class="csscript"></span>
+
+    # Execute function immediately
+    type = do ->
+      classToType = {}
+      for name in "Boolean Number String Function Array Date RegExp Undefined Null".split(" ")
+        classToType["[object " + name + "]"] = name.toLowerCase()
+      
+      # Return a function
+      (obj) ->
+        strType = Object::toString.call(obj)
+        classToType[strType] or "object"

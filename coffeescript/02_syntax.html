@@ -255,29 +255,7 @@ if 1 &gt; 0 then "Ok" else "Y2K!"
   "Type coercion fixed!"
 </code></pre>
 
-<p>You may have noticed in the examples above, that CoffeeScript is converting <code>==</code> operators into <code>===</code> and <code>!=</code> into <code>!==</code>. This is one of my favorite features to the language, and yet one of the most simple. What's the reasoning behind this? Well frankly JavaScript's type coercion is a bit odd, and its equality operator coerces types in order to compare them, leading to some confusing behaviors and the source of many bugs.</p>
-
-<p>The example below is taken from <a href="http://bonsaiden.github.com/JavaScript-Garden/#types.equality">JavaScript Garden's equality section</a> which delves into the issue in some depth.</p>
-
-<p><span class="csscript"></span></p>
-
-<pre><code>""           ==   "0"           // false
-0            ==   ""            // true
-0            ==   "0"           // true
-false        ==   "false"       // false
-false        ==   "0"           // true
-false        ==   undefined     // false
-false        ==   null          // false
-null         ==   undefined     // true
-" \t\r\n"    ==   0             // true
-</code></pre>
-
-<p>The solution is to use the strict equality operator, which consists of three equal signs: <code>===</code>. It works exactly like the normal equality operator, but without any type coercion. It's recommended to always use the strict equality operator, and explicitly convert types if needs be. As mentioned earlier, this is the default in CoffeeScript, with any weak equality operators being converted into strict ones.</p>
-
-<p><span class="csscript"></span></p>
-
-<pre><code>if 10 == "+10" then "type coercion fail"
-</code></pre>
+<p>You may have noticed in the examples above, that CoffeeScript is converting <code>==</code> operators into <code>===</code> and <code>!=</code> into <code>!==</code>. This is one of my favorite features to the language, and yet one of the most simple. What's the reasoning behind this? Well frankly JavaScript's type coercion is a bit odd, and its equality operator coerces types in order to compare them, leading to some confusing behaviors and the source of many bugs. There's a longer discussing on this topic in chapter 7.</p>
 
 <h2>String interpolation</h2>
 

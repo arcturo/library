@@ -102,6 +102,16 @@ failed = []
 passed = (score for score in scores when score &gt; 60)
 </code></pre>
 
+<p>If comprehensions get too long, you can split them onto multiple lines.</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>passed = []
+failed = []
+for score in [49, 58, 76, 82, 88, 90]
+  (if score &gt; 60 then passed else failed).push score
+</code></pre>
+
 <h2>Includes</h2>
 
 <p>Checking to see if a value is inside an array is typically done with <code>indexOf()</code>, which rather mind-bogglingly still requires a shim, as Internet Explorer hasn't implemented it.</p>
@@ -158,6 +168,8 @@ alert("#{key} = #{value}") for key, value of object
 <pre><code>Math.max [14, 35, -7, 46, 98]... # 98
 Math.min [14, 35, -7, 46, 98]... # -7
 </code></pre>
+
+<p>It's worth noting that this trick will fail with really large arrays as browsers have a limitation on the amount of arguments you can pass to functions.</p>
 
 <h2>Multiple arguments</h2>
 
@@ -222,11 +234,13 @@ string is string # true
 console.log "a is '#{a}', b is '#{b}'"
 </code></pre>
 
-<p>This is especially useful in Node applications, when requiring modules:</p>
+<p>This is especially useful in Node applications when requiring modules:</p>
 
 <p><span class="csscript"></span></p>
 
 <pre><code>{join, resolve} = require('path')
+
+join('/Users', 'Alex')
 </code></pre>
 
 <h2>External libraries</h2>
@@ -245,6 +259,24 @@ $ -&gt;
 </code></pre>
 
 <p>Since all of CoffeeScript's output is wrapped in an anonymous function, we can set a local <code>$</code> alias for <code>jQuery</code>. This will make sure that even if jQuery's no conflict mode is enabled and the <code>$</code> re-defined, our script will still function as intended.</p>
+
+<h2>Private variables</h2>
+
+<p>The <code>do</code> keyword in CoffeeScript lets us execute functions immediately, a great way of encapsulating scope &amp; protecting variables. In the example below, we're defining a variable <code>classToType</code> in the context of an anonymous function which's immediately called by <code>do</code>. That anonymous function</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code># Execute function immediately
+type = do -&gt;
+  classToType = {}
+  for name in "Boolean Number String Function Array Date RegExp Undefined Null".split(" ")
+    classToType["[object " + name + "]"] = name.toLowerCase()
+
+  # Return a function
+  (obj) -&gt;
+    strType = Object::toString.call(obj)
+    classToType[strType] or "object"
+</code></pre>
 
   </div>
 </div>

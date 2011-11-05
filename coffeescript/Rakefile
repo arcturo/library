@@ -32,7 +32,13 @@ task :generate do
       File.read("site/index.ms"), 
       :pages => pages
     ))
-  end  
+  end
+  
+  File.open("all.html", "w+") do |f|
+    pages.each do |page|
+      f.write generate(page)
+    end
+  end
 end
 
 task :default => :generate

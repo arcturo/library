@@ -128,7 +128,7 @@ It's worth pointing out though that static properties are copied to subclasses, 
 
 ##Mixins
 
-[Mixins](http://en.wikipedia.org/wiki/Mixin) are not something supported natively by CoffeeScript, for the good reason that they can be trivially implemented. For example, here's two functions, `extend()` and `include()` that'll add class and instance properties respectively to a class. 
+[Mixins](http://en.wikipedia.org/wiki/Mixin) are not something supported natively by CoffeeScript, for the good reason that they can be trivially implemented yourself. For example, here's two functions, `extend()` and `include()` that'll add class and instance properties respectively to a class. 
 
 <span class="csscript"></span>
 

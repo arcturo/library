@@ -212,27 +212,7 @@ In a similar fashion to `not`, CoffeeScript also introduces the `is` statement, 
     if true is 1
       "Type coercion fixed!"
 
-You may have noticed in the examples above, that CoffeeScript is converting `==` operators into `===` and `!=` into `!==`. This is one of my favorite features to the language, and yet one of the most simple. What's the reasoning behind this? Well frankly JavaScript's type coercion is a bit odd, and its equality operator coerces types in order to compare them, leading to some confusing behaviors and the source of many bugs. 
-
-The example below is taken from [JavaScript Garden's equality section](http://bonsaiden.github.com/JavaScript-Garden/#types.equality) which delves into the issue in some depth. 
-
-<span class="csscript"></span>
-
-    ""           ==   "0"           // false
-    0            ==   ""            // true
-    0            ==   "0"           // true
-    false        ==   "false"       // false
-    false        ==   "0"           // true
-    false        ==   undefined     // false
-    false        ==   null          // false
-    null         ==   undefined     // true
-    " \t\r\n"    ==   0             // true
-  
-The solution is to use the strict equality operator, which consists of three equal signs: `===`. It works exactly like the normal equality operator, but without any type coercion. It's recommended to always use the strict equality operator, and explicitly convert types if needs be. As mentioned earlier, this is the default in CoffeeScript, with any weak equality operators being converted into strict ones. 
-
-<span class="csscript"></span>
-
-    if 10 == "+10" then "type coercion fail"
+You may have noticed in the examples above, that CoffeeScript is converting `==` operators into `===` and `!=` into `!==`. This is one of my favorite features to the language, and yet one of the most simple. What's the reasoning behind this? Well frankly JavaScript's type coercion is a bit odd, and its equality operator coerces types in order to compare them, leading to some confusing behaviors and the source of many bugs. There's a longer discussing on this topic in chapter 7.
     
 ##String interpolation
 

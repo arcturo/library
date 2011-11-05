@@ -22,9 +22,11 @@ CoffeeScript is not limited to the browser, and can be used to great effect in s
 
 ##Initial setup
 
-One of the easiest ways to initially play around with the library is to use it right inside the browser. Navigate to [http://coffeescript.org](http://coffeescript.org) and click on the *Try CoffeeScript* tab. The site uses a browser version of the CoffeeScript compiler, converting any CoffeeScript typed inside the left panel, to JavaScript in the right panel.
+One of the easiest ways to initially play around with the library is to use it right inside the browser. Navigate to [http://coffeescript.org](http://coffeescript.org) and click on the *Try CoffeeScript* tab. The site uses a browser version of the CoffeeScript compiler, converting any CoffeeScript typed inside the left panel, to JavaScript in the right panel. 
 
-In fact you can use the browser-based compiler yourself, by including [this script](http://jashkenas.github.com/coffee-script/extras/coffee-script.js) in a page, marking up any CoffeeScript script tags with the correct `type`.
+You can also convert JavaScript back to CoffeeScript using the [js2coffee](http://js2coffee.org/) project, especially useful when migration JavaScript projects to CoffeeScript.
+
+In fact, you can use the browser-based CoffeeScript compiler yourself, by including [this script](http://jashkenas.github.com/coffee-script/extras/coffee-script.js) in a page, marking up any CoffeeScript script tags with the correct `type`.
 
     <script src="http://jashkenas.github.com/coffee-script/extras/coffee-script.js" type="text/javascript" charset="utf-8"></script>
     <script type="text/coffeescript">
@@ -45,4 +47,4 @@ If `--output` is not specified, CoffeeScript will write to a JavaScript file wit
 
 As you can see above, the default extension of CoffeeScript files is `.coffee`. Amongst other things, this will allow text editors like [TextMate](http://macromates.com/) to work out which language the file contains, giving it the appropriate syntax highlighting. By default, TextMate doesn't include support for CoffeeScript, but you can easily install the [bundle to do so](https://github.com/jashkenas/coffee-script-tmbundle).
 
-If all this compilation seems like a bit of an inconvenience and bother, that's because it is. We'll be getting onto ways to solve this by automatically compiling CoffeeScript files when they're first requested, but first lets take a look at the language's syntax. 
+If all this compilation seems like a bit of an inconvenience and bother, that's because it is. We'll be getting onto ways to solve this by automatically compiling CoffeeScript files, but first lets take a look at the language's syntax. 

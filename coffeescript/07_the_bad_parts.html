@@ -167,7 +167,7 @@ null         ==   undefined     // true
 " \t\r\n"    ==   0             // true
 </code></pre>
 
-<p>The reason behind this behavior is that the weak equality coerces types automatically. However, I'm sure you'll agree this is all pretty ambiguous, and can leave to some unexpected results and bugs.</p>
+<p>The reason behind this behavior is that the weak equality coerces types automatically. However, I'm sure you'll agree this is all pretty ambiguous, and can lead to unexpected results and bugs.</p>
 
 <p>The solution is to instead use the strict equality operator, which consists of three equal signs: <code>===</code>. It works exactly like the normal equality operator, but without any type coercion. It's recommended to always use the strict equality operator, and explicitly convert types if needs be.</p>
 
@@ -441,23 +441,6 @@ aVar = null
 <pre><code>coffee --line index.coffee
   index.coffee: 0 error(s), 0 warning(s)
 </code></pre>
-
-<hr />
-
-<p>==
-global variables (and overwriting issue)
-typeof
-instanceof
-shimming
-Strict checking
-Semicolons
-reserved words
-jslint</p>
-
-<p>parseInt
-hasOwnProperty
-The function Statement Versus the function Expression
-weak equality</p>
 
   </div>
 </div>

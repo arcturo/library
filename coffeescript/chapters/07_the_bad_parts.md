@@ -20,7 +20,7 @@ You could write:
       email = "info@eribium.org";
     }
     
-Setting aside the fact that we shouldn't have such a deep object in the first place, the syntax is quite cleaner. Except for one thing. It's damn confusing to the JavaScript interpreter - it doesn't know exactly what you're going to do in the `with` context, and forces the specified object to be searched first for all name lookups. 
+Setting aside the fact that we shouldn't have such a deep object in the first place, the syntax is quite clean. Except for one thing. It's damn confusing to the JavaScript interpreter - it doesn't know exactly what you're going to do in the `with` context, and forces the specified object to be searched first for all name lookups. 
 
 This really hurts performance and means the interpreter has to turn off all sorts of JIT optimizations. Additionally `with` statements can't be minified using tools like [uglify-js](https://github.com/mishoo/UglifyJS). All things considered, it's much better just to avoid using them, and CoffeeScript takes this a step further by eliminating them from it's syntax. In other words, using `with` in CoffeeScript will throw a syntax error. 
 
@@ -82,7 +82,7 @@ By ensuring global variables are explicit, rather than implicit, CoffeeScript re
 
 ##Semicolons
 
-JavaScript does not enforce the use of semicolons in source code, so it's possible to omit them. However, behind the scenes the JavaScript compiler still needs them, so the parser automatically inserts them whenever it encounters a parse error due to a missing semicolon. In other words, it'll try to evaluate a statement without semicolons and, if that fails, try again using semicolons.
+JavaScript does not enforce the use of semicolons in source code, so it's possible to omit them. However, behind the scenes the JavaScript compiler still needs them, so the parser automatically inserts them whenever it encounters a parse error due to a missing semicolon. In other words, it'll try to evaluate a statement without semicolons and, if that fails, tries again using semicolons.
 
 Unfortunately this is a tremendously bad idea, and can actually change the behavior of your code. Take the following example, seems valid JavaScript, right?
 
@@ -119,7 +119,9 @@ The CoffeeScript parser notices you're using a reserved keyword, and quotes it f
     
 ##Equality comparisons
 
-The weak equality comparison in JavaScript is broken.
+The weak equality comparison in JavaScript has some confusing behavior and is often the source of confusing bugs. The example below is taken from [JavaScript Garden's equality section](http://bonsaiden.github.com/JavaScript-Garden/#types.equality) which delves into the issue in some depth. 
+
+<span class="csscript"></span>
 
     ""           ==   "0"           // false
     0            ==   ""            // true
@@ -130,10 +132,18 @@ The weak equality comparison in JavaScript is broken.
     false        ==   null          // false
     null         ==   undefined     // true
     " \t\r\n"    ==   0             // true
-    
-CoffeeScript solves this by simply replacing all weak comparisons with strict ones. 
 
-This doesn't mean you can't blah coerciion TODO
+The reason behind this behavior is that the weak equality coerces types automatically. However, I'm sure you'll agree this is all pretty ambiguous, and can lead to unexpected results and bugs. 
+
+The solution is to instead use the strict equality operator, which consists of three equal signs: `===`. It works exactly like the normal equality operator, but without any type coercion. It's recommended to always use the strict equality operator, and explicitly convert types if needs be.
+    
+CoffeeScript solves this by simply replacing all weak comparisons with strict ones, in other words converting all `==` comparators into `===`. You can't do a a weak equality comparison in CoffeeScript, and you should explicitly convert types before comparing them if necessary.
+
+This doesn't mean you can ignore type coercion in CoffeeScript completely though, especially when it comes to checking the 'truthfulness' of variables during flow control. Blank strings, `null`, `undefined` and the number `0` are all coerced to `false`
+
+    alert("Empty Array")  unless [].length
+    alert("Empty String") unless ""
+    alert("Number 0")     unless 0
 
 ##Function definition
 
@@ -144,7 +154,7 @@ Oddly enough in JavaScript, functions can be defined after they're used. For exa
 
 The is because of function scope. Functions get hoisted before the programs execution and as such are available everywhere in the scope they were defined in, even if called before the actual definition in the source. Future versions of JavaScript may remove this behavior, and indeed it already fails in *strict* mode. 
 
-Best to steer clear of this issue by assigning an anonymous functions to a variable:
+Best to steer clear of this issue by using anonymous functions:
 
     var wem = function(){};
     wem();
@@ -153,7 +163,9 @@ CoffeeScript's approach to this is to remove named functions entirely, using onl
 
 #The un-fixed parts
 
-Whilst CoffeeScript goes some length to solving some of JavaScript's design flaws, it can only go so far.
+Whilst CoffeeScript goes some length to solving some of JavaScript's design flaws, it can only go so far. As I mentioned previously, CoffeeScript's strictly limited to static analysis by design, and doesn't do any runtime checking for performance reasons. CoffeeScript uses a straight source-to-source compiler, the idea being that every CoffeeScript statement results in a equivalent JavaScript statement. CoffeeScript doesn't provide an abstraction over any of JavaScript's keywords, such as `typeof`, and as such some design flaws in JavaScript's design also apply to CoffeeScript.
+
+In the previous sections we covered some design flaws in JavaScript that CoffeeScript fixes. Now let's talk about some of JavaScript's flaws that CoffeeScript can't fix.
 
 ##Using eval
 
@@ -367,20 +379,3 @@ The good news is that CoffeeScript already 'lints' all of its output, so CoffeeS
 
     coffee --line index.coffee
       index.coffee:	0 error(s), 0 warning(s)
-
----------
-
-==
-global variables (and overwriting issue)
-typeof
-instanceof
-shimming
-Strict checking
-Semicolons
-reserved words
-jslint
-
-parseInt
-hasOwnProperty
-The function Statement Versus the function Expression
-weak equality
