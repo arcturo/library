@@ -94,7 +94,7 @@ In the example above, `nums` is an array of all the arguments passed to the func
 
     trigger = (events...) ->
       events.splice(1, 0, this)
-      this.parent.trigger.apply(events)
+      this.constructor.trigger.apply(events)
 
 ###Function invocation
 
@@ -210,7 +210,12 @@ In a similar fashion to `not`, CoffeeScript also introduces the `is` statement, 
 <span class="csscript"></span>
 
     if true is 1
-      "Type coercion fixed!"
+      "Type coercion fail!"
+      
+As an alternative to `is not`, you can use `isnt`.
+
+    if true isnt true
+      alert "Opposite day!"
 
 You may have noticed in the examples above, that CoffeeScript is converting `==` operators into `===` and `!=` into `!==`. This is one of my favorite features to the language, and yet one of the most simple. What's the reasoning behind this? Well frankly JavaScript's type coercion is a bit odd, and its equality operator coerces types in order to compare them, leading to some confusing behaviors and the source of many bugs. There's a longer discussing on this topic in chapter 7.
     

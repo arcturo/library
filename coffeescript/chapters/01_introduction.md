@@ -22,7 +22,7 @@ CoffeeScript is not limited to the browser, and can be used to great effect in s
 
 ##Initial setup
 
-One of the easiest ways to initially play around with the library is to use it right inside the browser. Navigate to [http://coffeescript.org](http://coffeescript.org) and click on the *Try CoffeeScript* tab. The site uses a browser version of the CoffeeScript compiler, converting any CoffeeScript typed inside the left panel, to JavaScript in the right panel. 
+One of the easiest ways to initially play around with the library is to use it right inside the browser. Navigate to [http://coffeescript.org](http://coffeescript.org) and click on the *Try CoffeeScript* tab. The site uses a browser version of the CoffeeScript compiler, converting any CoffeeScript typed inside the left panel to JavaScript in the right panel. 
 
 You can also convert JavaScript back to CoffeeScript using the [js2coffee](http://js2coffee.org/) project, especially useful when migration JavaScript projects to CoffeeScript.
 
@@ -33,7 +33,7 @@ In fact, you can use the browser-based CoffeeScript compiler yourself, by includ
       # Some CoffeeScript
     </script>
     
-Obviously, in production, you don't want to be interpreting CoffeeScript at runtime, as it'll slow things up for your clients, so CoffeeScript offers a [Node.js](http://nodejs.org) compiler to pre-process CoffeeScript files.
+Obviously, in production, you don't want to be interpreting CoffeeScript at runtime as it'll slow things up for your clients. Instead CoffeeScript offers a [Node.js](http://nodejs.org) compiler to pre-process CoffeeScript files.
 
 To install it, first make sure you have a working copy of the latest stable version of [Node.js](http://nodejs.org), and [npm](http://npmjs.org/) (the Node Package Manager). You can then install CoffeeScript with npm:
 

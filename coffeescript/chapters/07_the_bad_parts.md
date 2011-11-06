@@ -343,8 +343,7 @@ Having said that, strict mode is completely backwards compatible with older brow
 
 Most of the changes strict mode introduces pertain to JavaScript's syntax:
 
-* Errors on duplicate property names
-* Errors on duplicate function argument names
+* Errors on duplicate property and function argument names
 * Errors on incorrect use of the `delete` operator
 * Access to `arguments.caller` & `arguments.callee` throws an error (for performance reasons)
 * Using the `with` operator will raise a syntax error

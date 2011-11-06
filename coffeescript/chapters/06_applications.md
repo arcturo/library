@@ -90,7 +90,8 @@ You can see some dependencies listed: `coffee-script`, `stitch` and `express`. W
       "dependencies": { 
         "coffee-script": "~1.1.2",
         "stitch": "~0.3.2",
-        "express": "~2.5.0"
+        "express": "~2.5.0",
+        "eco": "1.1.0-rc-1"
       }
     }
     
@@ -131,15 +132,15 @@ Now let's create our main page `index.html` which, if we're building a single pa
     </body>
     </html>
 
-When the page loads, our *DOMContentLoaded* event callback is requiring the `app.coffee` script (which is automatically compiled), and invoking our `init()` function. That's all there is to it, we've got CommonJS modules up and running, as well as a HTTP server and CoffeeScript compiler. If, say, we wanted to include a module, it's just a case of calling `require()`.
+When the page loads, our *DOMContentLoaded* event callback is requiring the `app.coffee` script (which is automatically compiled), and invoking our `init()` function. That's all there is to it, we've got CommonJS modules up and running, as well as a HTTP server and CoffeeScript compiler. If, say, we wanted to include a module, it's just a case of calling `require()`. Let's create a new class, `User`, and reference it from `app.coffee`:
 
 <span class="csscript"></span>
 
-    # models/user.coffee
+    # app/models/user.coffee
     module.exports = class User
       constructor: (@name) ->
       
-    # app.coffee
+    # app/app.coffee
     User = require("models/user")
 
 ##JavaScript templates
@@ -190,7 +191,29 @@ Now we've got a handle on the syntax, let's define an Eco template in `views/use
     
 Stitch will automatically compile our template and include it in `application.js`. Then, in our application's controllers we can require the template, like it was a module, and execute it passing any data required. 
     
+<span class="csscript"></span>
+
     require("views/users/show")(new User("Brian"))
+    
+Our `app.coffee` file should now look like this, rendering the template and appending it to the page when the document loads:
+
+<span class="csscript"></span>
+
+    User = require("models/user")
+
+    App =
+      init: ->
+        template = require("views/users/show")
+        view     = template(new User("Brian"))
+
+        # Obviously this could be spruced up by jQuery
+        element = document.createElement("div")
+        element.innerHTML = view
+        document.body.appendChild(element)
+    
+    module.exports = App
+    
+Open up [the application](http://localhost:9294/) and give it a whirl! Hopefully this tutorial has given you a good idea of how to structure client-side CoffeeScript applications. For your next steps, I recommend checking out a client-side framework like [Backbone](http://documentcloud.github.com/backbone/) or [Spine](http://spinejs.com), They'll provide a basic MVC structure for you, freeing you up for the interesting stuff.
     
 ##Bonus - 30 second deployment with Heroku
 

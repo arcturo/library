@@ -174,7 +174,7 @@ One extremely nice addition to CoffeeScript is the 'or equals', which is a patte
 
     hash or= {}
     
-If hash evaluates to `false`, then it's set to an empty object. It's important to note here that this expression also recognizes `0`, `""` and `[]` as false. If that isn't your intention, you'll need to use CoffeeScript's existential operator, which only gets activated if `hash` is `undefined` or `null`:
+If hash evaluates to `false`, then it's set to an empty object. It's important to note here that this expression also recognizes `0`, `""` and `null` as false. If that isn't your intention, you'll need to use CoffeeScript's existential operator, which only gets activated if `hash` is `undefined` or `null`:
 
 <span class="csscript"></span>
 

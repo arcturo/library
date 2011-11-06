@@ -118,7 +118,8 @@ app.listen port
   "dependencies": { 
     "coffee-script": "~1.1.2",
     "stitch": "~0.3.2",
-    "express": "~2.5.0"
+    "express": "~2.5.0",
+    "eco": "1.1.0-rc-1"
   }
 }
 </code></pre>
@@ -164,15 +165,15 @@ npm install -g coffee-script
 &lt;/html&gt;
 </code></pre>
 
-<p>When the page loads, our <em>DOMContentLoaded</em> event callback is requiring the <code>app.coffee</code> script (which is automatically compiled), and invoking our <code>init()</code> function. That's all there is to it, we've got CommonJS modules up and running, as well as a HTTP server and CoffeeScript compiler. If, say, we wanted to include a module, it's just a case of calling <code>require()</code>.</p>
+<p>When the page loads, our <em>DOMContentLoaded</em> event callback is requiring the <code>app.coffee</code> script (which is automatically compiled), and invoking our <code>init()</code> function. That's all there is to it, we've got CommonJS modules up and running, as well as a HTTP server and CoffeeScript compiler. If, say, we wanted to include a module, it's just a case of calling <code>require()</code>. Let's create a new class, <code>User</code>, and reference it from <code>app.coffee</code>:</p>
 
 <p><span class="csscript"></span></p>
 
-<pre><code># models/user.coffee
+<pre><code># app/models/user.coffee
 module.exports = class User
   constructor: (@name) -&gt;
 
-# app.coffee
+# app/app.coffee
 User = require("models/user")
 </code></pre>
 
@@ -230,8 +231,31 @@ Evaluate a CoffeeScript expression and print its return value without escaping i
 
 <p>Stitch will automatically compile our template and include it in <code>application.js</code>. Then, in our application's controllers we can require the template, like it was a module, and execute it passing any data required.</p>
 
+<p><span class="csscript"></span></p>
+
 <pre><code>require("views/users/show")(new User("Brian"))
 </code></pre>
+
+<p>Our <code>app.coffee</code> file should now look like this, rendering the template and appending it to the page when the document loads:</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>User = require("models/user")
+
+App =
+  init: -&gt;
+    template = require("views/users/show")
+    view     = template(new User("Brian"))
+
+    # Obviously this could be spruced up by jQuery
+    element = document.createElement("div")
+    element.innerHTML = view
+    document.body.appendChild(element)
+
+module.exports = App
+</code></pre>
+
+<p>Open up <a href="http://localhost:9294/">the application</a> and give it a whirl! Hopefully this tutorial has given you a good idea of how to structure client-side CoffeeScript applications. For your next steps, I recommend checking out a JavaScript/CoffeeScript MVC framework like <a href="http://documentcloud.github.com/backbone/">Backbone</a> or <a href="http://spinejs.com">Spine</a>, They'll provide a basic MVC structure for you, freeing you up to build awesome web applications.</p>
 
 <h2>Bonus - 30 second deployment with Heroku</h2>
 

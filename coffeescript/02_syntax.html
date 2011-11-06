@@ -126,7 +126,7 @@ exports.MyVariable = "foo-bar"
 
 <pre><code>trigger = (events...) -&gt;
   events.splice(1, 0, this)
-  this.parent.trigger.apply(events)
+  this.constructor.trigger.apply(events)
 </code></pre>
 
 <h3>Function invocation</h3>
@@ -252,7 +252,13 @@ if 1 &gt; 0 then "Ok" else "Y2K!"
 <p><span class="csscript"></span></p>
 
 <pre><code>if true is 1
-  "Type coercion fixed!"
+  "Type coercion fail!"
+</code></pre>
+
+<p>As an alternative to <code>is not</code>, you can use <code>isnt</code>.</p>
+
+<pre><code>if true isnt true
+  alert "Opposite day!"
 </code></pre>
 
 <p>You may have noticed in the examples above, that CoffeeScript is converting <code>==</code> operators into <code>===</code> and <code>!=</code> into <code>!==</code>. This is one of my favorite features to the language, and yet one of the most simple. What's the reasoning behind this? Well frankly JavaScript's type coercion is a bit odd, and its equality operator coerces types in order to compare them, leading to some confusing behaviors and the source of many bugs. There's a longer discussing on this topic in chapter 7.</p>
