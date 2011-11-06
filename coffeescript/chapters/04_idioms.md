@@ -216,7 +216,7 @@ Since all of CoffeeScript's output is wrapped in an anonymous function, we can s
 
 ##Private variables
 
-The `do` keyword in CoffeeScript lets us execute functions immediately, a great way of encapsulating scope & protecting variables. In the example below, we're defining a variable `classToType` in the context of an anonymous function which's immediately called by `do`. That anonymous function
+The `do` keyword in CoffeeScript lets us execute functions immediately, a great way of encapsulating scope & protecting variables. In the example below, we're defining a variable `classToType` in the context of an anonymous function which's immediately called by `do`. That anonymous function returns a second anonymous function, which will be ultimate value of `type`. Since `classToType` is defined in a context that no reference is kept to, it can't be accessed outside that scope.
 
 <span class="csscript"></span>
 
@@ -230,3 +230,5 @@ The `do` keyword in CoffeeScript lets us execute functions immediately, a great 
       (obj) ->
         strType = Object::toString.call(obj)
         classToType[strType] or "object"
+
+In other words, `classToType` is completely private, and can never again be referenced outside the executing anonymous function. This pattern is a great way of encapsulating scope and hiding variables.

@@ -1004,7 +1004,7 @@ $ -&gt;
 
 <h2>Private variables</h2>
 
-<p>The <code>do</code> keyword in CoffeeScript lets us execute functions immediately, a great way of encapsulating scope &amp; protecting variables. In the example below, we're defining a variable <code>classToType</code> in the context of an anonymous function which's immediately called by <code>do</code>. That anonymous function</p>
+<p>The <code>do</code> keyword in CoffeeScript lets us execute functions immediately, a great way of encapsulating scope &amp; protecting variables. In the example below, we're defining a variable <code>classToType</code> in the context of an anonymous function which's immediately called by <code>do</code>. That anonymous function returns a second anonymous function, which will be ultimate value of <code>type</code>. Since <code>classToType</code> is defined in a context that no reference is kept to, it can't be accessed outside that scope.</p>
 
 <p><span class="csscript"></span></p>
 
@@ -1019,6 +1019,8 @@ type = do -&gt;
     strType = Object::toString.call(obj)
     classToType[strType] or "object"
 </code></pre>
+
+<p>In other words, <code>classToType</code> is completely private, and can never again be referenced outside the executing anonymous function. This pattern is a great way of encapsulating scope and hiding variables.</p>
 
   </div>
 </div>
@@ -1150,7 +1152,7 @@ task 'build', 'Build lib/ from src/', -&gt;
 
 <p>Django also has <a href="http://pypi.python.org/pypi/django-coffeescript/">support for CoffeeScript</a> through special template tags. It works with both inline code and external files.</p>
 
-<p>Both Ruby and Python pipe out Node and the CoffeeScript lib behind the scenes when compiling CoffeeScript, so you'll need to have those installed during development. If you're using Node directly as a backend for your site, CoffeeScript integration is even simpler and you can use it for both the backend and frontend code. We're going to talk further about this in the next chapter, using <a href="https://github.com/sstephenson/stitch">Stitch</a> to serve all our client-side CoffeeScript.</p>
+<p>Both Ruby and Python pipe out to Node and the CoffeeScript lib behind the scenes when compiling CoffeeScript, so you'll need to have those installed during development. If you're using Node directly as a backend for your site, CoffeeScript integration is even simpler and you can use it for both the backend and frontend code. We're going to talk more about this in the next chapter, using <a href="https://github.com/sstephenson/stitch">Stitch</a> to serve all our client-side CoffeeScript.</p>
 
   </div>
 </div>
@@ -1595,6 +1597,8 @@ null         ==   undefined     // true
 
 <p>This doesn't mean you can ignore type coercion in CoffeeScript completely though, especially when it comes to checking the 'truthfulness' of variables during flow control. Blank strings, <code>null</code>, <code>undefined</code> and the number <code>0</code> are all coerced to <code>false</code></p>
 
+<p><span class="csscript"></span></p>
+
 <pre><code>alert("Empty Array")  unless [].length
 alert("Empty String") unless ""
 alert("Number 0")     unless 0
@@ -1617,6 +1621,21 @@ wem();
 </code></pre>
 
 <p>CoffeeScript's approach to this is to remove named functions entirely, using only anonymous ones.</p>
+
+<h2>Number property lookups</h2>
+
+<p>A flaw in JavaScript's parser means that the <em>dot notation</em> on numbers is interpreted as a floating point literal, rather than a property lookup. For example, the following JavaScript will cause a syntax error:</p>
+
+<pre><code>5.toString();
+</code></pre>
+
+<p>JavaScript's parser is looking for another Number after the <code>.</code>, and so raises an <code>Unexpected token</code> error when it encounters <code>toString()</code>. The solution to this is to either use parenthesis, or add an additional dot.</p>
+
+<pre><code>(5).toString();
+5..toString();
+</code></pre>
+
+<p>Fortunately CoffeeScript's parsers is clever enough to deal with this issue by using double dot notations automatically (as in the example above) whenever you access properties on numbers.</p>
 
 <h1>The un-fixed parts</h1>
 
@@ -1768,8 +1787,19 @@ aVar = null
 
 <h2>Using parseInt</h2>
 
-<pre><code>2.toString()
+<p>JavaScript's <code>parseInt()</code> function can return unexpected results if you pass a string to it without informing it of the proper base. For example:</p>
+
+<pre><code># Returns 8, not 10!
+parseInt('010') is 8
 </code></pre>
+
+<p>Always pass a base to the function to make it work correctly:</p>
+
+<pre><code># Use base 10 for the correct result
+parseInt('010', 10) is 10
+</code></pre>
+
+<p>This isn't something CoffeeScript can do for you; you'll just have to remember to always specify a base when using <code>parseInt()</code>.</p>
 
 <h2>Strict mode</h2>
 

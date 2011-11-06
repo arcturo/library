@@ -141,6 +141,8 @@ CoffeeScript solves this by simply replacing all weak comparisons with strict on
 
 This doesn't mean you can ignore type coercion in CoffeeScript completely though, especially when it comes to checking the 'truthfulness' of variables during flow control. Blank strings, `null`, `undefined` and the number `0` are all coerced to `false`
 
+<span class="csscript"></span>
+
     alert("Empty Array")  unless [].length
     alert("Empty String") unless ""
     alert("Number 0")     unless 0
@@ -160,6 +162,19 @@ Best to steer clear of this issue by using anonymous functions:
     wem();
 
 CoffeeScript's approach to this is to remove named functions entirely, using only anonymous ones. 
+
+##Number property lookups
+
+A flaw in JavaScript's parser means that the *dot notation* on numbers is interpreted as a floating point literal, rather than a property lookup. For example, the following JavaScript will cause a syntax error:
+
+    5.toString();
+    
+JavaScript's parser is looking for another Number after the `.`, and so raises an `Unexpected token` error when it encounters `toString()`. The solution to this is to either use parenthesis, or add an additional dot.
+    
+    (5).toString();
+    5..toString();
+    
+Fortunately CoffeeScript's parsers is clever enough to deal with this issue by using double dot notations automatically (as in the example above) whenever you access properties on numbers.
 
 #The un-fixed parts
 
@@ -300,8 +315,17 @@ It's rather peculiar behavior, but there you have it. If you want to remove a re
 
 ##Using parseInt
 
+JavaScript's `parseInt()` function can return unexpected results if you pass a string to it without informing it of the proper base. For example:
 
-    2.toString()
+    # Returns 8, not 10!
+    parseInt('010') is 8
+    
+Always pass a base to the function to make it work correctly:
+
+    # Use base 10 for the correct result
+    parseInt('010', 10) is 10
+
+This isn't something CoffeeScript can do for you; you'll just have to remember to always specify a base when using `parseInt()`.
     
 ##Strict mode
 

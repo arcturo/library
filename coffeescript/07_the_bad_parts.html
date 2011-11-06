@@ -175,6 +175,8 @@ null         ==   undefined     // true
 
 <p>This doesn't mean you can ignore type coercion in CoffeeScript completely though, especially when it comes to checking the 'truthfulness' of variables during flow control. Blank strings, <code>null</code>, <code>undefined</code> and the number <code>0</code> are all coerced to <code>false</code></p>
 
+<p><span class="csscript"></span></p>
+
 <pre><code>alert("Empty Array")  unless [].length
 alert("Empty String") unless ""
 alert("Number 0")     unless 0
@@ -197,6 +199,21 @@ wem();
 </code></pre>
 
 <p>CoffeeScript's approach to this is to remove named functions entirely, using only anonymous ones.</p>
+
+<h2>Number property lookups</h2>
+
+<p>A flaw in JavaScript's parser means that the <em>dot notation</em> on numbers is interpreted as a floating point literal, rather than a property lookup. For example, the following JavaScript will cause a syntax error:</p>
+
+<pre><code>5.toString();
+</code></pre>
+
+<p>JavaScript's parser is looking for another Number after the <code>.</code>, and so raises an <code>Unexpected token</code> error when it encounters <code>toString()</code>. The solution to this is to either use parenthesis, or add an additional dot.</p>
+
+<pre><code>(5).toString();
+5..toString();
+</code></pre>
+
+<p>Fortunately CoffeeScript's parsers is clever enough to deal with this issue by using double dot notations automatically (as in the example above) whenever you access properties on numbers.</p>
 
 <h1>The un-fixed parts</h1>
 
@@ -348,8 +365,19 @@ aVar = null
 
 <h2>Using parseInt</h2>
 
-<pre><code>2.toString()
+<p>JavaScript's <code>parseInt()</code> function can return unexpected results if you pass a string to it without informing it of the proper base. For example:</p>
+
+<pre><code># Returns 8, not 10!
+parseInt('010') is 8
 </code></pre>
+
+<p>Always pass a base to the function to make it work correctly:</p>
+
+<pre><code># Use base 10 for the correct result
+parseInt('010', 10) is 10
+</code></pre>
+
+<p>This isn't something CoffeeScript can do for you; you'll just have to remember to always specify a base when using <code>parseInt()</code>.</p>
 
 <h2>Strict mode</h2>
 
