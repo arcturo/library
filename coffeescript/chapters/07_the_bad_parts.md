@@ -400,5 +400,5 @@ The reason behind this disparity is that in strict mode `this` is `undefined`, w
 
 The good news is that CoffeeScript already 'lints' all of its output, so CoffeeScript generated JavaScript is already JSLint compatible. In fact, the `coffee` tool has support for a `--lint` option:
 
-    coffee --line index.coffee
+    coffee --lint index.coffee
       index.coffee:	0 error(s), 0 warning(s)
