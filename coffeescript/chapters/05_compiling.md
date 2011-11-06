@@ -85,13 +85,17 @@ You can also define options for your task using the `option()` function, which t
 
 As you can see, the task context now has access to an `options` object containing any data specified by the user. If we run `cake` without any other arguments, all the tasks and options will be listed.
 
-http://jashkenas.github.com/coffee-script/documentation/docs/cake.html
+It's also worth taking a look at [Cake's source](http://jashkenas.github.com/coffee-script/documentation/docs/cake.html), a great example of CoffeeScript's expressiveness and beautifully documented alongside the code comments.
 
 ##Server side support
 
-above fine for static
+Using Cake for CoffeeScript compilation is fine for static sites, but for dynamic sites we might as well integrate CoffeeScript compilation into the request/response cycle. Various integration solutions already exist for the popular backend languages and frameworks, such as [Rails](http://rubyonrails.org/) and [Django](https://www.djangoproject.com/). 
 
+When it comes to Rails 3, CoffeeScript support comes via [Sprockets & the asset pipeline](https://github.com/sstephenson/sprockets). Add your CoffeeScript files under `app/assets/javascripts`, and Rails is smart enough to pre-compile them when they're requested. JavaScript & CoffeeScript files are concatenated and bundled using special comment directives, meaning you can fetch all of your application's JavaScript with one request. When it comes to production, Rails will write the compiled output to disk, ensuring it's cached and fast to serve. 
 
-Python
-Rails
-Hem
+Other Ruby options include Rack servers such as 37signal's [Pow](http://pow.cx/) and Joshua Peek's [Nack](http://josh.github.com/nack/), both highly recommended if your application doesn't need Rail's other features and associated overhead.
+
+Django also has [support for CoffeeScript](http://pypi.python.org/pypi/django-coffeescript/) through special template tags. It works with both inline code and external files.
+
+Both Ruby and Python pipe out to Node and the CoffeeScript lib behind the scenes when compiling CoffeeScript, so you'll need to have those installed during development. If you're using Node directly as a backend for your site, CoffeeScript integration is even simpler and you can use it for both the backend and frontend code. We're going to talk more about this in the next chapter, using [Stitch](https://github.com/sstephenson/stitch) to serve all our client-side CoffeeScript.
+
