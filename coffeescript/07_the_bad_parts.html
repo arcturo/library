@@ -167,7 +167,7 @@ null         ==   undefined     // true
 " \t\r\n"    ==   0             // true
 </code></pre>
 
-<p>The reason behind this behavior is that the weak equality coerces types automatically. However, I'm sure you'll agree this is all pretty ambiguous, and can lead to unexpected results and bugs.</p>
+<p>The reason behind this behavior is that the weak equality coerces types automatically. I'm sure you'll agree this is all pretty ambiguous, and can lead to unexpected results and bugs.</p>
 
 <p>The solution is to instead use the strict equality operator, which consists of three equal signs: <code>===</code>. It works exactly like the normal equality operator, but without any type coercion. It's recommended to always use the strict equality operator, and explicitly convert types if needs be.</p>
 
@@ -192,7 +192,7 @@ function wem() {}
 
 <p>The is because of function scope. Functions get hoisted before the programs execution and as such are available everywhere in the scope they were defined in, even if called before the actual definition in the source. Future versions of JavaScript may remove this behavior, and indeed it already fails in <em>strict</em> mode.</p>
 
-<p>Best to steer clear of this issue by using anonymous functions:</p>
+<p>It's best to steer clear of this issue by using anonymous functions:</p>
 
 <pre><code>var wem = function(){};
 wem();
@@ -207,13 +207,13 @@ wem();
 <pre><code>5.toString();
 </code></pre>
 
-<p>JavaScript's parser is looking for another Number after the <code>.</code>, and so raises an <code>Unexpected token</code> error when it encounters <code>toString()</code>. The solution to this is to either use parenthesis, or add an additional dot.</p>
+<p>JavaScript's parser is looking for another Number after the dot, and so raises an <code>Unexpected token</code> error when it encounters <code>toString()</code>. The solution to this is to either use parenthesis, or add an additional dot.</p>
 
 <pre><code>(5).toString();
 5..toString();
 </code></pre>
 
-<p>Fortunately CoffeeScript's parsers is clever enough to deal with this issue by using double dot notations automatically (as in the example above) whenever you access properties on numbers.</p>
+<p>Fortunately CoffeeScript's parsers is clever enough to deal with this issue by using double dot notations automatically (as in the example above) whenever you access properties on Numbers.</p>
 
 <h1>The un-fixed parts</h1>
 
@@ -442,7 +442,7 @@ parseInt('010', 10) is 10
 
 <p>Strict mode has removed access to <code>arguments.caller</code> &amp; <code>arguments.callee</code> as they're major performance hogs, and is now throwing syntax errors whenever they're used.</p>
 
-<p>There's a particular gotcha you should look out for when using strict mode, namely creating global variables with <code>this</code>. The following example will throw a <code>TypeError</code> in strict mode, but run fine normally:</p>
+<p>There's a particular gotcha you should look out for when using strict mode, namely creating global variables with <code>this</code>. The following example will throw a <code>TypeError</code> in strict mode, but run fine in a normal context, creating a global variable:</p>
 
 <p><span class="csscript"></span></p>
 

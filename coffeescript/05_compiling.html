@@ -22,7 +22,7 @@
   <div id="content">
     <h1>Automating CoffeeScript compilation</h1>
 
-<p>An issue to CoffeeScript is that it puts another layer between you and JavaScript, and manually having to compile CoffeeScript files whenever they change quickly gets old. Fortunately CoffeeScript has some alternatives to manual compilation, which can make the development cycle somewhat smoother.</p>
+<p>An issue with CoffeeScript is that it puts another layer between you and JavaScript, and having to manually compile CoffeeScript files whenever they change quickly gets old. Fortunately CoffeeScript has some alternative forms of compilation which can make the development cycle somewhat smoother.</p>
 
 <p>As we covered in the first chapter, we can compile CoffeeScript files using the <code>coffee</code> executable:</p>
 
@@ -37,7 +37,7 @@
 
 <p>You can define tasks using CoffeeScript in a file called <code>Cakefile</code>. Cake will pick these up, and can be invoked by running <code>cake [task] [options]</code> from within the directory. To print a list of all the tasks and options, just type <code>cake</code>.</p>
 
-<p>Tasks are defined using the <code>task()</code> function, passing a name, optional description and callback function. For example, create a file called <code>Cakefile</code>, and two directories, <code>lib</code> and <code>src</code>.</p>
+<p>Tasks are defined using the <code>task()</code> function, passing a name, optional description and callback function. For example, create a file called <code>Cakefile</code>, and two directories, <code>lib</code> and <code>src</code>. Add the following to the <code>Cakefile</code>:</p>
 
 <p><span class="csscript"></span></p>
 
@@ -74,7 +74,7 @@ task 'build', 'Build lib/ from src/', -&gt;
 &lt;/html&gt;
 </code></pre>
 
-<p>We're still having to manually run <code>cake build</code> whenever our CoffeeScript code changes, which is far from ideal. Luckily, the <code>coffee</code> command takes another option, <code>--watch</code>, which instructs it to watch a directory for changes and re-compiling as necessary.</p>
+<p>We're still having to manually run <code>cake build</code> whenever our CoffeeScript code changes, which is far from ideal. Luckily, the <code>coffee</code> command takes another option, <code>--watch</code>, which instructs it to watch a directory for changes and re-compiling as necessary. Let's define another task using that:</p>
 
 <p><span class="csscript"></span></p>
 
@@ -86,7 +86,7 @@ task 'build', 'Build lib/ from src/', -&gt;
       print data.toString()
 </code></pre>
 
-<p>If one task relies on another, you can run other tasks using <code>invoke(name)</code>. Let's add a utility task to our <code>Cakefile</code> which is going to both open our</p>
+<p>If one task relies on another, you can run other tasks using <code>invoke(name)</code>. Let's add a utility task to our <code>Cakefile</code> which is going to both open  <code>index.html</code> and start watching the source for changes.</p>
 
 <p><span class="csscript"></span></p>
 
@@ -113,7 +113,7 @@ task 'build', 'Build lib/ from src/', -&gt;
 
 <p>As you can see, the task context now has access to an <code>options</code> object containing any data specified by the user. If we run <code>cake</code> without any other arguments, all the tasks and options will be listed.</p>
 
-<p>It's also worth taking a look at <a href="http://jashkenas.github.com/coffee-script/documentation/docs/cake.html">Cake's source</a>, a great example of CoffeeScript's expressiveness and beautifully documented alongside the code comments.</p>
+<p>Cake's a great way of automating common tasks such as compiling CoffeeScript without going to the hassle of using bash or Makefiles. It's also worth taking a look at <a href="http://jashkenas.github.com/coffee-script/documentation/docs/cake.html">Cake's source</a>, a great example of CoffeeScript's expressiveness and beautifully documented alongside the code comments.</p>
 
 <h2>Server side support</h2>
 

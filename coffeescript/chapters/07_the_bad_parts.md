@@ -133,7 +133,7 @@ The weak equality comparison in JavaScript has some confusing behavior and is of
     null         ==   undefined     // true
     " \t\r\n"    ==   0             // true
 
-The reason behind this behavior is that the weak equality coerces types automatically. However, I'm sure you'll agree this is all pretty ambiguous, and can lead to unexpected results and bugs. 
+The reason behind this behavior is that the weak equality coerces types automatically. I'm sure you'll agree this is all pretty ambiguous, and can lead to unexpected results and bugs. 
 
 The solution is to instead use the strict equality operator, which consists of three equal signs: `===`. It works exactly like the normal equality operator, but without any type coercion. It's recommended to always use the strict equality operator, and explicitly convert types if needs be.
     
@@ -156,7 +156,7 @@ Oddly enough in JavaScript, functions can be defined after they're used. For exa
 
 The is because of function scope. Functions get hoisted before the programs execution and as such are available everywhere in the scope they were defined in, even if called before the actual definition in the source. Future versions of JavaScript may remove this behavior, and indeed it already fails in *strict* mode. 
 
-Best to steer clear of this issue by using anonymous functions:
+It's best to steer clear of this issue by using anonymous functions:
 
     var wem = function(){};
     wem();
@@ -169,12 +169,12 @@ A flaw in JavaScript's parser means that the *dot notation* on numbers is interp
 
     5.toString();
     
-JavaScript's parser is looking for another Number after the `.`, and so raises an `Unexpected token` error when it encounters `toString()`. The solution to this is to either use parenthesis, or add an additional dot.
+JavaScript's parser is looking for another Number after the dot, and so raises an `Unexpected token` error when it encounters `toString()`. The solution to this is to either use parenthesis, or add an additional dot.
     
     (5).toString();
     5..toString();
     
-Fortunately CoffeeScript's parsers is clever enough to deal with this issue by using double dot notations automatically (as in the example above) whenever you access properties on numbers.
+Fortunately CoffeeScript's parsers is clever enough to deal with this issue by using double dot notations automatically (as in the example above) whenever you access properties on Numbers.
 
 #The un-fixed parts
 
@@ -379,7 +379,7 @@ That's it, just the `'use strict'` string. Couldn't be simpler and it's complete
       
 Strict mode has removed access to `arguments.caller` & `arguments.callee` as they're major performance hogs, and is now throwing syntax errors whenever they're used.
 
-There's a particular gotcha you should look out for when using strict mode, namely creating global variables with `this`. The following example will throw a `TypeError` in strict mode, but run fine normally:
+There's a particular gotcha you should look out for when using strict mode, namely creating global variables with `this`. The following example will throw a `TypeError` in strict mode, but run fine in a normal context, creating a global variable:
 
 <span class="csscript"></span>
 
