@@ -18,7 +18,7 @@ Practically speaking, modules ensure that your code is run in a local namespace 
 
 You can load in other modules and libraries using `require()`. Simply pass a module name and, if it's in the load path, it'll return an object representing that module. For example:
 
-    var User = require("models/user");
+    User = require("models/user")
     
 Synchronous require support is a contentious issue, but has mostly been resolved with the mainstream loader libraries and latest CommonJS [proposals](http://wiki.commonjs.org/wiki/Modules/AsynchronousDefinition). It may be something you'll have to look into if you decided to take a separate route than the one I'm advocating with Stitch below. 
 
@@ -26,14 +26,13 @@ Synchronous require support is a contentious issue, but has mostly been resolved
 
 By default, modules don't expose any properties so their contents are completely invisible to `require()` calls. If you want a particular property to be accessible from your module, you'll need to set it on `module.exports`:
 
-    // random_module.js
-    module.exports.myFineProperty = function(){
-      // Some shizzle
-    }
+    # random_module.js
+    module.exports.myFineProperty = ->
+      # Some shizzle
     
 Now, whenever this module is required then `myFineProperty` will be exposed:
 
-    var myFineProperty = require("random_module").myFineProperty;
+    myFineProperty = require("random_module").myFineProperty
 
 ##Stitch it up
 

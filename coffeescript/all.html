@@ -1206,7 +1206,7 @@ task 'build', 'Build lib/ from src/', -&gt;
 
 <p>You can load in other modules and libraries using <code>require()</code>. Simply pass a module name and, if it's in the load path, it'll return an object representing that module. For example:</p>
 
-<pre><code>var User = require("models/user");
+<pre><code>User = require("models/user")
 </code></pre>
 
 <p>Synchronous require support is a contentious issue, but has mostly been resolved with the mainstream loader libraries and latest CommonJS <a href="http://wiki.commonjs.org/wiki/Modules/AsynchronousDefinition">proposals</a>. It may be something you'll have to look into if you decided to take a separate route than the one I'm advocating with Stitch below.</p>
@@ -1215,15 +1215,14 @@ task 'build', 'Build lib/ from src/', -&gt;
 
 <p>By default, modules don't expose any properties so their contents are completely invisible to <code>require()</code> calls. If you want a particular property to be accessible from your module, you'll need to set it on <code>module.exports</code>:</p>
 
-<pre><code>// random_module.js
-module.exports.myFineProperty = function(){
-  // Some shizzle
-}
+<pre><code># random_module.js
+module.exports.myFineProperty = -&gt;
+  # Some shizzle
 </code></pre>
 
 <p>Now, whenever this module is required then <code>myFineProperty</code> will be exposed:</p>
 
-<pre><code>var myFineProperty = require("random_module").myFineProperty;
+<pre><code>myFineProperty = require("random_module").myFineProperty
 </code></pre>
 
 <h2>Stitch it up</h2>
@@ -1485,7 +1484,7 @@ heroku open
 
 <h2>A JavaScript Subset</h2>
 
-<p>CoffeeScript's syntax is already a subset of JavaScript's, so already there's less to fix. Let's take the <code>with</code> statement for example. This statement has for a long time been "considered harmful", and should be avoided. <code>with</code> was intended to provide a shorthand for writing recurring property lookups on objects. For example, instead of writing:</p>
+<p>CoffeeScript's syntax only covers a subset of JavaScript's, the famous <em>Good Parts</em>, so already there's less to fix. Let's take the <code>with</code> statement for example. This statement has for a long time been "considered harmful", and should be avoided. <code>with</code> was intended to provide a shorthand for writing recurring property lookups on objects. For example, instead of writing:</p>
 
 <pre><code>dataObj.users.alex.email = "info@eribium.org";
 </code></pre>
@@ -1516,7 +1515,7 @@ var groupsCount = 2;   // Global
 
 <p>This is a bit of an odd decision since the vast majority of the time you'll be creating local variables not global, so why not make that the default? As it stands, developers have to remember to put <code>var</code> statements before any variables they're initializing, or face weird bugs when variables accidentally conflict and overwrite each other.</p>
 
-<p>Luckily CoffeeScript comes to your rescue here by eliminating implicit global variable assignment entirely. In other words, the <code>var</code> keyword is reserved in CoffeeScript, and will trigger a syntax error if used. Local variables are created implicitly by default, and it's impossible to create global variables without explicitly assigning them as properties on <code>window</code>.</p>
+<p>Luckily CoffeeScript comes to your rescue here by eliminating implicit global variable assignment entirely. In other words, the <code>var</code> keyword is reserved in CoffeeScript, and will trigger a syntax error if used. Local variables are created implicitly by default, and it's very difficult to create global variables without explicitly assigning them as properties on <code>window</code>.</p>
 
 <p>Let's have a look at an example of CoffeeScript's variable assignment:</p>
 
@@ -1633,6 +1632,15 @@ null         ==   undefined     // true
 alert("Empty String") unless ""
 alert("Number 0")     unless 0
 </code></pre>
+
+<p>If you want to explicitly check for <code>null</code> and <code>undefined</code>, then you can use CoffeeScript's existential operator:</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>alert("This is not called") unless ""?
+</code></pre>
+
+<p>The <code>alert()</code> in the previous example won't be called, as the empty string isn't equal to <code>null</code>.</p>
 
 <h2>Function definition</h2>
 
@@ -1754,6 +1762,11 @@ type({})         # "object"
   objectType = type(aVar)
 </code></pre>
 
+<p>Or more succulently with the existential operator:</p>
+
+<pre><code>objectType = type(aVar?)
+</code></pre>
+
 <p>As an alternative to type checking, you can often use duck typing and the CoffeeScript existential operator together to eliminating the need to resolve an object's type. For example, let's say we're pushing a value onto an array. We could say that, as long as the 'array like' object implements <code>push()</code>, we should treat it like an array:</p>
 
 <p><span class="csscript"></span></p>
@@ -1773,7 +1786,7 @@ type({})         # "object"
 "foo" instanceof String             # false
 </code></pre>
 
-<p>It only returns a correct result for custom made objects.</p>
+<p>Additionally, <code>instanceof</code> also doesn't work when comparing object from different frames in the browser. In fact, <code>instanceof</code> only returns a correct result for custom made objects, such as CoffeeScript classes.</p>
 
 <p><span class="csscript"></span></p>
 

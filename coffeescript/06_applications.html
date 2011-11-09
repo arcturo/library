@@ -41,7 +41,7 @@
 
 <p>You can load in other modules and libraries using <code>require()</code>. Simply pass a module name and, if it's in the load path, it'll return an object representing that module. For example:</p>
 
-<pre><code>var User = require("models/user");
+<pre><code>User = require("models/user")
 </code></pre>
 
 <p>Synchronous require support is a contentious issue, but has mostly been resolved with the mainstream loader libraries and latest CommonJS <a href="http://wiki.commonjs.org/wiki/Modules/AsynchronousDefinition">proposals</a>. It may be something you'll have to look into if you decided to take a separate route than the one I'm advocating with Stitch below.</p>
@@ -50,15 +50,14 @@
 
 <p>By default, modules don't expose any properties so their contents are completely invisible to <code>require()</code> calls. If you want a particular property to be accessible from your module, you'll need to set it on <code>module.exports</code>:</p>
 
-<pre><code>// random_module.js
-module.exports.myFineProperty = function(){
-  // Some shizzle
-}
+<pre><code># random_module.js
+module.exports.myFineProperty = -&gt;
+  # Some shizzle
 </code></pre>
 
 <p>Now, whenever this module is required then <code>myFineProperty</code> will be exposed:</p>
 
-<pre><code>var myFineProperty = require("random_module").myFineProperty;
+<pre><code>myFineProperty = require("random_module").myFineProperty
 </code></pre>
 
 <h2>Stitch it up</h2>

@@ -10,7 +10,7 @@ First, let's talk about what things the language does solve.
 
 ##A JavaScript Subset
 
-CoffeeScript's syntax is already a subset of JavaScript's, so already there's less to fix. Let's take the `with` statement for example. This statement has for a long time been "considered harmful", and should be avoided. `with` was intended to provide a shorthand for writing recurring property lookups on objects. For example, instead of writing:
+CoffeeScript's syntax only covers a subset of JavaScript's, the famous *Good Parts*, so already there's less to fix. Let's take the `with` statement for example. This statement has for a long time been "considered harmful", and should be avoided. `with` was intended to provide a shorthand for writing recurring property lookups on objects. For example, instead of writing:
 
     dataObj.users.alex.email = "info@eribium.org";
     
@@ -22,7 +22,7 @@ You could write:
     
 Setting aside the fact that we shouldn't have such a deep object in the first place, the syntax is quite clean. Except for one thing. It's damn confusing to the JavaScript interpreter - it doesn't know exactly what you're going to do in the `with` context, and forces the specified object to be searched first for all name lookups. 
 
-This really hurts performance and means the interpreter has to turn off all sorts of JIT optimizations. Additionally `with` statements can't be minified using tools like [uglify-js](https://github.com/mishoo/UglifyJS). All things considered, it's much better just to avoid using them, and CoffeeScript takes this a step further by eliminating them from it's syntax. In other words, using `with` in CoffeeScript will throw a syntax error. 
+This really hurts performance and means the interpreter has to turn off all sorts of JIT optimizations. Additionally `with` statements can't be minified using tools like [uglify-js](https://github.com/mishoo/UglifyJS). They're deprecated and removed from future JavaScript versions. All things considered, it's much better just to avoid using them, and CoffeeScript takes this a step further by eliminating them from it's syntax. In other words, using `with` in CoffeeScript will throw a syntax error. 
 
 ##Global variables
 
@@ -38,7 +38,7 @@ By default, your JavaScript programs run in a global scope, and by default any v
 
 This is a bit of an odd decision since the vast majority of the time you'll be creating local variables not global, so why not make that the default? As it stands, developers have to remember to put `var` statements before any variables they're initializing, or face weird bugs when variables accidentally conflict and overwrite each other.
 
-Luckily CoffeeScript comes to your rescue here by eliminating implicit global variable assignment entirely. In other words, the `var` keyword is reserved in CoffeeScript, and will trigger a syntax error if used. Local variables are created implicitly by default, and it's impossible to create global variables without explicitly assigning them as properties on `window`.
+Luckily CoffeeScript comes to your rescue here by eliminating implicit global variable assignment entirely. In other words, the `var` keyword is reserved in CoffeeScript, and will trigger a syntax error if used. Local variables are created implicitly by default, and it's very difficult to create global variables without explicitly assigning them as properties on `window`.
 
 Let's have a look at an example of CoffeeScript's variable assignment:
 
@@ -146,6 +146,14 @@ This doesn't mean you can ignore type coercion in CoffeeScript completely though
     alert("Empty Array")  unless [].length
     alert("Empty String") unless ""
     alert("Number 0")     unless 0
+    
+If you want to explicitly check for `null` and `undefined`, then you can use CoffeeScript's existential operator:
+
+<span class="csscript"></span>
+
+    alert("This is not called") unless ""?
+    
+The `alert()` in the previous example won't be called, as the empty string isn't equal to `null`.
 
 ##Function definition
 
@@ -257,6 +265,10 @@ If you're checking to see if an variable has been defined, you'll still need to 
 
     if typeof aVar isnt "undefined"
       objectType = type(aVar)
+      
+Or more succulently with the existential operator:
+
+    objectType = type(aVar?)
     
 As an alternative to type checking, you can often use duck typing and the CoffeeScript existential operator together to eliminating the need to resolve an object's type. For example, let's say we're pushing a value onto an array. We could say that, as long as the 'array like' object implements `push()`, we should treat it like an array:
 
@@ -275,7 +287,7 @@ JavaScript's `instanceof` keyword is nearly as broken as `typeof`. Ideally `inst
     new String("foo") instanceof String # true
     "foo" instanceof String             # false
     
-It only returns a correct result for custom made objects.
+Additionally, `instanceof` also doesn't work when comparing object from different frames in the browser. In fact, `instanceof` only returns a correct result for custom made objects, such as CoffeeScript classes.
 
 <span class="csscript"></span>
 
@@ -393,6 +405,8 @@ The reason behind this disparity is that in strict mode `this` is `undefined`, w
     do ->
       "use strict"
       class window.Spine
+      
+Whilst I recommend enabling script mode, but it's worth noting that script mode doesn't enable any new features that aren't ready possible in JavaScript, and will actually slow down your code a bit by having the VM do more checks at runtime. You may want to develop with strict mode, and deploy to production without it.
 
 ##JSLint
 
