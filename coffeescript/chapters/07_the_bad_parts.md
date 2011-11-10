@@ -4,7 +4,7 @@
 
 JavaScript is a tricky beast, and knowing the parts that you should avoid is just as important as knowing about the parts you should use. As Sun Tzu says, "know your enemy", and that's exactly what we're going to do in the chapter, exploring the dark side of JavaScript and revealing all the lurking monsters ready to pounce on the unsuspecting developer. 
 
-As I mentioned in the introduction, CoffeeScript's awesomeness lies not only in it's syntax, but in it's ability to fix some of JavaScript's warts. However, due to the fact CoffeeScript uses static analysis and has no runtime type checking, it's not a silver bullet to all of JavaScript's bugbears and there's still some issues you need to be aware about.
+As I mentioned in the introduction, CoffeeScript's awesomeness lies not only in it's syntax, but in it's ability to fix some of JavaScript's warts. However, due to the fact that CoffeeScript statements have a direct translation into JavaScript, and don't run in a virtual machine or interpreter, the language is not a silver bullet to all of JavaScript's bugbears and there's still some issues you need to be aware about.
 
 First, let's talk about what things the language does solve. 
 
@@ -353,6 +353,8 @@ Strict mode is currently supported in the following browsers:
 
 Having said that, strict mode is completely backwards compatible with older browsers. Programs using it should run fine in either a strict or normal context. 
 
+###Strict mode changes
+
 Most of the changes strict mode introduces pertain to JavaScript's syntax:
 
 * Errors on duplicate property and function argument names
@@ -370,6 +372,8 @@ However, strict mode also changes some runtime behavior:
 * `arguments` is immutable
 
 CoffeeScript already abides by a lot of strict mode's requirements, such as always using `var` when defining variables, but it's still very useful to enable strict mode in your CoffeeScript programs. Indeed, CoffeeScript is taking this a step further and in [future versions](https://github.com/jashkenas/coffee-script/issues/1547) will check a program's compliance to strict mode at compile time.
+
+###Strict mode usage
 
 All you need to do to enable strict checking is start your script or function with the following string:
 
@@ -410,9 +414,9 @@ Whilst I recommend enabling script mode, but it's worth noting that script mode 
 
 ##JSLint
 
-[JSLint](http://www.jslint.com/) is a JavaScript code quality tool, and running your programs through it is a great way of improving code quality and best practices. The project's site has a [great list](http://www.jslint.com/lint.html) of issues that JSLint checks for, including global variables, missing semicolons and weak equality comparisons.
+[JavaScript Lint](http://www.javascriptlint.com/) is a JavaScript code quality tool, and running your programs through it is a great way of improving code quality and best practices. The project was based on a similar tool called [JSLint](http://www.jslint.com). Check out JSLint's site for a [great list](http://www.jslint.com/lint.html) of issues that it checks for, including global variables, missing semicolons and weak equality comparisons.
 
-The good news is that CoffeeScript already 'lints' all of its output, so CoffeeScript generated JavaScript is already JSLint compatible. In fact, the `coffee` tool has support for a `--lint` option:
+The good news is that CoffeeScript already 'lints' all of its output, so CoffeeScript generated JavaScript is already JavaScript Lint compatible. In fact, the `coffee` tool has support for a `--lint` option:
 
     coffee --lint index.coffee
       index.coffee:	0 error(s), 0 warning(s)

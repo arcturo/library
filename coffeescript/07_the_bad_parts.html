@@ -27,7 +27,7 @@
 
 <p>JavaScript is a tricky beast, and knowing the parts that you should avoid is just as important as knowing about the parts you should use. As Sun Tzu says, "know your enemy", and that's exactly what we're going to do in the chapter, exploring the dark side of JavaScript and revealing all the lurking monsters ready to pounce on the unsuspecting developer.</p>
 
-<p>As I mentioned in the introduction, CoffeeScript's awesomeness lies not only in it's syntax, but in it's ability to fix some of JavaScript's warts. However, due to the fact CoffeeScript uses static analysis and has no runtime type checking, it's not a silver bullet to all of JavaScript's bugbears and there's still some issues you need to be aware about.</p>
+<p>As I mentioned in the introduction, CoffeeScript's awesomeness lies not only in it's syntax, but in it's ability to fix some of JavaScript's warts. However, due to the fact that CoffeeScript statements have a direct translation into JavaScript, and don't run in a virtual machine or interpreter, the language is not a silver bullet to all of JavaScript's bugbears and there's still some issues you need to be aware about.</p>
 
 <p>First, let's talk about what things the language does solve.</p>
 
@@ -47,7 +47,7 @@
 
 <p>Setting aside the fact that we shouldn't have such a deep object in the first place, the syntax is quite clean. Except for one thing. It's damn confusing to the JavaScript interpreter - it doesn't know exactly what you're going to do in the <code>with</code> context, and forces the specified object to be searched first for all name lookups.</p>
 
-<p>This really hurts performance and means the interpreter has to turn off all sorts of JIT optimizations. Additionally <code>with</code> statements can't be minified using tools like <a href="https://github.com/mishoo/UglifyJS">uglify-js</a>. All things considered, it's much better just to avoid using them, and CoffeeScript takes this a step further by eliminating them from it's syntax. In other words, using <code>with</code> in CoffeeScript will throw a syntax error.</p>
+<p>This really hurts performance and means the interpreter has to turn off all sorts of JIT optimizations. Additionally <code>with</code> statements can't be minified using tools like <a href="https://github.com/mishoo/UglifyJS">uglify-js</a>. They're deprecated and removed from future JavaScript versions. All things considered, it's much better just to avoid using them, and CoffeeScript takes this a step further by eliminating them from it's syntax. In other words, using <code>with</code> in CoffeeScript will throw a syntax error.</p>
 
 <h2>Global variables</h2>
 
@@ -410,6 +410,8 @@ parseInt('010', 10) is 10
 
 <p>Having said that, strict mode is completely backwards compatible with older browsers. Programs using it should run fine in either a strict or normal context.</p>
 
+<h3>Strict mode changes</h3>
+
 <p>Most of the changes strict mode introduces pertain to JavaScript's syntax:</p>
 
 <ul>
@@ -433,6 +435,8 @@ parseInt('010', 10) is 10
 
 
 <p>CoffeeScript already abides by a lot of strict mode's requirements, such as always using <code>var</code> when defining variables, but it's still very useful to enable strict mode in your CoffeeScript programs. Indeed, CoffeeScript is taking this a step further and in <a href="https://github.com/jashkenas/coffee-script/issues/1547">future versions</a> will check a program's compliance to strict mode at compile time.</p>
+
+<h3>Strict mode usage</h3>
 
 <p>All you need to do to enable strict checking is start your script or function with the following string:</p>
 
@@ -473,11 +477,13 @@ parseInt('010', 10) is 10
   class window.Spine
 </code></pre>
 
+<p>Whilst I recommend enabling script mode, but it's worth noting that script mode doesn't enable any new features that aren't ready possible in JavaScript, and will actually slow down your code a bit by having the VM do more checks at runtime. You may want to develop with strict mode, and deploy to production without it.</p>
+
 <h2>JSLint</h2>
 
-<p><a href="http://www.jslint.com/">JSLint</a> is a JavaScript code quality tool, and running your programs through it is a great way of improving code quality and best practices. The project's site has a <a href="http://www.jslint.com/lint.html">great list</a> of issues that JSLint checks for, including global variables, missing semicolons and weak equality comparisons.</p>
+<p><a href="http://www.javascriptlint.com/">JavaScript Lint</a> is a JavaScript code quality tool, and running your programs through it is a great way of improving code quality and best practices. The project was based on a similar tool called <a href="http://www.jslint.com">JSLint</a>. Check out JSLint's site for a <a href="http://www.jslint.com/lint.html">great list</a> of issues that it checks for, including global variables, missing semicolons and weak equality comparisons.</p>
 
-<p>The good news is that CoffeeScript already 'lints' all of its output, so CoffeeScript generated JavaScript is already JSLint compatible. In fact, the <code>coffee</code> tool has support for a <code>--lint</code> option:</p>
+<p>The good news is that CoffeeScript already 'lints' all of its output, so CoffeeScript generated JavaScript is already JavaScript Lint compatible. In fact, the <code>coffee</code> tool has support for a <code>--lint</code> option:</p>
 
 <pre><code>coffee --lint index.coffee
   index.coffee: 0 error(s), 0 warning(s)

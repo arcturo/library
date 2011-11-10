@@ -235,3 +235,14 @@ And now to deploy the application, we'll use the `heroku` gem (which you'll need
     heroku open
     
 That's it! Seriously, that's all there is to it. Hosting Node applications has never been easier.
+
+##Additional libs
+
+http://coffeekup.org/
+Mustache, Jade
+
+
+https://github.com/substack/node-browserify
+https://github.com/jashkenas/coffee-script/wiki/Web-framework-plugins
+https://github.com/TrevorBurnham/connect-assets
+http://addyosmani.com/blog/building-real-time-coffeescript-web-applications-with-socketstream/
