@@ -162,14 +162,37 @@ Oddly enough in JavaScript, functions can be defined after they're used. For exa
     wem();
     function wem() {}
 
-The is because of function scope. Functions get hoisted before the programs execution and as such are available everywhere in the scope they were defined in, even if called before the actual definition in the source. Future versions of JavaScript may remove this behavior, and indeed it already fails in *strict* mode. 
+The is because of function scope. Functions get hoisted before the programs execution and as such are available everywhere in the scope they were defined in, even if called before the actual definition in the source. Trouble is, hoisting behavior differs between browser, for example:
+    
+    if (1) {
+      function declaration() {
+        return "first";
+      }
+    } else {
+      function declaration() {
+        return "second";
+      }
+    }
+    declaration();
+    
+In some browsers, such as x and x, `declaration()` will return `"first"`, and in other browsers it'll return `"true"`, even though it looks like the `else` statement is never run.
 
-It's best to steer clear of this issue by using anonymous functions:
+Blah, memory leak, blah. TODO.
+
+    var f = (function(){
+      function g(){
+        
+      }
+      
+      return function g(){};
+    })()
+    
+If you want to know more about declarative functions, then you should read [Juriy Zaytsev's guide](http://kangax.github.com/nfe/), where he delves into the specifics. Suffice to say, they have fairly ambiguous behavior, and can lead to problems later down the road. All things considered, It's best to steer clear of them by using function expressions instead:
 
     var wem = function(){};
     wem();
 
-CoffeeScript's approach to this is to remove named functions entirely, using only anonymous ones. 
+CoffeeScript's approach to this is to remove declarative functions entirely, using only function expressions. 
 
 ##Number property lookups
 
@@ -412,7 +435,7 @@ The reason behind this disparity is that in strict mode `this` is `undefined`, w
       
 Whilst I recommend enabling script mode, but it's worth noting that script mode doesn't enable any new features that aren't ready possible in JavaScript, and will actually slow down your code a bit by having the VM do more checks at runtime. You may want to develop with strict mode, and deploy to production without it.
 
-##JSLint
+##JavaScript Lint
 
 [JavaScript Lint](http://www.javascriptlint.com/) is a JavaScript code quality tool, and running your programs through it is a great way of improving code quality and best practices. The project was based on a similar tool called [JSLint](http://www.jslint.com). Check out JSLint's site for a [great list](http://www.jslint.com/lint.html) of issues that it checks for, including global variables, missing semicolons and weak equality comparisons.
 
