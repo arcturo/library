@@ -199,15 +199,29 @@ alert("Number 0")     unless 0
 function wem() {}
 </code></pre>
 
-<p>The is because of function scope. Functions get hoisted before the programs execution and as such are available everywhere in the scope they were defined in, even if called before the actual definition in the source. Future versions of JavaScript may remove this behavior, and indeed it already fails in <em>strict</em> mode.</p>
+<p>The is because of function scope. Functions get hoisted before the programs execution and as such are available everywhere in the scope they were defined in, even if called before the actual definition in the source. The trouble is, hoisting behavior differs between browser; for example:</p>
 
-<p>It's best to steer clear of this issue by using anonymous functions:</p>
+<pre><code>if (true) {
+  function declaration() {
+    return "first";
+  }
+} else {
+  function declaration() {
+    return "second";
+  }
+}
+declaration();
+</code></pre>
+
+<p>In some browsers such as Firefox, <code>declaration()</code> will return <code>"first"</code>, and in other browsers like Chrome it'll return <code>"second"</code>, even though it looks like the <code>else</code> statement is never run.</p>
+
+<p>If you want to know more about declarative functions, then you should read <a href="http://kangax.github.com/nfe/">Juriy Zaytsev's guide</a>, where he delves into the specifics. Suffice to say, they have fairly ambiguous behavior, and can lead to problems later down the road. All things considered, It's best to steer clear of them by using function expressions instead:</p>
 
 <pre><code>var wem = function(){};
 wem();
 </code></pre>
 
-<p>CoffeeScript's approach to this is to remove named functions entirely, using only anonymous ones.</p>
+<p>CoffeeScript's approach to this is to remove declarative functions entirely, using only function expressions.</p>
 
 <h2>Number property lookups</h2>
 

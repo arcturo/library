@@ -236,13 +236,12 @@ And now to deploy the application, we'll use the `heroku` gem (which you'll need
     
 That's it! Seriously, that's all there is to it. Hosting Node applications has never been easier.
 
-##Additional libs
+##Additional libraries
 
-http://coffeekup.org/
-Mustache, Jade
+[Stitch](https://github.com/sstephenson/stitch) and [Eco](https://github.com/sstephenson/eco) are the only libraries you can use for creating CoffeeScript & Node applications, there are a variety of alternatives.
 
-Hem
-https://github.com/substack/node-browserify
-https://github.com/jashkenas/coffee-script/wiki/Web-framework-plugins
-https://github.com/TrevorBurnham/connect-assets
-http://addyosmani.com/blog/building-real-time-coffeescript-web-applications-with-socketstream/
+For example, when it comes to templating, you can use [Mustache](http://mustache.github.com), [Jade](http://jade-lang.com) or write your HTML in pure CoffeeScript using [CoffeeKup](http://coffeekup.org).
+
+As for serving up application, [Hem](http://github.com/maccman/hem) is a great choice, supporting both CommonJS and NPM modules and integrating seamlessly with the CoffeeScript MVC framework [Spine](http://spinejs.com). [node-browsify](https://github.com/substack/node-browserify) is another similar project. Or if you want to go lower level with [express](http://expressjs.com/) integration, there's Trevor Burnham's [connect-assets](https://github.com/TrevorBurnham/connect-assets)
+
+You can find a full list of CoffeeScript web framework plugins, on the [project's wiki](https://github.com/jashkenas/coffee-script/wiki/Web-framework-plugins).

@@ -1446,16 +1446,15 @@ heroku open
 
 <p>That's it! Seriously, that's all there is to it. Hosting Node applications has never been easier.</p>
 
-<h2>Additional libs</h2>
+<h2>Additional libraries</h2>
 
-<p>http://coffeekup.org/
-Mustache, Jade</p>
+<p><a href="https://github.com/sstephenson/stitch">Stitch</a> and <a href="https://github.com/sstephenson/eco">Eco</a> are the only libraries you can use for creating CoffeeScript &amp; Node applications, there are a variety of alternatives.</p>
 
-<p>Hem
-https://github.com/substack/node-browserify
-https://github.com/jashkenas/coffee-script/wiki/Web-framework-plugins
-https://github.com/TrevorBurnham/connect-assets
-http://addyosmani.com/blog/building-real-time-coffeescript-web-applications-with-socketstream/</p>
+<p>For example, when it comes to templating, you can use <a href="http://mustache.github.com">Mustache</a>, <a href="http://jade-lang.com">Jade</a> or write your HTML in pure CoffeeScript using <a href="http://coffeekup.org">CoffeeKup</a>.</p>
+
+<p>As for serving up application, <a href="http://github.com/maccman/hem">Hem</a> is a great choice, supporting both CommonJS and NPM modules and integrating seamlessly with the CoffeeScript MVC framework <a href="http://spinejs.com">Spine</a>. <a href="https://github.com/substack/node-browserify">node-browsify</a> is another similar project. Or if you want to go lower level with <a href="http://expressjs.com/">express</a> integration, there's Trevor Burnham's <a href="https://github.com/TrevorBurnham/connect-assets">connect-assets</a></p>
+
+<p>You can find a full list of CoffeeScript web framework plugins, on the <a href="https://github.com/jashkenas/coffee-script/wiki/Web-framework-plugins">project's wiki</a>.</p>
 
   </div>
 </div>
@@ -1661,15 +1660,29 @@ alert("Number 0")     unless 0
 function wem() {}
 </code></pre>
 
-<p>The is because of function scope. Functions get hoisted before the programs execution and as such are available everywhere in the scope they were defined in, even if called before the actual definition in the source. Future versions of JavaScript may remove this behavior, and indeed it already fails in <em>strict</em> mode.</p>
+<p>The is because of function scope. Functions get hoisted before the programs execution and as such are available everywhere in the scope they were defined in, even if called before the actual definition in the source. The trouble is, hoisting behavior differs between browser; for example:</p>
 
-<p>It's best to steer clear of this issue by using anonymous functions:</p>
+<pre><code>if (true) {
+  function declaration() {
+    return "first";
+  }
+} else {
+  function declaration() {
+    return "second";
+  }
+}
+declaration();
+</code></pre>
+
+<p>In some browsers such as Firefox, <code>declaration()</code> will return <code>"first"</code>, and in other browsers like Chrome it'll return <code>"second"</code>, even though it looks like the <code>else</code> statement is never run.</p>
+
+<p>If you want to know more about declarative functions, then you should read <a href="http://kangax.github.com/nfe/">Juriy Zaytsev's guide</a>, where he delves into the specifics. Suffice to say, they have fairly ambiguous behavior, and can lead to problems later down the road. All things considered, It's best to steer clear of them by using function expressions instead:</p>
 
 <pre><code>var wem = function(){};
 wem();
 </code></pre>
 
-<p>CoffeeScript's approach to this is to remove named functions entirely, using only anonymous ones.</p>
+<p>CoffeeScript's approach to this is to remove declarative functions entirely, using only function expressions.</p>
 
 <h2>Number property lookups</h2>
 

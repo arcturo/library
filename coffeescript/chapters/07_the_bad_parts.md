@@ -162,9 +162,9 @@ Oddly enough in JavaScript, functions can be defined after they're used. For exa
     wem();
     function wem() {}
 
-The is because of function scope. Functions get hoisted before the programs execution and as such are available everywhere in the scope they were defined in, even if called before the actual definition in the source. Trouble is, hoisting behavior differs between browser, for example:
+The is because of function scope. Functions get hoisted before the programs execution and as such are available everywhere in the scope they were defined in, even if called before the actual definition in the source. The trouble is, hoisting behavior differs between browser; for example:
     
-    if (1) {
+    if (true) {
       function declaration() {
         return "first";
       }
@@ -175,18 +175,8 @@ The is because of function scope. Functions get hoisted before the programs exec
     }
     declaration();
     
-In some browsers, such as x and x, `declaration()` will return `"first"`, and in other browsers it'll return `"second"`, even though the `else` statement is never run.
+In some browsers such as Firefox, `declaration()` will return `"first"`, and in other browsers like Chrome it'll return `"second"`, even though it looks like the `else` statement is never run.
 
-Blah, memory leak, blah. TODO.
-
-    var f = (function(){
-      function g(){
-        
-      }
-      
-      return function g(){};
-    })()
-    
 If you want to know more about declarative functions, then you should read [Juriy Zaytsev's guide](http://kangax.github.com/nfe/), where he delves into the specifics. Suffice to say, they have fairly ambiguous behavior, and can lead to problems later down the road. All things considered, It's best to steer clear of them by using function expressions instead:
 
     var wem = function(){};
