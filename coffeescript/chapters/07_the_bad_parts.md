@@ -175,7 +175,7 @@ The is because of function scope. Functions get hoisted before the programs exec
     }
     declaration();
     
-In some browsers, such as x and x, `declaration()` will return `"first"`, and in other browsers it'll return `"true"`, even though it looks like the `else` statement is never run.
+In some browsers, such as x and x, `declaration()` will return `"first"`, and in other browsers it'll return `"second"`, even though the `else` statement is never run.
 
 Blah, memory leak, blah. TODO.
 
