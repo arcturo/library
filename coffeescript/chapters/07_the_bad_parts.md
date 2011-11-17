@@ -279,7 +279,7 @@ If you're checking to see if an variable has been defined, you'll still need to 
     if typeof aVar isnt "undefined"
       objectType = type(aVar)
       
-Or more succulently with the existential operator:
+Or more succinctly with the existential operator:
 
     objectType = type(aVar?)
     
