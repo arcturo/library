@@ -238,7 +238,7 @@ That's it! Seriously, that's all there is to it. Hosting Node applications has n
 
 ##Additional libraries
 
-[Stitch](https://github.com/sstephenson/stitch) and [Eco](https://github.com/sstephenson/eco) are the only libraries you can use for creating CoffeeScript & Node applications, there are a variety of alternatives.
+[Stitch](https://github.com/sstephenson/stitch) and [Eco](https://github.com/sstephenson/eco) aren't the only libraries you can use for creating CoffeeScript & Node applications, there are a variety of alternatives.
 
 For example, when it comes to templating, you can use [Mustache](http://mustache.github.com), [Jade](http://jade-lang.com) or write your HTML in pure CoffeeScript using [CoffeeKup](http://coffeekup.org).
 
