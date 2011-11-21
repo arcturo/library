@@ -24,7 +24,7 @@ CoffeeScript is not limited to the browser, and can be used to great effect in s
 
 One of the easiest ways to initially play around with the library is to use it right inside the browser. Navigate to [http://coffeescript.org](http://coffeescript.org) and click on the *Try CoffeeScript* tab. The site uses a browser version of the CoffeeScript compiler, converting any CoffeeScript typed inside the left panel to JavaScript in the right panel. 
 
-You can also convert JavaScript back to CoffeeScript using the [js2coffee](http://js2coffee.org/) project, especially useful when migration JavaScript projects to CoffeeScript.
+You can also convert JavaScript back to CoffeeScript using the [js2coffee](http://js2coffee.org/) project, especially useful when migrating JavaScript projects to CoffeeScript.
 
 In fact, you can use the browser-based CoffeeScript compiler yourself, by including [this script](http://jashkenas.github.com/coffee-script/extras/coffee-script.js) in a page, marking up any CoffeeScript script tags with the correct `type`.
 
