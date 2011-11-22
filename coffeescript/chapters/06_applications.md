@@ -60,7 +60,7 @@ Now to actually boot up the Stitch server. Let's create a file called `index.cof
     express = require("express")
     argv    = process.argv.slice(2)
     
-    package = stitch.createPackage(
+    pckg = stitch.createPackage(
       # Specify the paths you want Stitch to automatically bundle up
       paths: [ __dirname + "/app" ]
       
@@ -75,7 +75,7 @@ Now to actually boot up the Stitch server. Let's create a file called `index.cof
       app.set "views", __dirname + "/views"
       app.use app.router
       app.use express.static(__dirname + "/public")
-      app.get "/application.js", package.createServer()
+      app.get "/application.js", pckg.createServer()
 
     port = argv[0] or process.env.PORT or 9294
     console.log "Starting server on port: #{port}"
