@@ -25,31 +25,31 @@
 
 <h1>What is CoffeeScript?</h1>
 
-<p><a href="http://coffeescript.org">CoffeeScript</a> is a little language that compiles down to JavaScript. The syntax is inspired by Ruby and Python, and implements many features from those two languages. This book is designed to help you learn CoffeeScript, understand best practices and start building awesome client side applications. The book is little, only five chapters, but that's rather apt as CoffeeScript is a little language too.</p>
+<p><a href="http://coffeescript.org">CoffeeScript</a> is a little language that compiles down to JavaScript. The syntax is inspired by Ruby and Python, and it implements many features from those two languages. This book is designed to help you learn CoffeeScript, understand best practices and start building awesome client-side applications. The book is little, only five chapters, but that's rather apt, because CoffeeScript is little, too.</p>
 
-<p>This book is completely open source, and was written by <a href="http://alexmaccaw.co.uk">Alex MacCaw</a> (or <a href="http://twitter.com/maccman">@maccman</a>) with great contributions from <a href="https://github.com/dxgriffiths">David Griffiths</a>, <a href="http://github.com/satyr">Satoshi Murakami</a>, and <a href="https://github.com/jashkenas">Jeremy Ashkenas</a>.</p>
+<p>This book, completely open source, was written by <a href="http://alexmaccaw.co.uk">Alex MacCaw</a> (or <a href="http://twitter.com/maccman">@maccman</a>) with great contributions from <a href="https://github.com/dxgriffiths">David Griffiths</a>, <a href="http://github.com/satyr">Satoshi Murakami</a> and <a href="https://github.com/jashkenas">Jeremy Ashkenas</a>.</p>
 
-<p>If you have any errata or suggestions, please don't hesitate to open a ticket on the book's <a href="https://github.com/arcturo/library">GitHub page</a>. Readers may also be interested in <a href="http://oreilly.com/catalog/9781449307530/">JavaScript Web Applications by O'Reilly</a>, a book I authored that explores rich JavaScript applications and moving state to the client side.</p>
+<p>If you find errors or have suggestions, please don't hesitate to open a ticket on the book's <a href="https://github.com/arcturo/library">GitHub page</a>. Readers may also be interested in <a href="http://oreilly.com/catalog/9781449307530/">JavaScript Web Applications by O'Reilly</a>, a book I authored that explores rich JavaScript applications and moving state to the client side.</p>
 
-<p>So let's dive right into it; why is CoffeeScript better than writing pure JavaScript? Well for a start, there's less code to write - CoffeeScript is very succinct, and takes whitespace into account. In my experience this reduces code by a third to a half of the original pure JavaScript. In addition, CoffeeScript has some neat features, such as array comprehensions, prototype aliases and classes that further reduce the amount of typing you need to do.</p>
+<p>So let's dive right in: why is CoffeeScript better than writing pure JavaScript? Well, for a start, there's less code to write -- CoffeeScript is very succinct and takes whitespace into account. In my experience, this reduces code by a third to a half of the original JavaScript. In addition, CoffeeScript has some neat features -- such as array comprehensions, prototype aliases and classes -- that further reduce the amount of typing you need to do.</p>
 
-<p>More importantly though, JavaScript has a lot of <a href="http://bonsaiden.github.com/JavaScript-Garden/">skeletons in its closet</a> which can often trip up inexperienced developers. CoffeeScript neatly sidesteps these by only exposing a curated selection of JavaScript features, fixing many of the language's oddities.</p>
+<p>More importantly, JavaScript has a lot of <a href="http://bonsaiden.github.com/JavaScript-Garden/">skeletons in its closet</a> which can often trip up inexperienced developers. CoffeeScript neatly sidesteps these by exposing only a curated selection of JavaScript features, fixing many of the language's oddities.</p>
 
-<p>CoffeeScript is <em>not</em> a superset of JavaScript, so although you can use external JavaScript libraries from inside CoffeeScript, you'll get syntax errors if you compile JavaScript as-is, without converting it. The compiler converts CoffeeScript code into its counterpart JavaScript, there's no interpretation at runtime.</p>
+<p>CoffeeScript is <em>not</em> a superset of JavaScript. Although you can use external JavaScript libraries from inside CoffeeScript, you'll get syntax errors if you compile JavaScript as-is, without converting it. The compiler converts CoffeeScript code into its counterpart JavaScript; there's no interpretation at runtime.</p>
 
-<p>First to get some common fallacies out the way. You will need to know JavaScript in order to write CoffeeScript, as runtime errors require JavaScript knowledge. However, having said that, runtime errors are usually pretty obvious, and so far I haven't found mapping JavaScript back to CoffeeScript to be an issue. The second problem I've often heard associated with CoffeeScript is speed; i.e. the code produced by the CoffeeScript compiler would run slower than its equivalent written in pure JavaScript. In practice though, it turns out this isn't a problem either. CoffeeScript tends to run as fast, or faster than hand-written JavaScript.</p>
+<p>Let's address two common fallacies. You <em>will</em> need to know JavaScript in order to write CoffeeScript, as runtime errors require JavaScript knowledge. However, having said that, runtime errors are usually pretty obvious, and so far I haven't found mapping JavaScript back to CoffeeScript to be an issue. The second problem I've often heard associated with CoffeeScript is speed, i.e., the code produced by the CoffeeScript compiler would run slower than its equivalent written in pure JavaScript. In practice, though, it turns out this isn't a problem either. CoffeeScript tends to run as fast, or faster, than hand-written JavaScript.</p>
 
-<p>What are the disadvantages of using CoffeeScript? Well, it introduces another compile step between you and your JavaScript. CoffeeScript tries to mitigate the issue as best it can by producing clean and readable JavaScript, and with its server integrations which automate compilation. The other disadvantage, as with any new language, is the fact that the community is still small at this point, and you'll have a hard time finding fellow collaborators who already know the language. CoffeeScript is quickly gaining momentum though, and its IRC list is well staffed; any questions you have are usually answered promptly.</p>
+<p>What are the disadvantages of using CoffeeScript? Well, it introduces another compile step between you and your JavaScript. CoffeeScript tries to mitigate the issue by producing clean and readable JavaScript, and by providing server integrations that automate compilation. The other disadvantage, as with any new language, is the fact that the community is still small, and you'll have a hard time finding fellow collaborators who already know the language. CoffeeScript is quickly gaining momentum, though, and its IRC channel is well staffed; questions are usually answered promptly.</p>
 
-<p>CoffeeScript is not limited to the browser, and can be used to great effect in server side JavaScript implementations, such as <a href="http://nodejs.org/">Node.js</a>.   Additionally, CoffeeScript is getting much wider use and integration, such as being a default in Rails 3.1. Now is definitely the time to jump on the CoffeeScript train. The time you invest in learning about the language now will be repaid by major time savings later.</p>
+<p>CoffeeScript is not limited to the browser and can be used to great effect in server side JavaScript implementations, such as <a href="http://nodejs.org/">Node.js</a>.   Additionally, CoffeeScript is getting much wider use and integration, notably included by default in Rails 3.1. Now is definitely the time to jump on the CoffeeScript train. The time you invest in learning it now will be repaid by major time savings later.</p>
 
 <h2>Initial setup</h2>
 
-<p>One of the easiest ways to initially play around with the library is to use it right inside the browser. Navigate to <a href="http://coffeescript.org">http://coffeescript.org</a> and click on the <em>Try CoffeeScript</em> tab. The site uses a browser version of the CoffeeScript compiler, converting any CoffeeScript typed inside the left panel to JavaScript in the right panel.</p>
+<p>One of the easiest ways to start playing with the library is to use it inside your browser. Go to <a href="http://coffeescript.org">http://coffeescript.org</a> and click on the <em>Try CoffeeScript</em> tab. The site uses a browser version of the CoffeeScript compiler, converting CoffeeScript typed inside the left panel to JavaScript in the right panel.</p>
 
-<p>You can also convert JavaScript back to CoffeeScript using the <a href="http://js2coffee.org/">js2coffee</a> project, especially useful when migrating JavaScript projects to CoffeeScript.</p>
+<p>You can also convert JavaScript back to CoffeeScript using <a href="http://js2coffee.org/">js2coffee</a>, especially useful when migrating JavaScript projects to CoffeeScript.</p>
 
-<p>In fact, you can use the browser-based CoffeeScript compiler yourself, by including <a href="http://jashkenas.github.com/coffee-script/extras/coffee-script.js">this script</a> in a page, marking up any CoffeeScript script tags with the correct <code>type</code>.</p>
+<p>In fact, you can use the browser-based CoffeeScript compiler yourself by including <a href="http://jashkenas.github.com/coffee-script/extras/coffee-script.js">this script</a> in a page, marking up any CoffeeScript script tags with the correct <code>type</code>.</p>
 
 <pre><code>&lt;script src="http://jashkenas.github.com/coffee-script/extras/coffee-script.js" type="text/javascript" charset="utf-8"&gt;&lt;/script&gt;
 &lt;script type="text/coffeescript"&gt;
@@ -57,23 +57,23 @@
 &lt;/script&gt;
 </code></pre>
 
-<p>Obviously, in production, you don't want to be interpreting CoffeeScript at runtime as it'll slow things up for your clients. Instead CoffeeScript offers a <a href="http://nodejs.org">Node.js</a> compiler to pre-process CoffeeScript files.</p>
+<p>Obviously it's inefficient to interpret CoffeeScript at runtime in production, so CoffeeScript offers a <a href="http://nodejs.org">Node.js</a> compiler to pre-process CoffeeScript files.</p>
 
-<p>To install it, first make sure you have a working copy of the latest stable version of <a href="http://nodejs.org">Node.js</a>, and <a href="http://npmjs.org/">npm</a> (the Node Package Manager). You can then install CoffeeScript with npm:</p>
+<p>To install it, first make sure you have a working copy of the latest stable version of <a href="http://nodejs.org">Node.js</a> and <a href="http://npmjs.org/">npm</a> (the Node Package Manager). Then you can install CoffeeScript with npm:</p>
 
 <pre><code>npm install -g coffee-script
 </code></pre>
 
-<p>This will give you a <code>coffee</code> executable. If you execute it without any command line options, it'll give you the CoffeeScript console, which you can use to quickly execute CoffeeScript statements. To pre-process files, pass the <code>--compile</code> option.</p>
+<p>This will give you the <code>coffee</code> executable. Execute it without any command line options to enter the CoffeeScript console, which lets you quickly execute CoffeeScript statements. To pre-process files, pass the <code>--compile</code> option.</p>
 
 <pre><code>coffee --compile my-script.coffee
 </code></pre>
 
-<p>If <code>--output</code> is not specified, CoffeeScript will write to a JavaScript file with the same name, in this case <code>my-script.js</code>. This will overwrite any existing files, so be careful you're not overwriting any JavaScript files unintentionally. For a full list of the command line options available, pass <code>--help</code>.</p>
+<p>If <code>--output</code> isn't specified, CoffeeScript will write to a JavaScript file with the same name, in this case <code>my-script.js</code>. (Warning: This will overwrite any existing file with that name!) For a full list of the command line options available, pass <code>--help</code>.</p>
 
-<p>As you can see above, the default extension of CoffeeScript files is <code>.coffee</code>. Amongst other things, this will allow text editors like <a href="http://macromates.com/">TextMate</a> to work out which language the file contains, giving it the appropriate syntax highlighting. By default, TextMate doesn't include support for CoffeeScript, but you can easily install the <a href="https://github.com/jashkenas/coffee-script-tmbundle">bundle to do so</a>.</p>
+<p>As you can see above, the default extension of CoffeeScript files is <code>.coffee</code>. Among other things, this helps text editors like <a href="http://macromates.com/">TextMate</a> determine the appropriate syntax highlighting. By default, TextMate doesn't include support for CoffeeScript, but you can easily install the <a href="https://github.com/jashkenas/coffee-script-tmbundle">bundle to do so</a>.</p>
 
-<p>If all this compilation seems like a bit of an inconvenience and bother, that's because it is. We'll be getting onto ways to solve this by automatically compiling CoffeeScript files, but first lets take a look at the language's syntax.</p>
+<p>If all this compilation seems like a bit of an inconvenience and bother, that's because it is. We'll be getting onto ways to solve this by automatically compiling CoffeeScript files, but first let's take a look at the language's syntax.</p>
 
   </div>
 </div>
