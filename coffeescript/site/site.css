@@ -77,6 +77,15 @@ header h1 a {
   text-decoration: none;
 }
 
+#notice {
+  margin: 2em 0 0 3em;
+  width: 400px;
+}
+
+#notice img {
+  margin-bottom: 0;
+}
+
 #content {
   margin: 0 0 50px 50px;
   max-width: 625px;
