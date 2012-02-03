@@ -1,8 +1,8 @@
-<div class="back"><a href="index.html">&laquo; Back to all chapters</a></div>
+<div class="back"><a href="index.html">&laquo; 返回目录</a></div>
 
-#What is CoffeeScript?
+#CoffeeScirpt是什么？
 
-[CoffeeScript](http://coffeescript.org) is a little language that compiles down to JavaScript. The syntax is inspired by Ruby and Python, and implements many features from those two languages. This book is designed to help you learn CoffeeScript, understand best practices and start building awesome client side applications. The book is little, only five chapters, but that's rather apt as CoffeeScript is a little language too. 
+[CoffeeScript](http://coffeescript.org)是一门小巧的语言，会编译为JavaScript。它的语法风格受到了Ruby和Python影响，很多特性都借鉴于这两种语言。我们写作本书的目的在于帮助你学习CoffeeScript，明白最佳实践是什么，以及帮助你开始创建有意思的客户端程序。这本书很小，仅仅只有五章，但是对与CoffeeScript这门小语言来说已足够。
 
 This book is completely open source, and was written by [Alex MacCaw](http://alexmaccaw.co.uk) (or [@maccman](http://twitter.com/maccman)) with great contributions from [David Griffiths](https://github.com/dxgriffiths), [Satoshi Murakami](http://github.com/satyr), and [Jeremy Ashkenas](https://github.com/jashkenas).
 
