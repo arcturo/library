@@ -1,0 +1,1970 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset=utf-8>
+<title>The Little Book on CoffeeScript - Introduction</title>
+<link rel="stylesheet" href="site/site.css" type="text/css" charset="utf-8">
+<link rel="stylesheet" href="site/highlight.css" type="text/css" charset="utf-8">
+<script src="site/jquery.js" type="text/javascript" charset="utf-8"></script>      
+<script src="site/highlight.js" type="text/javascript" charset="utf-8"></script>
+<script src="site/coffee-script.js" type="text/javascript" charset="utf-8"></script>
+<script src="site/preview.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript" charset="utf-8">
+  hljs.initHighlightingOnLoad();
+</script>
+</head>
+<body>
+<div id="container">
+  <header>
+    <h1><a href="index.html">The Little Book on CoffeeScript</a></h1>
+  </header>
+  
+  <div id="content">
+    <div class="back"><a href="index.html">&laquo; Back to all chapters</a></div>
+
+
+<h1>What is CoffeeScript?</h1>
+
+<p><a href="http://coffeescript.org">CoffeeScript</a> is a little language that compiles down to JavaScript. The syntax is inspired by Ruby and Python, and implements many features from those two languages. This book is designed to help you learn CoffeeScript, understand best practices and start building awesome client side applications. The book is little, only five chapters, but that's rather apt as CoffeeScript is a little language too.</p>
+
+<p>This book is completely open source, and was written by <a href="http://alexmaccaw.co.uk">Alex MacCaw</a> (or <a href="http://twitter.com/maccman">@maccman</a>) with great contributions from <a href="https://github.com/dxgriffiths">David Griffiths</a>, <a href="http://github.com/satyr">Satoshi Murakami</a>, and <a href="https://github.com/jashkenas">Jeremy Ashkenas</a>.</p>
+
+<p>If you have any errata or suggestions, please don't hesitate to open a ticket on the book's <a href="https://github.com/arcturo/library">GitHub page</a>. Readers may also be interested in <a href="http://oreilly.com/catalog/9781449307530/">JavaScript Web Applications by O'Reilly</a>, a book I authored that explores rich JavaScript applications and moving state to the client side.</p>
+
+<p>So let's dive right into it; why is CoffeeScript better than writing pure JavaScript? Well for a start, there's less code to write - CoffeeScript is very succinct, and takes white-space into account. In my experience this reduces code by a third to a half of the original pure JavaScript. In addition, CoffeeScript has some neat features, such as array comprehensions, prototype aliases and classes that further reduce the amount of typing you need to do.</p>
+
+<p>More importantly though, JavaScript has a lot of <a href="http://bonsaiden.github.com/JavaScript-Garden/">skeletons in its closet</a> which can often trip up inexperienced developers. CoffeeScript neatly sidesteps these by only exposing a curated selection of JavaScript features, fixing many of the language's oddities.</p>
+
+<p>CoffeeScript is <em>not</em> a superset of JavaScript, so although you can use external JavaScript libraries from inside CoffeeScript, you'll get syntax errors if you compile JavaScript as-is, without converting it. The compiler converts CoffeeScript code into its counterpart JavaScript, there's no interpretation at runtime.</p>
+
+<p>First to get some common fallacies out the way. You will need to know JavaScript in order to write CoffeeScript, as runtime errors require JavaScript knowledge. However, having said that, runtime errors are usually pretty obvious, and so far I haven't found mapping JavaScript back to CoffeeScript to be an issue. The second problem I've often heard associated with CoffeeScript is speed; i.e. the code produced by the CoffeeScript compiler would run slower than its equivalent written in pure JavaScript. In practice though, it turns out this isn't a problem either. CoffeeScript tends to run as fast, or faster than hand-written JavaScript.</p>
+
+<p>What are the disadvantages of using CoffeeScript? Well, it introduces another compile step between you and your JavaScript. CoffeeScript tries to mitigate the issue as best it can by producing clean and readable JavaScript, and with its server integrations which automate compilation. The other disadvantage, as with any new language, is the fact that the community is still small at this point, and you'll have a hard time finding fellow collaborators who already know the language. CoffeeScript is quickly gaining momentum though, and its IRC list is well staffed; any questions you have are usually answered promptly.</p>
+
+<p>CoffeeScript is not limited to the browser, and can be used to great effect in server side JavaScript implementations, such as <a href="http://nodejs.org/">Node.js</a>.   Additionally, CoffeeScript is getting much wider use and integration, such as being a default in Rails 3.1. Now is definitely the time to jump on the CoffeeScript train. The time you invest in learning about the language now will be repaid by major time savings later.</p>
+
+<h2>Initial setup</h2>
+
+<p>One of the easiest ways to initially play around with the library is to use it right inside the browser. Navigate to <a href="http://coffeescript.org">http://coffeescript.org</a> and click on the <em>Try CoffeeScript</em> tab. The site uses a browser version of the CoffeeScript compiler, converting any CoffeeScript typed inside the left panel to JavaScript in the right panel.</p>
+
+<p>You can also convert JavaScript back to CoffeeScript using the <a href="http://js2coffee.org/">js2coffee</a> project, especially useful when migration JavaScript projects to CoffeeScript.</p>
+
+<p>In fact, you can use the browser-based CoffeeScript compiler yourself, by including <a href="http://jashkenas.github.com/coffee-script/extras/coffee-script.js">this script</a> in a page, marking up any CoffeeScript script tags with the correct <code>type</code>.</p>
+
+<pre><code>&lt;script src="http://jashkenas.github.com/coffee-script/extras/coffee-script.js" type="text/javascript" charset="utf-8"&gt;&lt;/script&gt;
+&lt;script type="text/coffeescript"&gt;
+  # Some CoffeeScript
+&lt;/script&gt;
+</code></pre>
+
+<p>Obviously, in production, you don't want to be interpreting CoffeeScript at runtime as it'll slow things up for your clients. Instead CoffeeScript offers a <a href="http://nodejs.org">Node.js</a> compiler to pre-process CoffeeScript files.</p>
+
+<p>To install it, first make sure you have a working copy of the latest stable version of <a href="http://nodejs.org">Node.js</a>, and <a href="http://npmjs.org/">npm</a> (the Node Package Manager). You can then install CoffeeScript with npm:</p>
+
+<pre><code>npm install -g coffee-script
+</code></pre>
+
+<p>This will give you a <code>coffee</code> executable. If you execute it without any command line options, it'll give you the CoffeeScript console, which you can use to quickly execute CoffeeScript statements. To pre-process files, pass the <code>--compile</code> option.</p>
+
+<pre><code>coffee --compile my-script.coffee
+</code></pre>
+
+<p>If <code>--output</code> is not specified, CoffeeScript will write to a JavaScript file with the same name, in this case <code>my-script.js</code>. This will overwrite any existing files, so be careful you're not overwriting any JavaScript files unintentionally. For a full list of the command line options available, pass <code>--help</code>.</p>
+
+<p>As you can see above, the default extension of CoffeeScript files is <code>.coffee</code>. Amongst other things, this will allow text editors like <a href="http://macromates.com/">TextMate</a> to work out which language the file contains, giving it the appropriate syntax highlighting. By default, TextMate doesn't include support for CoffeeScript, but you can easily install the <a href="https://github.com/jashkenas/coffee-script-tmbundle">bundle to do so</a>.</p>
+
+<p>If all this compilation seems like a bit of an inconvenience and bother, that's because it is. We'll be getting onto ways to solve this by automatically compiling CoffeeScript files, but first lets take a look at the language's syntax.</p>
+
+  </div>
+</div>
+</body>
+</html><!DOCTYPE html>
+<html>
+<head>
+<meta charset=utf-8>
+<title>The Little Book on CoffeeScript - Syntax</title>
+<link rel="stylesheet" href="site/site.css" type="text/css" charset="utf-8">
+<link rel="stylesheet" href="site/highlight.css" type="text/css" charset="utf-8">
+<script src="site/jquery.js" type="text/javascript" charset="utf-8"></script>      
+<script src="site/highlight.js" type="text/javascript" charset="utf-8"></script>
+<script src="site/coffee-script.js" type="text/javascript" charset="utf-8"></script>
+<script src="site/preview.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript" charset="utf-8">
+  hljs.initHighlightingOnLoad();
+</script>
+</head>
+<body>
+<div id="container">
+  <header>
+    <h1><a href="index.html">The Little Book on CoffeeScript</a></h1>
+  </header>
+  
+  <div id="content">
+    <div class="back"><a href="index.html">&laquo; Back to all chapters</a></div>
+
+
+<h1>CoffeeScript Syntax</h1>
+
+<p>Firstly, before we get any further into this section, I want to reiterate that while CoffeeScript's syntax is often identical with JavaScript's, it's not a superset, and therefore some JavaScript keywords, such as <code>function</code> and <code>var</code> aren't permitted, and will throw syntax errors. If you're writing a CoffeeScript file, it needs to be pure CoffeeScript; you can't intermingle the two languages.</p>
+
+<p>Why isn't CoffeeScript a superset? Well, the very fact that whitespace is significant in CoffeeScript programs prevents it being a superset. And, once that decision's been made, the team decided you might as well go the full hog and deprecate some JavaScript keywords and features in the name of simplicity and in an effort to reduce many commonly occurring bugs.</p>
+
+<p>What I find mind-blowing, in a meta sort of way, is that the CoffeeScript interpreter itself is actually written in CoffeeScript. It looks like the chicken or egg paradox has finally been solved!</p>
+
+<p>Right, so firstly let's tackle the basic stuff. There are no semicolons in CoffeeScript, it'll add them automatically for you upon compilation. Semicolons were the cause of much debate in the JavaScript community, and behind some weird interpreter <a href="http://bonsaiden.github.com/JavaScript-Garden/#core.semicolon">behavior</a>. Anyway, CoffeeScript resolves this problem for you by simply removing semi-colons from its syntax, adding them as needed behind the scenes.</p>
+
+<p>Comments are in the same format as Ruby comments, starting with a hash character.</p>
+
+<pre><code># A comment
+</code></pre>
+
+<p>Multiline comments are also supported, and are brought forward to the generated JavaScript. They're enclosed by three hash characters.</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>###
+  A multiline comment, perhaps a LICENSE.
+###
+</code></pre>
+
+<p>As I briefly alluded to, whitespace is significant in CoffeeScript. In practice, this means that you can replace curly brackets (<code>{}</code>) with a tab. This takes inspiration from Python's syntax, and has the excellent side effect of ensuring that your script is formatted in a sane manner, otherwise it won't even compile!</p>
+
+<h2>Variables &amp; Scope</h2>
+
+<p>CoffeeScript fixes one of the major bugbears with JavaScript, global variables. In JavaScript, it's all too easy to accidentally declare a global variable by forgetting to include <code>var</code> before the variable assignment. CoffeeScript solves this by simply removing global variables. Behind the scenes, CoffeeScript wraps up scripts with an anonymous function, keeping the local context, and automatically prefixes all variable assignments with <code>var</code>. For example, take this simple variable assignment in CoffeeScript:</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>myVariable = "test"
+</code></pre>
+
+<p>Notice the dark grey box in the top right of the code example above. Give that a click, and the code will toggle between CoffeeScript and the compiled JavaScript. This is rendered right inside the page at runtime, so you're assured the compiled output is accurate.</p>
+
+<p>As you can see, the variable assignment is kept completely local, it's impossible to accidentally create a global variable. CoffeeScript actually takes this a step further, and makes it difficult to shadow a higher-level variable. This goes a great deal to prevent some of the most common mistakes developers make in JavaScript.</p>
+
+<p>However, sometimes it's useful to create global variables. You can either do this by directly setting them as properties on the global object (<code>window</code> in browsers), or with the following pattern:</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>exports = this
+exports.MyVariable = "foo-bar"
+</code></pre>
+
+<p>In the root context, <code>this</code> is equal to the global object, and by creating a local <code>exports</code> variable you're making it really obvious to anyone reading your code exactly which global variables a script is creating. Additionally, it paves the way for CommonJS modules, which we're going to cover later in the book.</p>
+
+<h2>Functions</h2>
+
+<p>CoffeeScript removes the rather verbose <code>function</code> statement, and replaces it with a thin arrow: <code>-&gt;</code>. Functions can be one liners or indented on multiple lines. The last expression in the function is implicitly returned. In other words, you don't need to use the <code>return</code> statement unless you want to return earlier inside the function.</p>
+
+<p>With that in mind, let's take a look at an example:</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>func = -&gt; "bar"
+</code></pre>
+
+<p>You can see in the resultant compilation, the <code>-&gt;</code> is turned into a <code>function</code> statement, and the <code>"bar"</code> string is automatically returned.</p>
+
+<p>As mentioned earlier, there's no reason why we can't use multiple lines, as long as we indent the function body properly.</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>func = -&gt;
+  # An extra line
+  "bar"
+</code></pre>
+
+<h3>Function arguments</h3>
+
+<p>How about specifying arguments? Well, CoffeeScript lets you do that by specifying arguments in parentheses before the arrow.</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>times = (a, b) -&gt; a * b
+</code></pre>
+
+<p>CoffeeScript supports default arguments too, for example:</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>times = (a = 1, b = 2) -&gt; a * b
+</code></pre>
+
+<p>You can also use splats to accept multiple arguments, denoted by <code>...</code></p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>sum = (nums...) -&gt; 
+  result = 0
+  nums.forEach (n) -&gt; result += n
+  result
+</code></pre>
+
+<p>In the example above, <code>nums</code> is an array of all the arguments passed to the function. It's not an <code>arguments</code> object, but rather a real array, so you don't need to concern yourself with <code>Array.prototype.splice</code> or <code>jQuery.makeArray()</code> if you want to manipulate it.</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>trigger = (events...) -&gt;
+  events.splice(1, 0, this)
+  this.constructor.trigger.apply(events)
+</code></pre>
+
+<h3>Function invocation</h3>
+
+<p>Functions can be invoked exactly as in JavaScript, with parens <code>()</code>, <code>apply()</code> or <code>call()</code>. However, like Ruby, CoffeeScript will automatically call functions if they are invoked with at least one argument.</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>a = "Howdy!"
+
+alert a
+# Equivalent to:
+alert(a)
+
+alert inspect a
+# Equivalent to:
+alert(inspect(a))
+</code></pre>
+
+<p>Although parenthesis is optional, I'd recommend using it if it's not immediately obvious what's being invoked, and with which arguments. In the last example, with <code>inspect</code>, I'd definitely recommend wrapping at least the <code>inspect</code> invocation in parens.</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>alert inspect(a)
+</code></pre>
+
+<p>If you don't pass any arguments with an invocation, CoffeeScript has no way of working out if you intend to invoke the function, or just treat it like a variable. In this respect, CoffeeScript's behavior differs from Ruby which always invokes references to functions, and is more similar to Python's. This has been the source of a few errors in my CoffeeScript programs, so it's worth keeping an eye out for cases where you intend to call a function without any arguments, and include parenthesis.</p>
+
+<h3>Function context</h3>
+
+<p>Context changes are rife within JavaScript, especially with event callbacks, so CoffeeScript provides a few helpers to manage this. One such helper is a variation on <code>-&gt;</code>, the fat arrow function: <code>=&gt;</code></p>
+
+<p>Using the fat arrow instead of the thin arrow ensures that the function context will be bound to the local one. For example:</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>this.clickHandler = -&gt; alert "clicked"
+element.addEventListener "click", (e) =&gt; this.clickHandler(e)
+</code></pre>
+
+<p>The reason you might want to do this, is that callbacks from <code>addEventListener()</code> are executed in the context of the <code>element</code>, i.e. <code>this</code> equals the element. If you want to keep <code>this</code> equal to the local context, without doing a <code>self = this</code> dance, fat arrows are the way to go.</p>
+
+<p>This binding idea is a similar concept to jQuery's <a href="http://api.jquery.com/jQuery.proxy/"><code>proxy()</code></a> or <a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Function/bind">ES5's</a> <code>bind()</code> functions.</p>
+
+<h2>Object literals &amp; array definition</h2>
+
+<p>Object literals can be specified exactly as in JavaScript, with a pair of braces and key/value statements. However, like with function invocation, CoffeeScript makes the braces optional. In fact, you can also use indentation and new lines instead of comma separation.</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>object1 = {one: 1, two: 2}
+
+# Without braces
+object2 = one: 1, two: 2
+
+# Using new lines instead of commas
+object3 = 
+  one: 1
+  two: 2
+
+User.create(name: "John Smith")
+</code></pre>
+
+<p>Likewise, arrays can use whitespace instead of comma separators, although the square brackets (<code>[]</code>) are still required.</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>array1 = [1, 2, 3]
+
+array2 = [
+  1
+  2
+  3
+]
+
+array3 = [1,2,3,]
+</code></pre>
+
+<p>As you can see in the example above, CoffeeScript has also stripped the trailing comma in <code>array3</code>, another common source of cross-browser errors.</p>
+
+<h2>Flow control</h2>
+
+<p>The convention of optional parentheses continues with CoffeeScript's <code>if</code> and <code>else</code> keywords.</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>if true == true
+  "We're ok"
+
+if true != true then "Panic"
+
+# Equivalent to:
+#  (1 &gt; 0) ? "Ok" : "Y2K!"
+if 1 &gt; 0 then "Ok" else "Y2K!"
+</code></pre>
+
+<p>As you can see above, if the <code>if</code> statement is on one line, you'll need to use the <code>then</code> keyword, so CoffeeScript knows when the block begins. Conditional operators (<code>?:</code>) are not supported, instead you should use a single line <code>if/else</code> statement.</p>
+
+<p>CoffeeScript also includes a Ruby idiom of allowing suffixed <code>if</code> statements.</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>alert "It's cold!" if heat &lt; 5
+</code></pre>
+
+<p>Instead of using the exclamation mark (<code>!</code>) for negation, you can also use the <code>not</code> keyword - which can sometimes make your code more readable as exclamation marks can be easy to miss.</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>if not true then "Panic"
+</code></pre>
+
+<p>In the example above, we could also use the CoffeeScript's <code>unless</code> statement, the opposite of <code>if</code>.</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>unless true
+  "Panic"
+</code></pre>
+
+<p>In a similar fashion to <code>not</code>, CoffeeScript also introduces the <code>is</code> statement, which translates to <code>===</code>.</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>if true is 1
+  "Type coercion fail!"
+</code></pre>
+
+<p>As an alternative to <code>is not</code>, you can use <code>isnt</code>.</p>
+
+<pre><code>if true isnt true
+  alert "Opposite day!"
+</code></pre>
+
+<p>You may have noticed in the examples above, that CoffeeScript is converting <code>==</code> operators into <code>===</code> and <code>!=</code> into <code>!==</code>. This is one of my favorite features to the language, and yet one of the most simple. What's the reasoning behind this? Well frankly JavaScript's type coercion is a bit odd, and its equality operator coerces types in order to compare them, leading to some confusing behaviors and the source of many bugs. There's a longer discussing on this topic in chapter 7.</p>
+
+<h2>String interpolation</h2>
+
+<p>CoffeeScript brings Ruby style string interpolation to JavaScript. Double quotes strings can contain <code>#{}</code> tags, which contain expressions to be interpolated into the string.</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>favourite_color = "Blue. No, yel..."
+question = "Bridgekeeper: What... is your favourite color?
+            Galahad: #{favourite_color}
+            Bridgekeeper: Wrong!
+            "
+</code></pre>
+
+<p>As you can see in the example above, multiline strings are also allowed, without having to prefix each line with a <code>+</code>:</p>
+
+<h2>Loops and Comprehensions</h2>
+
+<p>Array iteration in JavaScript has a rather archaic syntax, reminiscent of an older language like C rather than a modern object orientated one. The introduction of ES5 improved that situation somewhat, with the <code>forEach()</code> function, but that still requires a function call every iteration and is therefore much slower. Again, CoffeeScript comes to the rescue, with a beautiful syntax:</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>for name in ["Roger", "Roderick", "Brian"]
+  alert "Release #{name}"
+</code></pre>
+
+<p>If you need the current iteration index, just pass an extra argument:</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>for name, i in ["Roger the pickpocket", "Roderick the robber"]
+  alert "#{i} - Release #{name}"
+</code></pre>
+
+<p>You can also iterate on one line, using the postfix form.</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>release prisoner for prisoner in ["Roger", "Roderick", "Brian"]
+</code></pre>
+
+<p>As with Python comprehensions, you can filter them:</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>prisoners = ["Roger", "Roderick", "Brian"]
+release prisoner for prisoner in prisoners when prisoner[0] is "R" 
+</code></pre>
+
+<p>You can also use comprehensions for iterating over properties in objects. Instead of the <code>in</code> keyword, use <code>of</code>.</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>names = sam: seaborn, donna: moss
+alert("#{first} #{last}") for first, last of names
+</code></pre>
+
+<p>The only low-level loop that CoffeeScript exposes is the <code>while</code> loop. This has similar behavior to the <code>while</code> loop in pure JavaScript, but has the added advantage that it returns an array of results, i.e. like the <code>Array.prototype.map()</code> function.</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>num = 6
+minstrel = while num -= 1
+  num + " Brave Sir Robin ran away"
+</code></pre>
+
+<h2>Arrays</h2>
+
+<p>CoffeeScript takes inspiration from Ruby when it comes to array slicing by using ranges. Ranges are created by two numerical values, the first and last positions in the range, separated by <code>..</code> or <code>...</code>. If a range isn't prefixed by anything, CoffeeScript expands it out into an array.</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>range = [1..5]
+</code></pre>
+
+<p>If, however, the range is specified immediately after a variable, CoffeeScript converts it into a <code>slice()</code> method call.</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>firstTwo = ["one", "two", "three"][0..1]
+</code></pre>
+
+<p>In the example above, the range returns a new array, containing only the first two elements of the original array. You can also use the same syntax for replacing an array segment with another array.</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>numbers = [0..9]
+numbers[3..5] = [-3, -4, -5]
+</code></pre>
+
+<p>What's neat, is that JavaScript allows you to call <code>slice()</code> on strings too, so you can use ranges with string to return a new subset of characters.</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>my = "my string"[0..2]
+</code></pre>
+
+<p>Checking to see if a value exists inside an array is always a bore in JavaScript, particular as <code>indexOf()</code> doesn't yet have full cross-browser support (IE, I'm talking about you). CoffeeScript solves this with the <code>in</code> operator, for example.</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>words = ["rattled", "roudy", "rebbles", "ranks"]
+alert "Stop wagging me" if "ranks" in words 
+</code></pre>
+
+<h2>Aliases &amp; the Existential Operator</h2>
+
+<p>CoffeeScript includes some useful aliases to save some typing. One of which is <code>@</code>, which is an alias for <code>this</code>.</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>@saviour = true
+</code></pre>
+
+<p>Another is <code>::</code>, which is an alias for <code>prototype</code></p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>User::first = -&gt; @records[0]
+</code></pre>
+
+<p>Using <code>if</code> for <code>null</code> checks in JavaScript is common, but has a few pitfalls in that empty strings and zero are both coerced into <code>false</code>, which can catch you out. CoffeeScript existential operator <code>?</code> returns true unless a variable is <code>null</code> or <code>undefined</code>, similar to Ruby's <code>nil?</code>.</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>praise if brian?
+</code></pre>
+
+<p>You can also use it in place of the <code>||</code> operator:</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>velocity = southern ? 40
+</code></pre>
+
+<p>If you're using a <code>null</code> check before accessing a property, you can skip that by placing the existential operator right before it. This is similar to Active Support's <a href="http://guides.rubyonrails.org/active_support_core_extensions.html#try"><code>try</code></a> method.</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>blackKnight.getLegs()?.kick()
+</code></pre>
+
+<p>Similarly you can check that a property is actually a function, and callable, by placing the existential operator right before the parens. If the property doesn't exist, or isn't a function, it simply won't get called.</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>blackKnight.getLegs().kick?()
+</code></pre>
+
+  </div>
+</div>
+</body>
+</html><!DOCTYPE html>
+<html>
+<head>
+<meta charset=utf-8>
+<title>The Little Book on CoffeeScript - Classes</title>
+<link rel="stylesheet" href="site/site.css" type="text/css" charset="utf-8">
+<link rel="stylesheet" href="site/highlight.css" type="text/css" charset="utf-8">
+<script src="site/jquery.js" type="text/javascript" charset="utf-8"></script>      
+<script src="site/highlight.js" type="text/javascript" charset="utf-8"></script>
+<script src="site/coffee-script.js" type="text/javascript" charset="utf-8"></script>
+<script src="site/preview.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript" charset="utf-8">
+  hljs.initHighlightingOnLoad();
+</script>
+</head>
+<body>
+<div id="container">
+  <header>
+    <h1><a href="index.html">The Little Book on CoffeeScript</a></h1>
+  </header>
+  
+  <div id="content">
+    <div class="back"><a href="index.html">&laquo; Back to all chapters</a></div>
+
+
+<h1>Classes</h1>
+
+<p>Classes in JavaScript seem to have the kind of effect that cloves of garlic have to Dracula for some purists; although, let's be honest, if you're that way inclined, you're unlikely to be reading a book on CoffeeScript. However, it turns out that classes are just as damn useful in JavaScript as they are in other languages and CoffeeScript provides a great abstraction.</p>
+
+<p>Behind the scenes, CoffeeScript is using JavaScript's native prototype to create classes; adding a bit of syntactic sugar for static property inheritance and context persistence. As a developer all that's exposed to you is the <code>class</code> keyword.</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>class Animal
+</code></pre>
+
+<p>In the example above, <code>Animal</code> is the name of the class, and also the name of the resultant variable that you can use to create instances. Behind the scenes CoffeeScript is using constructor functions, which means you can instantiate classes using the <code>new</code> operator.</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>animal = new Animal
+</code></pre>
+
+<p>Defining constructors (functions that get invoked upon instantiation) is simple, just use a function named <code>constructor</code>. This is akin to using Ruby's <code>initialize</code> or Python's <code>__init__</code>.</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>class Animal
+  constructor: (name) -&gt;
+    @name = name
+</code></pre>
+
+<p>In fact, CoffeeScript provides a shorthand for the common pattern of setting instance properties. By prefixing argument's with <code>@</code>, CoffeeScript will automatically set the arguments as instance properties in the constructor. Indeed, this shorthand will also work for normal functions outside classes. The example below is equivalent to the last example, where we set the instance properties manually.</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>class Animal
+  constructor: (@name) -&gt;
+</code></pre>
+
+<p>As you'd expect, any arguments passed on instantiation are proxied to the constructor function.</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>animal = new Animal("Parrot")
+alert "Animal is a #{animal.name}"
+</code></pre>
+
+<h2>Instance properties</h2>
+
+<p>Adding additional instance properties to a class is very straightforward, it's exactly the syntax as adding properties onto an object. Just make sure properties are indented correctly inside the class body.</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>class Animal
+  price: 5
+
+  sell: (customer) -&gt;
+
+animal = new Animal
+animal.sell(new Customer)
+</code></pre>
+
+<p>Context changes are rife within JavaScript, and earlier in the Syntax chapter we talked about how CoffeeScript can lock the value of <code>this</code> to a particular context using a fat arrow function: <code>=&gt;</code>. This ensures that whatever context a function is called under, it'll always execute inside the context it was created in. CoffeeScript has extended support for fat arrows to classes, so by using a fat arrow for an instance method you'll ensure that it's invoked in the correct context, and that <code>this</code> is always equal to the current instance.</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>class Animal
+  price: 5
+
+  sell: =&gt;
+    alert "Give me #{@price} shillings!"
+
+animal = new Animal
+$("#sell").click(animal.sell)
+</code></pre>
+
+<p>As demonstrated in the example above, this is especially useful in event callbacks. Normally the <code>sell()</code> function would be invoked in the context of the <code>#sell</code> element. However, by using fat arrows for <code>sell()</code>, we're ensuring the correct context is being maintained, and that <code>this.price</code> equals <code>5</code>.</p>
+
+<h2>Static properties</h2>
+
+<p>How about defining class (i.e. static) properties? Well, it turns out that inside a class definition, <code>this</code> refers to the class object. In other words you can set class properties by setting them directly on <code>this</code>.</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>class Animal
+  this.find = (name) -&gt;      
+
+Animal.find("Parrot")
+</code></pre>
+
+<p>In fact, as you may remember, CoffeeScript aliases <code>this</code> to <code>@</code>, which lets you write static properties even more succinctly:</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>class Animal
+  @find: (name) -&gt;
+
+Animal.find("Parrot")
+</code></pre>
+
+<h2>Inheritance &amp; Super</h2>
+
+<p>It wouldn't be a proper class implementation without some form of inheritance, and CoffeeScript doesn't disappoint. You can inherit from another class by using the <code>extends</code> keyword. In the example below, <code>Parrot</code> extends from <code>Animal</code>, inheriting all of its instance properties, such as <code>alive()</code></p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>class Animal
+  constructor: (@name) -&gt;
+
+  alive: -&gt;
+    false
+
+class Parrot extends Animal
+  constructor: -&gt;
+    super("Parrot")
+
+  dead: -&gt;
+    not @alive()
+</code></pre>
+
+<p>You'll notice that in the example above, we're using the <code>super()</code> keyword. Behind the scenes, this is translated into a function call on the class' parent prototype, invoked in the current context. In this case, it'll be <code>Parrot.__super__.constructor.call(this, "Parrot");</code>. In practice, this will have exactly the same effect as invoking <code>super</code> in Ruby or Python, invoking the overridden inherited function.</p>
+
+<p>Unless you override the <code>constructor</code>, by default CoffeeScript will invoke the parent's constructor when instances are created.</p>
+
+<p>CoffeeScript uses prototypal inheritance to automatically inherit all of a class's instance properties. This ensures that classes are dynamic; even if you add properties to a parent class after a child has been created, the property will still be propagated to all of its inherited children.</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>class Animal
+  constructor: (@name) -&gt;
+
+class Parrot extends Animal
+
+Animal::rip = true
+
+parrot = new Parrot("Macaw")
+alert("This parrot is no more") if parrot.rip
+</code></pre>
+
+<p>It's worth pointing out though that static properties are copied to subclasses, rather than inherited using prototype as instance properties are. This is due to implementation details with JavaScript's prototypal architecture, and is a difficult problem to work around.</p>
+
+<h2>Mixins</h2>
+
+<p><a href="http://en.wikipedia.org/wiki/Mixin">Mixins</a> are not something supported natively by CoffeeScript, for the good reason that they can be trivially implemented yourself. For example, here's two functions, <code>extend()</code> and <code>include()</code> that'll add class and instance properties respectively to a class.</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>extend = (obj, mixin) -&gt;
+  obj[name] = method for name, method of mixin        
+  obj
+
+include = (klass, mixin) -&gt;
+  extend klass.prototype, mixin
+
+# Usage
+include Parrot,
+  isDeceased: true
+
+(new Parrot).isDeceased
+</code></pre>
+
+<p>Mixins are a great pattern for sharing common logic between modules when inheritance is not suited. The advantage of mixins, is that you can include multiple ones, compared to inheritance where only one class can be inherited from.</p>
+
+<h2>Extending classes</h2>
+
+<p>Mixins are pretty neat, but they're not very object orientated. Instead, let's integrate mixins into CoffeeScript's classes. We're going to define a class called <code>Module</code> that we can inherit from for mixin support. <code>Module</code> will have two static functions, <code>@extend()</code> and <code>@include()</code> which we can use for extending the class with static and instance properties respectively.</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>moduleKeywords = ['extended', 'included']
+
+class Module
+  @extend: (obj) -&gt;
+    for key, value of obj when key not in moduleKeywords
+      @[key] = value
+
+    obj.extended?.apply(@)
+    this
+
+  @include: (obj) -&gt;
+    for key, value of obj when key not in moduleKeywords
+      # Assign properties to the prototype
+      @::[key] = value
+
+    obj.included?.apply(@)
+    this
+</code></pre>
+
+<p>The little dance around the <code>moduleKeywords</code> variable is to ensure we have callback support when mixins extend a class. Let's take a look at our <code>Module</code> class in action:</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>classProperties = 
+  find: (id) -&gt;
+  create: (attrs) -&gt;
+
+instanceProperties =
+  save: -&gt; 
+
+class User extends Module
+  @extend classProperties
+  @include instanceProperties
+
+# Usage:
+user = User.find(1)
+
+user = new User
+user.save()
+</code></pre>
+
+<p>As you can see, we've added some static properties, <code>find()</code> and <code>create()</code> to the <code>User</code> class, as well as some instance properties, <code>save()</code>.
+Since we've got callbacks whenever modules are extended, we can shortcut the process of applying both static and instance properties:</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>ORM = 
+  find: (id) -&gt;
+  create: (attrs) -&gt;
+  extended: -&gt;
+    @include
+      save: -&gt; 
+
+class User extends Module
+  @extend ORM
+</code></pre>
+
+<p>Super simple and elegant!</p>
+
+  </div>
+</div>
+</body>
+</html><!DOCTYPE html>
+<html>
+<head>
+<meta charset=utf-8>
+<title>The Little Book on CoffeeScript - Idioms</title>
+<link rel="stylesheet" href="site/site.css" type="text/css" charset="utf-8">
+<link rel="stylesheet" href="site/highlight.css" type="text/css" charset="utf-8">
+<script src="site/jquery.js" type="text/javascript" charset="utf-8"></script>      
+<script src="site/highlight.js" type="text/javascript" charset="utf-8"></script>
+<script src="site/coffee-script.js" type="text/javascript" charset="utf-8"></script>
+<script src="site/preview.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript" charset="utf-8">
+  hljs.initHighlightingOnLoad();
+</script>
+</head>
+<body>
+<div id="container">
+  <header>
+    <h1><a href="index.html">The Little Book on CoffeeScript</a></h1>
+  </header>
+  
+  <div id="content">
+    <div class="back"><a href="index.html">&laquo; Back to all chapters</a></div>
+
+
+<h1>Common CoffeeScript idioms</h1>
+
+<p>Every language has a set of idioms and practices, and CoffeeScript is no exception. This chapter will explore those conventions, and show you some JavaScript to CoffeeScript comparisons so you can get a practical sense of the language.</p>
+
+<h2>Each</h2>
+
+<p>In JavaScript to iterate over every item in an array, we could either use the newly added <a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/array/foreach"><code>forEach()</code></a> function, or an old C style <code>for</code> loop. If you're planning to use some of JavaScript's latest features introduced in ECMAScript 5, I advise you also include a <a href="https://github.com/kriskowal/es5-shim">shim</a> in the page to emulate support in older browsers.</p>
+
+<pre><code>for (var i=0; i &lt; array.length; i++)
+  myFunction(array[i]);
+
+array.forEach(function(item, i){
+  myFunction(item)
+});
+</code></pre>
+
+<p>Although the <code>forEach()</code> syntax is much more succinct and readable, it suffers from the drawback that the callback function will be invoked every iteration of the array, and is therefore much slower than the equivalent <code>for</code> loop. Let's see how it looks in CoffeeScript.</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>myFunction(item) for item in array
+</code></pre>
+
+<p>It's a readable and concise syntax, I'm sure you'll agree, and what's great is that it compiles to a <code>for</code> loop behind the scenes. In other words CoffeeScript's syntax offers the same expressiveness as <code>forEach()</code>, but without the speed and shimming caveats.</p>
+
+<h2>Map</h2>
+
+<p>As with <code>forEach()</code>, ES5 also includes a native map function that has a much more succinct syntax than the classic <code>for</code> loop, namely <a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array/map"><code>map()</code></a>. Unfortunately it suffers from much the same caveats that <code>forEach()</code> does, its speed is greatly reduced due to the function calls.</p>
+
+<pre><code>var result = []
+for (var i=0; i &lt; array.length; i++)
+  result.push(array[i].name)
+
+var result = array.map(function(item, i){
+  return item.name;
+});
+</code></pre>
+
+<p>As we covered in the syntax chapter, CoffeeScript's comprehensions can be used to get the same behavior as <code>map()</code>. Notice we're surrounding the comprehension with parens, which is <strong>absolutely critical</strong> in ensuring the comprehension returns what you'd expect, the mapped array.</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>result = (item.name for item in array)
+</code></pre>
+
+<h2>Select</h2>
+
+<p>Again, ES5 has a utility function <a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/array/filter"><code>filter()</code></a> for reducing arrays:</p>
+
+<pre><code>var result = []
+for (var i=0; i &lt; array.length; i++)
+  if (array[i].name == "test")
+    result.push(array[i])
+
+result = array.filter(function(item, i){
+  return item.name == "test"
+});
+</code></pre>
+
+<p>CoffeeScript's basic syntax uses the <code>when</code> keyword to filter items with a comparison. Behind the scenes a <code>for</code> loop is generated. The whole execution is performed in an anonymous function to ward against scope leakage and variable conflict.</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>result = (item for item in array when item.name is "test")
+</code></pre>
+
+<p>Don't forgot to include the parens, as otherwise <code>result</code> will be the last item in the array.
+CoffeeScript's comprehensions are so flexible that they allow you to do powerful selections as in the following example:</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>passed = []
+failed = []
+(if score &gt; 60 then passed else failed).push score for score in [49, 58, 76, 82, 88, 90]
+
+# Or
+passed = (score for score in scores when score &gt; 60)
+</code></pre>
+
+<p>If comprehensions get too long, you can split them onto multiple lines.</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>passed = []
+failed = []
+for score in [49, 58, 76, 82, 88, 90]
+  (if score &gt; 60 then passed else failed).push score
+</code></pre>
+
+<h2>Includes</h2>
+
+<p>Checking to see if a value is inside an array is typically done with <code>indexOf()</code>, which rather mind-bogglingly still requires a shim, as Internet Explorer hasn't implemented it.</p>
+
+<pre><code>var included = (array.indexOf("test") != -1)
+</code></pre>
+
+<p>CoffeeScript has a neat alternative to this which Pythonists may recognize, namely <code>in</code>.</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>included = "test" in array
+</code></pre>
+
+<p>Behind the scenes, CoffeeScript is using <code>Array.prototype.indexOf()</code>, and shimming if necessary, to detect if the value is inside the array. Unfortunately this  means the same <code>in</code> syntax won't work for strings. We need to revert back to using <code>indexOf()</code> and testing if the result is negative:</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>included = "a long test string".indexOf("test") isnt -1
+</code></pre>
+
+<p>Or even better, hijack the bitwise operator so we don't have to do a <code>-1</code> comparison.</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>string   = "a long test string"
+included = !!~ string.indexOf "test"
+</code></pre>
+
+<h2>Property iteration</h2>
+
+<p>To iterate over a bunch of properties in JavaScript, you'd use the <code>in</code> operator, for example:</p>
+
+<pre><code>var object = {one: 1, two: 2}
+for(var key in object) alert(key + " = " + object[key])
+</code></pre>
+
+<p>However, as you've seen in the previous section, CoffeeScript has already reserved <code>in</code> for use with arrays. Instead, the operator has been renamed <code>of</code>, and can be used like thus:</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>object = {one: 1, two: 2}
+alert("#{key} = #{value}") for key, value of object
+</code></pre>
+
+<p>As you can see, you can specify variables for both the property name, and its value; rather convenient.</p>
+
+<h2>Min/Max</h2>
+
+<p>This technique is not specific to CoffeeScript, but I thought it useful to demonstrate anyway. <code>Math.max</code> and <code>Math.min</code> take multiple arguments, so you can easily use <code>...</code> to pass an array to them, retrieving the maximum and minimum values in the array.</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>Math.max [14, 35, -7, 46, 98]... # 98
+Math.min [14, 35, -7, 46, 98]... # -7
+</code></pre>
+
+<p>It's worth noting that this trick will fail with really large arrays as browsers have a limitation on the amount of arguments you can pass to functions.</p>
+
+<h2>Multiple arguments</h2>
+
+<p>In the <code>Math.max</code> example above, we're  using <code>...</code> to de-structure the array and passing it as multiple arguments to <code>max</code>. Behind the scenes, CoffeeScript is converting the function call to use <code>apply()</code>, ensuring the array is passed as multiple arguments to <code>max</code>. We can use this feature in other ways too, such as proxying function calls:</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>Log =
+  log: -&gt;
+    console?.log(arguments...)
+</code></pre>
+
+<p>Or you can alter the arguments before they're passed onwards:</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>Log =
+  logPrefix: "(App)"
+
+  log: (args...) -&gt;
+    args.unshift(@logPrefix) if @logPrefix
+    console?.log(args...)
+</code></pre>
+
+<p>Bear in mind though, that CoffeeScript will automatically set the function invocation context to the object the function is being invoked on. In the example above, that would be <code>console</code>. If you want to set the context specifically, then you'll need to call <code>apply()</code> manually.</p>
+
+<h2>And/or</h2>
+
+<p>CoffeeScript style guides indicates that <code>or</code> is preferred over <code>||</code>, and <code>and</code> is preferred over <code>&amp;&amp;</code>. I can see why, as the former is somewhat more readable. Nevertheless, the two styles have identical results.</p>
+
+<p>This preference over more English style code also applies to using <code>is</code> over <code>==</code> and <code>isnt</code> over <code>!=</code>.</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>string = "migrating coconuts"
+string == string # true
+string is string # true
+</code></pre>
+
+<p>One extremely nice addition to CoffeeScript is the 'or equals', which is a pattern Rubyists may recognize as <code>||=</code>:</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>hash or= {}
+</code></pre>
+
+<p>If hash evaluates to <code>false</code>, then it's set to an empty object. It's important to note here that this expression also recognizes <code>0</code>, <code>""</code> and <code>null</code> as false. If that isn't your intention, you'll need to use CoffeeScript's existential operator, which only gets activated if <code>hash</code> is <code>undefined</code> or <code>null</code>:</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>hash ?= {}
+</code></pre>
+
+<h2>Destructuring assignments</h2>
+
+<p>Destructuring assignments can be used with any depth of array and object nesting, to help pull out deeply nested properties.</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>someObject = { a: 'value for a', b: 'value for b' }
+{ a, b } = someObject
+console.log "a is '#{a}', b is '#{b}'"
+</code></pre>
+
+<p>This is especially useful in Node applications when requiring modules:</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>{join, resolve} = require('path')
+
+join('/Users', 'Alex')
+</code></pre>
+
+<h2>External libraries</h2>
+
+<p>Using external libraries is exactly the same as calling functions on CoffeeScript libraries; since at the end of the day everything is compiled down to JavaScript. Using CoffeeScript with <a href="http://jquery.com">jQuery</a> is especially elegant, due to the amount of callbacks in jQuery's API.</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code># Use local alias
+$ = jQuery
+
+$ -&gt;
+  # DOMContentLoaded
+  $(".el").click -&gt;
+    alert("Clicked!")
+</code></pre>
+
+<p>Since all of CoffeeScript's output is wrapped in an anonymous function, we can set a local <code>$</code> alias for <code>jQuery</code>. This will make sure that even if jQuery's no conflict mode is enabled and the <code>$</code> re-defined, our script will still function as intended.</p>
+
+<h2>Private variables</h2>
+
+<p>The <code>do</code> keyword in CoffeeScript lets us execute functions immediately, a great way of encapsulating scope &amp; protecting variables. In the example below, we're defining a variable <code>classToType</code> in the context of an anonymous function which's immediately called by <code>do</code>. That anonymous function returns a second anonymous function, which will be ultimate value of <code>type</code>. Since <code>classToType</code> is defined in a context that no reference is kept to, it can't be accessed outside that scope.</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code># Execute function immediately
+type = do -&gt;
+  classToType = {}
+  for name in "Boolean Number String Function Array Date RegExp Undefined Null".split(" ")
+    classToType["[object " + name + "]"] = name.toLowerCase()
+
+  # Return a function
+  (obj) -&gt;
+    strType = Object::toString.call(obj)
+    classToType[strType] or "object"
+</code></pre>
+
+<p>In other words, <code>classToType</code> is completely private, and can never again be referenced outside the executing anonymous function. This pattern is a great way of encapsulating scope and hiding variables.</p>
+
+  </div>
+</div>
+</body>
+</html><!DOCTYPE html>
+<html>
+<head>
+<meta charset=utf-8>
+<title>The Little Book on CoffeeScript - Compiling</title>
+<link rel="stylesheet" href="site/site.css" type="text/css" charset="utf-8">
+<link rel="stylesheet" href="site/highlight.css" type="text/css" charset="utf-8">
+<script src="site/jquery.js" type="text/javascript" charset="utf-8"></script>      
+<script src="site/highlight.js" type="text/javascript" charset="utf-8"></script>
+<script src="site/coffee-script.js" type="text/javascript" charset="utf-8"></script>
+<script src="site/preview.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript" charset="utf-8">
+  hljs.initHighlightingOnLoad();
+</script>
+</head>
+<body>
+<div id="container">
+  <header>
+    <h1><a href="index.html">The Little Book on CoffeeScript</a></h1>
+  </header>
+  
+  <div id="content">
+    <h1>Automating CoffeeScript compilation</h1>
+
+<p>An issue with CoffeeScript is that it puts another layer between you and JavaScript, and having to manually compile CoffeeScript files whenever they change quickly gets old. Fortunately CoffeeScript has some alternative forms of compilation which can make the development cycle somewhat smoother.</p>
+
+<p>As we covered in the first chapter, we can compile CoffeeScript files using the <code>coffee</code> executable:</p>
+
+<pre><code>coffee --compile --output lib src
+</code></pre>
+
+<p>In fact in the example above, all the <code>.coffee</code> files in <code>src</code> will be compiled &amp; their JavaScript outputted to the <code>lib</code> directory. Even calling that is a bit of a bore, so let's look into automating it.</p>
+
+<h2>Cake</h2>
+
+<p><a href="http://jashkenas.github.com/coffee-script/#cake">Cake</a> is a super simple build system along the lines of <a href="http://www.gnu.org/software/make/">Make</a> and <a href="http://rake.rubyforge.org/">Rake</a>. The library is bundled with the <code>coffee-script</code> npm package, and available via an executable called <code>cake</code>.</p>
+
+<p>You can define tasks using CoffeeScript in a file called <code>Cakefile</code>. Cake will pick these up, and can be invoked by running <code>cake [task] [options]</code> from within the directory. To print a list of all the tasks and options, just type <code>cake</code>.</p>
+
+<p>Tasks are defined using the <code>task()</code> function, passing a name, optional description and callback function. For example, create a file called <code>Cakefile</code>, and two directories, <code>lib</code> and <code>src</code>. Add the following to the <code>Cakefile</code>:</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>fs = require 'fs'
+
+{print} = require 'sys'
+{spawn} = require 'child_process'
+
+build = (callback) -&gt;
+  coffee = spawn 'coffee', ['-c', '-o', 'lib', 'src']
+  coffee.stderr.on 'data', (data) -&gt;
+    process.stderr.write data.toString()
+  coffee.stdout.on 'data', (data) -&gt;
+    print data.toString()
+  coffee.on 'exit', (code) -&gt;
+    callback?() if code is 0
+
+task 'build', 'Build lib/ from src/', -&gt;
+  build()
+</code></pre>
+
+<p>In the example above, we're defining a task called <code>build</code> that can be invoked by running: <code>cake build</code>. This runs the same command as the previous example, compiling all the CoffeeScript files in <code>src</code> to JavaScript in <code>lib</code>. You can now reference JavaScript files in the <code>lib</code> directory as per usual from your HTML:</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+&lt;meta charset=utf-8&gt;
+&lt;script src="lib/app.js" type="text/javascript" charset="utf-8"&gt;&lt;/script&gt;      
+&lt;/head&gt;
+&lt;body&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+
+<p>We're still having to manually run <code>cake build</code> whenever our CoffeeScript code changes, which is far from ideal. Luckily, the <code>coffee</code> command takes another option, <code>--watch</code>, which instructs it to watch a directory for changes and re-compiling as necessary. Let's define another task using that:</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code> task 'watch', 'Watch src/ for changes', -&gt;
+    coffee = spawn 'coffee', ['-w', '-c', '-o', 'lib', 'src']
+    coffee.stderr.on 'data', (data) -&gt;
+      process.stderr.write data.toString()
+    coffee.stdout.on 'data', (data) -&gt;
+      print data.toString()
+</code></pre>
+
+<p>If one task relies on another, you can run other tasks using <code>invoke(name)</code>. Let's add a utility task to our <code>Cakefile</code> which is going to both open  <code>index.html</code> and start watching the source for changes.</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>task 'open', 'Open index.html', -&gt;
+  # First open, then watch
+  spawn 'open', 'index.html'
+  invoke 'watch'
+</code></pre>
+
+<p>You can also define options for your task using the <code>option()</code> function, which takes a short name, long name and description.</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>option '-o', '--output [DIR]', 'output dir'
+
+task 'build', 'Build lib/ from src/', -&gt;
+  # Now we have access to a `options` object
+  coffee = spawn 'coffee', ['-c', '-o', options.output or 'lib', 'src']
+  coffee.stderr.on 'data', (data) -&gt;
+    process.stderr.write data.toString()
+  coffee.stdout.on 'data', (data) -&gt;
+    print data.toString()
+</code></pre>
+
+<p>As you can see, the task context now has access to an <code>options</code> object containing any data specified by the user. If we run <code>cake</code> without any other arguments, all the tasks and options will be listed.</p>
+
+<p>Cake's a great way of automating common tasks such as compiling CoffeeScript without going to the hassle of using bash or Makefiles. It's also worth taking a look at <a href="http://jashkenas.github.com/coffee-script/documentation/docs/cake.html">Cake's source</a>, a great example of CoffeeScript's expressiveness and beautifully documented alongside the code comments.</p>
+
+<h2>Server side support</h2>
+
+<p>Using Cake for CoffeeScript compilation is fine for static sites, but for dynamic sites we might as well integrate CoffeeScript compilation into the request/response cycle. Various integration solutions already exist for the popular backend languages and frameworks, such as <a href="http://rubyonrails.org/">Rails</a> and <a href="https://www.djangoproject.com/">Django</a>.</p>
+
+<p>When it comes to Rails 3.1, CoffeeScript support comes via <a href="https://github.com/sstephenson/sprockets">Sprockets &amp; the asset pipeline</a>. Add your CoffeeScript files under <code>app/assets/javascripts</code>, and Rails is smart enough to pre-compile them when they're requested. JavaScript &amp; CoffeeScript files are concatenated and bundled using special comment directives, meaning you can fetch all of your application's JavaScript with one request. When it comes to production, Rails will write the compiled output to disk, ensuring it's cached and fast to serve.</p>
+
+<p>Other Ruby options include Rack servers such as 37signal's <a href="http://pow.cx/">Pow</a> and Joshua Peek's <a href="http://josh.github.com/nack/">Nack</a>, both highly recommended if your application doesn't need Rail's other features and associated overhead.</p>
+
+<p>Django also has <a href="http://pypi.python.org/pypi/django-coffeescript/">support for CoffeeScript</a> through special template tags. It works with both inline code and external files.</p>
+
+<p>Both Ruby and Python pipe out to Node and the CoffeeScript lib behind the scenes when compiling CoffeeScript, so you'll need to have those installed during development. If you're using Node directly as a backend for your site, CoffeeScript integration is even simpler and you can use it for both the backend and frontend code. We're going to talk more about this in the next chapter, using <a href="https://github.com/sstephenson/stitch">Stitch</a> to serve all our client-side CoffeeScript.</p>
+
+  </div>
+</div>
+</body>
+</html><!DOCTYPE html>
+<html>
+<head>
+<meta charset=utf-8>
+<title>The Little Book on CoffeeScript - Applications</title>
+<link rel="stylesheet" href="site/site.css" type="text/css" charset="utf-8">
+<link rel="stylesheet" href="site/highlight.css" type="text/css" charset="utf-8">
+<script src="site/jquery.js" type="text/javascript" charset="utf-8"></script>      
+<script src="site/highlight.js" type="text/javascript" charset="utf-8"></script>
+<script src="site/coffee-script.js" type="text/javascript" charset="utf-8"></script>
+<script src="site/preview.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript" charset="utf-8">
+  hljs.initHighlightingOnLoad();
+</script>
+</head>
+<body>
+<div id="container">
+  <header>
+    <h1><a href="index.html">The Little Book on CoffeeScript</a></h1>
+  </header>
+  
+  <div id="content">
+    <div class="back"><a href="index.html">&laquo; Back to all chapters</a></div>
+
+
+<h1>Creating Applications</h1>
+
+<p>Now you've been given an overview of the syntax, lets explore actually structuring and creating CoffeeScript applications. This section aims to be useful to all CoffeeScript developers, novice or advanced. Indeed, it should be relevant to pure JavaScript developers too.</p>
+
+<p>For some reason, when developers are building client side JavaScript applications, tried and tested patterns and conventions often fly out the window, and the end result is a spaghetti mess of un-maintainable coupled JavaScript. I can't stress enough how important application architecture is; if you're writing any JavaScript/CoffeeScript beyond simple form validation you should implement a form of application structure, such as <a href="http://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller">MVC</a>.</p>
+
+<p>The secret to building maintainable large applications is not to build large applications. In other words, build a series of modular de-coupled components. Keep application logic as generic as possible, abstracting it out as appropriate. Lastly separate out your logic into views, models and controllers (MVC). Implementing MVC is beyond the scope of this chapter, for that I recommend you check out my book on <a href="http://oreilly.com/catalog/9781449307530/">JavaScript Web Applications</a> and use a framework like <a href="http://documentcloud.github.com/backbone/">Backbone</a> or <a href="https://github.com/maccman/spine">Spine</a>. Rather than that, here we're going to cover structuring applications using CommonJS modules.</p>
+
+<h2>Structure &amp; CommonJS</h2>
+
+<p>So what exactly are CommonJS modules? Well, If you've used <a href="http://nodejs.org/">NodeJS</a> before you've used CommonJS modules, probably without realizing it. CommonJS modules were initially developed for writing server side JavaScript libraries, in an attempt to deal with loading, namespacing and scoping issues. They were a common format that would be compatible across all JavaScript implementations. The aim was that a library written for <a href="http://www.mozilla.org/rhino/">Rhino</a> would work for Node. Eventually these ideas transitioned back to browsers, and now we have great libraries like <a href="http://requirejs.org">RequireJS</a> and <a href="https://github.com/jbrantly/yabble">Yabble</a> to use modules client-side.</p>
+
+<p>Practically speaking, modules ensure that your code is run in a local namespace (code encapsulation), that you can load other modules with the <code>require()</code> function, and expose module properties via <code>module.exports</code>. Let's dive into that in a bit more depth now.</p>
+
+<h3>Requiring files</h3>
+
+<p>You can load in other modules and libraries using <code>require()</code>. Simply pass a module name and, if it's in the load path, it'll return an object representing that module. For example:</p>
+
+<pre><code>User = require("models/user")
+</code></pre>
+
+<p>Synchronous require support is a contentious issue, but has mostly been resolved with the mainstream loader libraries and latest CommonJS <a href="http://wiki.commonjs.org/wiki/Modules/AsynchronousDefinition">proposals</a>. It may be something you'll have to look into if you decided to take a separate route than the one I'm advocating with Stitch below.</p>
+
+<h3>Exporting properties</h3>
+
+<p>By default, modules don't expose any properties so their contents are completely invisible to <code>require()</code> calls. If you want a particular property to be accessible from your module, you'll need to set it on <code>module.exports</code>:</p>
+
+<pre><code># random_module.js
+module.exports.myFineProperty = -&gt;
+  # Some shizzle
+</code></pre>
+
+<p>Now, whenever this module is required then <code>myFineProperty</code> will be exposed:</p>
+
+<pre><code>myFineProperty = require("random_module").myFineProperty
+</code></pre>
+
+<h2>Stitch it up</h2>
+
+<p>Formatting your code as CommonJS modules is all fine and dandy, but how do you actually get this working on the client in practice? Well, my method of choice is the rather unheard of <a href="https://github.com/sstephenson/stitch">Stitch</a> library. Stitch is by Sam Stephenson, the mind behind <a href="http://www.prototypejs.org">Prototype.js</a> amongst other things, and solves the module problem so elegantly it makes me want to dance for joy! Rather than try and dynamically resolve dependencies, Stitch simply bundles up all your JavaScript files into one, wrapping them in some CommonJS magic. Oh, and did I mention it'll compile your CoffeeScript, JS templates, <a href="http://lesscss.org">LESS CSS</a> and <a href="http://sass-lang.com">Sass</a> files too!</p>
+
+<p>First things first, you'll need to install <a href="http://nodejs.org/">Node.js</a> and <a href="http://npmjs.org/">npm</a> if you haven't already, we'll be using those throughout this chapter.</p>
+
+<p>Now let's create our application structure. If you're using <a href="https://github.com/maccman/spine">Spine</a>, you can automate this with <a href="http://github.com/maccman/spine.app">Spine.App</a>, otherwise it's something you'll need to do manually. I usually have an <code>app</code> folder for all the application specific code, and a <code>lib</code> folder for general libraries. Then anything else, including static assets, goes in the <code>public</code> directory.</p>
+
+<pre><code>app
+app/controllers
+app/views
+app/models
+app/lib
+lib
+public
+public/index.html
+</code></pre>
+
+<p>Now to actually boot up the Stitch server. Let's create a file called <code>index.coffee</code> and fill it with the following script:</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>require("coffee-script")
+stitch  = require("stitch")
+express = require("express")
+argv    = process.argv.slice(2)
+
+package = stitch.createPackage(
+  # Specify the paths you want Stitch to automatically bundle up
+  paths: [ __dirname + "/app" ]
+
+  # Specify your base libraries
+  dependencies: [
+    # __dirname + '/lib/jquery.js'
+  ]
+)
+app = express.createServer()
+
+app.configure -&gt;
+  app.set "views", __dirname + "/views"
+  app.use app.router
+  app.use express.static(__dirname + "/public")
+  app.get "/application.js", package.createServer()
+
+port = argv[0] or process.env.PORT or 9294
+console.log "Starting server on port: #{port}"
+app.listen port
+</code></pre>
+
+<p>You can see some dependencies listed: <code>coffee-script</code>, <code>stitch</code> and <code>express</code>. We need to create a <code>package.json</code> file, listing these dependencies so npm can pick them up. Our <code>./package.json</code> file will look like this:</p>
+
+<pre><code>{
+  "name": "app",
+  "version": "0.0.1",
+  "dependencies": { 
+    "coffee-script": "~1.1.2",
+    "stitch": "~0.3.2",
+    "express": "~2.5.0",
+    "eco": "1.1.0-rc-1"
+  }
+}
+</code></pre>
+
+<p>And let's install those dependencies with npm:</p>
+
+<pre><code>npm install .
+npm install -g coffee-script
+</code></pre>
+
+<p>Rightio, we're almost there. Now run:</p>
+
+<pre><code>coffee index.coffee
+</code></pre>
+
+<p>You'll hopefully have a Stitch server up and running. Let's go ahead and test it out by putting an <code>app.coffee</code> script in the <code>app</code> folder. This will be the file that'll bootstrap our application.</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>module.exports = App =
+  init: -&gt;
+    # Bootstrap the app
+</code></pre>
+
+<p>Now let's create our main page <code>index.html</code> which, if we're building a single page app, will be the only page the user actually navigates to. This is a static asset, so it's located under the <code>public</code> directory.</p>
+
+<pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+  &lt;meta charset=utf-8&gt;
+  &lt;title&gt;Application&lt;/title&gt;
+  &lt;!-- Require the main Stitch file --&gt;
+  &lt;script src="/application.js" type="text/javascript" charset="utf-8"&gt;&lt;/script&gt;
+  &lt;script type="text/javascript" charset="utf-8"&gt;
+    document.addEventListener("DOMContentLoaded", function(){
+      var App = require("app");
+      App.init();
+    }, false);
+  &lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+
+<p>When the page loads, our <em>DOMContentLoaded</em> event callback is requiring the <code>app.coffee</code> script (which is automatically compiled), and invoking our <code>init()</code> function. That's all there is to it, we've got CommonJS modules up and running, as well as a HTTP server and CoffeeScript compiler. If, say, we wanted to include a module, it's just a case of calling <code>require()</code>. Let's create a new class, <code>User</code>, and reference it from <code>app.coffee</code>:</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code># app/models/user.coffee
+module.exports = class User
+  constructor: (@name) -&gt;
+
+# app/app.coffee
+User = require("models/user")
+</code></pre>
+
+<h2>JavaScript templates</h2>
+
+<p>If you're moving logic to the client side, then you'll definitely need some sort of templating library. JavaScript templating is very similar to templates on the server, such as Ruby's ERB or Python's text interpolation, expect of course it runs client side. There are a whole host of templating libraries out there, so I encourage you to do some research and check them out. By default, Stitch comes with support for <a href="https://github.com/sstephenson/eco">Eco</a> templates baked right in.</p>
+
+<p>JavaScript templates are very similar to server side ones. You have template tags interoperated with HTML, and during rendering those tags get evaluated and replaced. The great thing about <a href="https://github.com/sstephenson/eco">Eco</a> templates, is they're actually written in CoffeeScript.</p>
+
+<p>Here's an example:</p>
+
+<pre><code>&lt;% if @projects.length: %&gt;
+  &lt;% for project in @projects: %&gt;
+    &lt;a href="&lt;%= project.url %&gt;"&gt;&lt;%= project.name %&gt;&lt;/a&gt;
+    &lt;p&gt;&lt;%= project.description %&gt;&lt;/p&gt;
+  &lt;% end %&gt;
+&lt;% else: %&gt;
+  No projects
+&lt;% end %&gt;
+</code></pre>
+
+<p>As you can see, the syntax is remarkably straightforward. Just use <code>&lt;%</code> tags for evaluating expressions, and <code>&lt;%=</code> tags for printing them. A partial list of template tags is as follows:</p>
+
+<ul>
+<li><p><code>&lt;% expression %&gt;</code><br/>
+Evaluate a CoffeeScript expression without printing its return value.</p></li>
+<li><p><code>&lt;%= expression %&gt;</code><br/>
+Evaluate a CoffeeScript expression, escape its return value, and print it.</p></li>
+<li><p><code>&lt;%- expression %&gt;</code><br/>
+Evaluate a CoffeeScript expression and print its return value without escaping it.</p></li>
+</ul>
+
+
+<p>You can use any CoffeeScript expression inside the templating tags, but there's one thing to look out for. CoffeeScript is whitespace-sensitive, but your Eco templates aren't. Therefore, Eco template tags that begin an indented CoffeeScript block must be suffixed with a colon. To indicate the end of an indented block, use the special tag <code>&lt;% end %&gt;</code>. For example:</p>
+
+<pre><code>&lt;% if @project.isOnHold(): %&gt;
+  On Hold
+&lt;% end %&gt;
+</code></pre>
+
+<p>You don't need to write the <code>if</code> and <code>end</code> tags on separate lines:</p>
+
+<pre><code>&lt;% if @project.isOnHold(): %&gt; On Hold &lt;% end %&gt;
+</code></pre>
+
+<p>And you can use the single-line postfix form of <code>if</code> as you'd expect:</p>
+
+<pre><code>&lt;%= "On Hold" if @project.isOnHold() %&gt;
+</code></pre>
+
+<p>Now we've got a handle on the syntax, let's define an Eco template in <code>views/users/show.eco</code>:</p>
+
+<pre><code>&lt;label&gt;Name: &lt;%= @name %&gt;&lt;/label&gt;
+</code></pre>
+
+<p>Stitch will automatically compile our template and include it in <code>application.js</code>. Then, in our application's controllers we can require the template, like it was a module, and execute it passing any data required.</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>require("views/users/show")(new User("Brian"))
+</code></pre>
+
+<p>Our <code>app.coffee</code> file should now look like this, rendering the template and appending it to the page when the document loads:</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>User = require("models/user")
+
+App =
+  init: -&gt;
+    template = require("views/users/show")
+    view     = template(new User("Brian"))
+
+    # Obviously this could be spruced up by jQuery
+    element = document.createElement("div")
+    element.innerHTML = view
+    document.body.appendChild(element)
+
+module.exports = App
+</code></pre>
+
+<p>Open up <a href="http://localhost:9294/">the application</a> and give it a whirl! Hopefully this tutorial has given you a good idea of how to structure client-side CoffeeScript applications. For your next steps, I recommend checking out a client-side framework like <a href="http://documentcloud.github.com/backbone/">Backbone</a> or <a href="http://spinejs.com">Spine</a>, They'll provide a basic MVC structure for you, freeing you up for the interesting stuff.</p>
+
+<h2>Bonus - 30 second deployment with Heroku</h2>
+
+<p><a href="http://heroku.com/">Heroku</a> is an incredibly awesome web host that manages all the servers and scaling for you, letting you get on with the exciting stuff (building awesome JavaScript applications). You'll need an account with Heroku for this tutorial to work, but the great news is that their basic plan is completely free. While traditionally a Ruby host, Heroku have recently released their Cedar stack, which includes Node support.</p>
+
+<p>Firstly we need to make a <code>Procfile</code>, which will inform Heroku about our application.</p>
+
+<pre><code>echo "web: coffee index.coffee" &gt; Procfile
+</code></pre>
+
+<p>Now, if you haven't already, you'll need to create a local git repository for your application.</p>
+
+<pre><code>git init
+git add .
+git commit -m "First commit"    
+</code></pre>
+
+<p>And now to deploy the application, we'll use the <code>heroku</code> gem (which you'll need to install if you haven't already).</p>
+
+<pre><code>heroku create myAppName --stack cedar
+git push heroku master
+heroku open
+</code></pre>
+
+<p>That's it! Seriously, that's all there is to it. Hosting Node applications has never been easier.</p>
+
+<h2>Additional libraries</h2>
+
+<p><a href="https://github.com/sstephenson/stitch">Stitch</a> and <a href="https://github.com/sstephenson/eco">Eco</a> aren't the only libraries you can use for creating CoffeeScript &amp; Node applications, there are a variety of alternatives.</p>
+
+<p>For example, when it comes to templating, you can use <a href="http://mustache.github.com">Mustache</a>, <a href="http://jade-lang.com">Jade</a> or write your HTML in pure CoffeeScript using <a href="http://coffeekup.org">CoffeeKup</a>.</p>
+
+<p>As for serving up application, <a href="http://github.com/maccman/hem">Hem</a> is a great choice, supporting both CommonJS and NPM modules and integrating seamlessly with the CoffeeScript MVC framework <a href="http://spinejs.com">Spine</a>. <a href="https://github.com/substack/node-browserify">node-browsify</a> is another similar project. Or if you want to go lower level with <a href="http://expressjs.com/">express</a> integration, there's Trevor Burnham's <a href="https://github.com/TrevorBurnham/connect-assets">connect-assets</a></p>
+
+<p>You can find a full list of CoffeeScript web framework plugins, on the <a href="https://github.com/jashkenas/coffee-script/wiki/Web-framework-plugins">project's wiki</a>.</p>
+
+  </div>
+</div>
+</body>
+</html><!DOCTYPE html>
+<html>
+<head>
+<meta charset=utf-8>
+<title>The Little Book on CoffeeScript - The Bad Parts</title>
+<link rel="stylesheet" href="site/site.css" type="text/css" charset="utf-8">
+<link rel="stylesheet" href="site/highlight.css" type="text/css" charset="utf-8">
+<script src="site/jquery.js" type="text/javascript" charset="utf-8"></script>      
+<script src="site/highlight.js" type="text/javascript" charset="utf-8"></script>
+<script src="site/coffee-script.js" type="text/javascript" charset="utf-8"></script>
+<script src="site/preview.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript" charset="utf-8">
+  hljs.initHighlightingOnLoad();
+</script>
+</head>
+<body>
+<div id="container">
+  <header>
+    <h1><a href="index.html">The Little Book on CoffeeScript</a></h1>
+  </header>
+  
+  <div id="content">
+    <div class="back"><a href="index.html">&laquo; Back to all chapters</a></div>
+
+
+<h1>The Bad Parts</h1>
+
+<p>JavaScript is a tricky beast, and knowing the parts that you should avoid is just as important as knowing about the parts you should use. As Sun Tzu says, "know your enemy", and that's exactly what we're going to do in the chapter, exploring the dark side of JavaScript and revealing all the lurking monsters ready to pounce on the unsuspecting developer.</p>
+
+<p>As I mentioned in the introduction, CoffeeScript's awesomeness lies not only in it's syntax, but in it's ability to fix some of JavaScript's warts. However, due to the fact that CoffeeScript statements have a direct translation into JavaScript, and don't run in a virtual machine or interpreter, the language is not a silver bullet to all of JavaScript's bugbears and there's still some issues you need to be aware about.</p>
+
+<p>First, let's talk about what things the language does solve.</p>
+
+<h2>A JavaScript Subset</h2>
+
+<p>CoffeeScript's syntax only covers a subset of JavaScript's, the famous <em>Good Parts</em>, so already there's less to fix. Let's take the <code>with</code> statement for example. This statement has for a long time been "considered harmful", and should be avoided. <code>with</code> was intended to provide a shorthand for writing recurring property lookups on objects. For example, instead of writing:</p>
+
+<pre><code>dataObj.users.alex.email = "info@eribium.org";
+</code></pre>
+
+<p>You could write:</p>
+
+<pre><code>with(dataObj.users.alex) {
+  email = "info@eribium.org";
+}
+</code></pre>
+
+<p>Setting aside the fact that we shouldn't have such a deep object in the first place, the syntax is quite clean. Except for one thing. It's damn confusing to the JavaScript interpreter - it doesn't know exactly what you're going to do in the <code>with</code> context, and forces the specified object to be searched first for all name lookups.</p>
+
+<p>This really hurts performance and means the interpreter has to turn off all sorts of JIT optimizations. Additionally <code>with</code> statements can't be minified using tools like <a href="https://github.com/mishoo/UglifyJS">uglify-js</a>. They're also deprecated and removed from future JavaScript versions. All things considered, it's much better just to avoid using them, and CoffeeScript takes this a step further by eliminating them from it's syntax. In other words, using <code>with</code> in CoffeeScript will throw a syntax error.</p>
+
+<h2>Global variables</h2>
+
+<p>By default, your JavaScript programs run in a global scope, and by default any variables created are in that global scope. If you want to create a variable in the local scope, JavaScript requires explicitly indicating that fact using the <code>var</code> keyword.</p>
+
+<pre><code>usersCount = 1;        // Global
+var groupsCount = 2;   // Global
+
+(function(){              
+  pagesCount = 3;      // Global
+  var postsCount = 4;  // Local
+})()
+</code></pre>
+
+<p>This is a bit of an odd decision since the vast majority of the time you'll be creating local variables not global, so why not make that the default? As it stands, developers have to remember to put <code>var</code> statements before any variables they're initializing, or face weird bugs when variables accidentally conflict and overwrite each other.</p>
+
+<p>Luckily CoffeeScript comes to your rescue here by eliminating implicit global variable assignment entirely. In other words, the <code>var</code> keyword is reserved in CoffeeScript, and will trigger a syntax error if used. Local variables are created implicitly by default, and it's very difficult to create global variables without explicitly assigning them as properties on <code>window</code>.</p>
+
+<p>Let's have a look at an example of CoffeeScript's variable assignment:</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>outerScope = true
+do -&gt;
+  innerScope = true
+</code></pre>
+
+<p>Compiles down to:</p>
+
+<pre><code>var outerScope;
+outerScope = true;
+(function() {
+  var innerScope;
+  return innerScope = true;
+})();
+</code></pre>
+
+<p>Notice how CoffeeScript initializes variables (using <code>var</code>) automatically in the context their first used. Whilst it's impossible to shadow outer variables, you can still refer to and access them. You need to watch out for this, be careful that you're not reusing the name of an external variable accidentally if you're writing a deeply nested function or class. For example, here we're accidentally overwriting the <code>package</code> variable in a Class function:</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>package = require('./package')
+
+class Hem
+  build: -&gt;
+    # Overwrites outer variable!
+    package = @hemPackage.compile()
+
+  hemPackage: -&gt;
+    package.create()
+</code></pre>
+
+<p>Global variables are needed from time to time, and to create those you need to set them as properties on <code>window</code>:</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>  class window.Asset
+    constructor: -&gt;
+</code></pre>
+
+<p>By ensuring global variables are explicit, rather than implicit, CoffeeScript removes one of the major sources of bugs in JavaScript programs.</p>
+
+<h2>Semicolons</h2>
+
+<p>JavaScript does not enforce the use of semicolons in source code, so it's possible to omit them. However, behind the scenes the JavaScript compiler still needs them, so the parser automatically inserts them whenever it encounters a parse error due to a missing semicolon. In other words, it'll try to evaluate a statement without semicolons and, if that fails, tries again using semicolons.</p>
+
+<p>Unfortunately this is a tremendously bad idea, and can actually change the behavior of your code. Take the following example, seems valid JavaScript, right?</p>
+
+<pre><code>function() {}
+(window.options || {}).property
+</code></pre>
+
+<p>Wrong, well at least according to the parser; it raises a syntax error. In case of a leading parenthesis, the parser will not insert a semicolon. The code gets transformed onto one line:</p>
+
+<pre><code>function() {}(window.options || {}).property
+</code></pre>
+
+<p>Now you can see the issue, and why the parser is complaining. When you're writing JavaScript, you should always include semicolons after statements. Fortunately CoffeeScript gets round all this hassle by not having semicolons in its syntax. Rather the semicolons are inserted automatically (at the right places) when the CoffeeScript is compiled down to JavaScript.</p>
+
+<h2>Reserved words</h2>
+
+<p>Certain keywords in JavaScript are reserved for future versions of JavaScript, such as <code>const</code>, <code>enum</code> and <code>class</code>. Using these as variable names in your JavaScript programs can unpredictable results; some browsers will cope with them just fine, and others will choke. CoffeeScript neatly sidesteps this issue, by detecting if you're using a reserved keyword, and escaping it if necessary.</p>
+
+<p>For example, let's say you were to use the reserved keyword <code>class</code> as a property on an object, your CoffeeScript might look like this:</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>myObj = {
+  delete: "I am a keyword!"
+}
+myObj.class = -&gt;
+</code></pre>
+
+<p>The CoffeeScript parser notices you're using a reserved keyword, and quotes it for you:</p>
+
+<pre><code>var myObj;
+myObj = {
+  "delete": "I am a keyword!"
+};
+myObj["class"] = function() {};
+</code></pre>
+
+<h2>Equality comparisons</h2>
+
+<p>The weak equality comparison in JavaScript has some confusing behavior and is often the source of confusing bugs. The example below is taken from <a href="http://bonsaiden.github.com/JavaScript-Garden/#types.equality">JavaScript Garden's equality section</a> which delves into the issue in some depth.</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>""           ==   "0"           // false
+0            ==   ""            // true
+0            ==   "0"           // true
+false        ==   "false"       // false
+false        ==   "0"           // true
+false        ==   undefined     // false
+false        ==   null          // false
+null         ==   undefined     // true
+" \t\r\n"    ==   0             // true
+</code></pre>
+
+<p>The reason behind this behavior is that the weak equality coerces types automatically. I'm sure you'll agree this is all pretty ambiguous, and can lead to unexpected results and bugs.</p>
+
+<p>The solution is to instead use the strict equality operator, which consists of three equal signs: <code>===</code>. It works exactly like the normal equality operator, but without any type coercion. It's recommended to always use the strict equality operator, and explicitly convert types if needs be.</p>
+
+<p>CoffeeScript solves this by simply replacing all weak comparisons with strict ones, in other words converting all <code>==</code> comparators into <code>===</code>. You can't do a a weak equality comparison in CoffeeScript, and you should explicitly convert types before comparing them if necessary.</p>
+
+<p>This doesn't mean you can ignore type coercion in CoffeeScript completely though, especially when it comes to checking the 'truthfulness' of variables during flow control. Blank strings, <code>null</code>, <code>undefined</code> and the number <code>0</code> are all coerced to <code>false</code></p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>alert("Empty Array")  unless [].length
+alert("Empty String") unless ""
+alert("Number 0")     unless 0
+</code></pre>
+
+<p>If you want to explicitly check for <code>null</code> and <code>undefined</code>, then you can use CoffeeScript's existential operator:</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>alert("This is not called") unless ""?
+</code></pre>
+
+<p>The <code>alert()</code> in the previous example won't be called, as the empty string isn't equal to <code>null</code>.</p>
+
+<h2>Function definition</h2>
+
+<p>Oddly enough in JavaScript, functions can be defined after they're used. For example, the following runs absolutely fine, even though <code>wem</code> is defined after it's called:</p>
+
+<pre><code>wem();
+function wem() {}
+</code></pre>
+
+<p>The is because of function scope. Functions get hoisted before the programs execution and as such are available everywhere in the scope they were defined in, even if called before the actual definition in the source. The trouble is, hoisting behavior differs between browser; for example:</p>
+
+<pre><code>if (true) {
+  function declaration() {
+    return "first";
+  }
+} else {
+  function declaration() {
+    return "second";
+  }
+}
+declaration();
+</code></pre>
+
+<p>In some browsers such as Firefox, <code>declaration()</code> will return <code>"first"</code>, and in other browsers like Chrome it'll return <code>"second"</code>, even though it looks like the <code>else</code> statement is never run.</p>
+
+<p>If you want to know more about declarative functions, then you should read <a href="http://kangax.github.com/nfe/">Juriy Zaytsev's guide</a>, where he delves into the specifics. Suffice to say, they have fairly ambiguous behavior, and can lead to problems later down the road. All things considered, It's best to steer clear of them by using function expressions instead:</p>
+
+<pre><code>var wem = function(){};
+wem();
+</code></pre>
+
+<p>CoffeeScript's approach to this is to remove declarative functions entirely, using only function expressions.</p>
+
+<h2>Number property lookups</h2>
+
+<p>A flaw in JavaScript's parser means that the <em>dot notation</em> on numbers is interpreted as a floating point literal, rather than a property lookup. For example, the following JavaScript will cause a syntax error:</p>
+
+<pre><code>5.toString();
+</code></pre>
+
+<p>JavaScript's parser is looking for another Number after the dot, and so raises an <code>Unexpected token</code> error when it encounters <code>toString()</code>. The solution to this is to either use parenthesis, or add an additional dot.</p>
+
+<pre><code>(5).toString();
+5..toString();
+</code></pre>
+
+<p>Fortunately CoffeeScript's parsers is clever enough to deal with this issue by using double dot notations automatically (as in the example above) whenever you access properties on Numbers.</p>
+
+<h1>The un-fixed parts</h1>
+
+<p>Whilst CoffeeScript goes some length to solving some of JavaScript's design flaws, it can only go so far. As I mentioned previously, CoffeeScript's strictly limited to static analysis by design, and doesn't do any runtime checking for performance reasons. CoffeeScript uses a straight source-to-source compiler, the idea being that every CoffeeScript statement results in a equivalent JavaScript statement. CoffeeScript doesn't provide an abstraction over any of JavaScript's keywords, such as <code>typeof</code>, and as such some design flaws in JavaScript's design also apply to CoffeeScript.</p>
+
+<p>In the previous sections we covered some design flaws in JavaScript that CoffeeScript fixes. Now let's talk about some of JavaScript's flaws that CoffeeScript can't fix.</p>
+
+<h2>Using eval</h2>
+
+<p>Whilst CoffeeScript removes some of JavaScript's foibles, other features are a necessary evil, you just need to be aware of their shortcomings. A case in point, is the <code>eval()</code> function. Whilst undoubtedly it has its uses, you should know about its drawbacks, and avoid it if possible. The <code>eval()</code> function will execute a string of JavaScript code in the local scope, and functions like <code>setTimeout()</code> and <code>setInterval()</code> can also both take a string as their first argument to be evaluated.</p>
+
+<p>However, like <code>with</code>, <code>eval()</code> throws the compiler off track, and is a major performance hog. As the compiler has no idea what's inside until runtime, it can't perform any optimizations like inlining. Another concern is with security. If you give it dirty input, <code>eval</code> can easily open up your code for injection attacks. 99% of the time when you're using <code>eval</code>, there are better &amp; safer alternatives (such as square brackets).</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code># Don't do this
+model = eval(modelName)
+
+# Use square brackets instead
+model = window[modelName]
+</code></pre>
+
+<h2>Using typeof</h2>
+
+<p>The <code>typeof</code> operator is probably the biggest design flaw of JavaScript, simply because it's basically completely broken. In fact, it really has only one use, checking to see if a value is <code>undefined</code>.</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>typeof undefinedVar is "undefined"
+</code></pre>
+
+<p>For all other types of type checking, <code>typeof</code> fails rather miserably, returning inconsistent results depending on the browser and how instances were instantiated. This isn't something that CoffeeScript can help you either, since the language uses static analysis and has no runtime type checking. You're on your own here.</p>
+
+<p>To illustrate the problem, here's a table taken from <a href="http://bonsaiden.github.com/JavaScript-Garden/">JavaScript Garden</a> which shows some of the major inconstancies in the keyword's type checking.</p>
+
+<pre><code>Value               Class      Type
+-------------------------------------
+"foo"               String     string
+new String("foo")   String     object
+1.2                 Number     number
+new Number(1.2)     Number     object
+true                Boolean    boolean
+new Boolean(true)   Boolean    object
+new Date()          Date       object
+new Error()         Error      object
+[1,2,3]             Array      object
+new Array(1, 2, 3)  Array      object
+new Function("")    Function   function
+/abc/g              RegExp     object
+new RegExp("meow")  RegExp     object
+{}                  Object     object
+new Object()        Object     object
+</code></pre>
+
+<p>As you can see, depending on if you define a string with quotes or with the <code>String</code> class affects the result of <code>typeof</code>. Logically <code>typeof</code> should return <code>"string"</code> for both checks, but for the latter it returns <code>"object"</code>. Unfortunately the inconstancies only get worse from there.</p>
+
+<p>So what can we use for type checking in JavaScript? Well, luckily <code>Object.prototype.toString()</code> comes to the rescue here. If we invoke that function in the context of a particular object, it'll return the correct type. All we need to do is massage the string it returns, so we end up with the sort of string <code>typeof</code> should be returning. Here's an example implementation ported from jQuery's <code>$.type</code>:</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>type = do -&gt;
+  classToType = {}
+  for name in "Boolean Number String Function Array Date RegExp Undefined Null".split(" ")
+    classToType["[object " + name + "]"] = name.toLowerCase()
+
+  (obj) -&gt;
+    strType = Object::toString.call(obj)
+    classToType[strType] or "object"
+
+# Returns the sort of types we'd expect:
+type("")         # "string"
+type(new String) # "string"
+type([])         # "array"
+type(/\d/)       # "regexp"
+type(new Date)   # "date"
+type(true)       # "boolean"
+type(null)       # "null"
+type({})         # "object"
+</code></pre>
+
+<p>If you're checking to see if an variable has been defined, you'll still need to use <code>typeof</code> otherwise you'll get a <code>ReferenceError</code>.</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>if typeof aVar isnt "undefined"
+  objectType = type(aVar)
+</code></pre>
+
+<p>Or more succinctly with the existential operator:</p>
+
+<pre><code>objectType = type(aVar?)
+</code></pre>
+
+<p>As an alternative to type checking, you can often use duck typing and the CoffeeScript existential operator together to eliminating the need to resolve an object's type. For example, let's say we're pushing a value onto an array. We could say that, as long as the 'array like' object implements <code>push()</code>, we should treat it like an array:</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>anArray?.push? aValue
+</code></pre>
+
+<p>If <code>anArray</code> is an object other than an array than the existential operator will ensure that <code>push()</code> is never called.</p>
+
+<h2>Using instanceof</h2>
+
+<p>JavaScript's <code>instanceof</code> keyword is nearly as broken as <code>typeof</code>. Ideally <code>instanceof</code> would compare the constructor of two object, returning a boolean if one was an instance of the other. However, in reality <code>instanceof</code> only works when comparing custom made objects. When it comes to comparing built-in types, it's as useless as <code>typeof</code>.</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>new String("foo") instanceof String # true
+"foo" instanceof String             # false
+</code></pre>
+
+<p>Additionally, <code>instanceof</code> also doesn't work when comparing object from different frames in the browser. In fact, <code>instanceof</code> only returns a correct result for custom made objects, such as CoffeeScript classes.</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>class Parent
+class Child extends Parent
+
+child = new Child
+child instanceof Child  # true
+child instanceof Parent # true
+</code></pre>
+
+<p>Make sure you only use it for your own objects or, even better, stick clear of it.</p>
+
+<h2>Using delete</h2>
+
+<p>The <code>delete</code> keyword can only safely be used for removing properties inside objects.</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>anObject = {one: 1, two: 2}
+delete anObject.one
+anObject.hasOwnProperty("one") # false
+</code></pre>
+
+<p>Any other use, such as deleting variables or function's won't work.</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>aVar = 1
+delete aVar
+typeof Var # "integer"
+</code></pre>
+
+<p>It's rather peculiar behavior, but there you have it. If you want to remove a reference to a variable, just assign it to <code>null</code> instead.</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>aVar = 1
+aVar = null
+</code></pre>
+
+<h2>Using parseInt</h2>
+
+<p>JavaScript's <code>parseInt()</code> function can return unexpected results if you pass a string to it without informing it of the proper base. For example:</p>
+
+<pre><code># Returns 8, not 10!
+parseInt('010') is 8
+</code></pre>
+
+<p>Always pass a base to the function to make it work correctly:</p>
+
+<pre><code># Use base 10 for the correct result
+parseInt('010', 10) is 10
+</code></pre>
+
+<p>This isn't something CoffeeScript can do for you; you'll just have to remember to always specify a base when using <code>parseInt()</code>.</p>
+
+<h2>Strict mode</h2>
+
+<p>Strict mode is a new feature of ECMAScript 5 that allows you to run a JavaScript program or function in a <em>strict</em> context. This strict context throws more exceptions and warnings than the normal context, giving developers some indication when they're straying from best practices, writing un-optimizable code or making common mistakes. In other words, strict mode reduces bugs, increases security, improves performance and eliminates some difficult to use language features. What's not to like?</p>
+
+<p>Strict mode is currently supported in the following browsers:</p>
+
+<ul>
+<li>Chrome >= 13.0</li>
+<li>Safari >= 5.0</li>
+<li>Opera >= 12.0</li>
+<li>Firefox >= 4.0</li>
+<li>IE >= 10.0</li>
+</ul>
+
+
+<p>Having said that, strict mode is completely backwards compatible with older browsers. Programs using it should run fine in either a strict or normal context.</p>
+
+<h3>Strict mode changes</h3>
+
+<p>Most of the changes strict mode introduces pertain to JavaScript's syntax:</p>
+
+<ul>
+<li>Errors on duplicate property and function argument names</li>
+<li>Errors on incorrect use of the <code>delete</code> operator</li>
+<li>Access to <code>arguments.caller</code> &amp; <code>arguments.callee</code> throws an error (for performance reasons)</li>
+<li>Using the <code>with</code> operator will raise a syntax error</li>
+<li>Certain variables such as <code>undefined</code> are no longer writeable</li>
+<li>Introduces additional reserved keywords, such as <code>implements</code>, <code>interface</code>, <code>let</code>, <code>package</code>, <code>private</code>, <code>protected</code>, <code>public</code>, <code>static</code>, and <code>yield</code></li>
+</ul>
+
+
+<p>However, strict mode also changes some runtime behavior:</p>
+
+<ul>
+<li>Global variables are explicit (<code>var</code> always required). The global value of <code>this</code> is <code>undefined</code>.</li>
+<li><code>eval</code> can't introduce new variables into the local context</li>
+<li>Function statements have to be defined before they're used (previously functions could be <a href="http://whereswalden.com/2011/01/24/new-es5-strict-mode-requirement-function-statements-not-at-top-level-of-a-program-or-function-are-prohibited/">defined anywhere</a>).</li>
+<li><code>arguments</code> is immutable</li>
+</ul>
+
+
+<p>CoffeeScript already abides by a lot of strict mode's requirements, such as always using <code>var</code> when defining variables, but it's still very useful to enable strict mode in your CoffeeScript programs. Indeed, CoffeeScript is taking this a step further and in <a href="https://github.com/jashkenas/coffee-script/issues/1547">future versions</a> will check a program's compliance to strict mode at compile time.</p>
+
+<h3>Strict mode usage</h3>
+
+<p>All you need to do to enable strict checking is start your script or function with the following string:</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>-&gt;
+  "use strict"
+
+  # ... your code ...
+</code></pre>
+
+<p>That's it, just the <code>'use strict'</code> string. Couldn't be simpler and it's completely backwards compatible. Let's take a look at strict mode in action. The following function will raise a syntax error in strict mode, but run fine in the usual mode:</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>do -&gt;
+  "use strict"
+  console.log(arguments.callee)
+</code></pre>
+
+<p>Strict mode has removed access to <code>arguments.caller</code> &amp; <code>arguments.callee</code> as they're major performance hogs, and is now throwing syntax errors whenever they're used.</p>
+
+<p>There's a particular gotcha you should look out for when using strict mode, namely creating global variables with <code>this</code>. The following example will throw a <code>TypeError</code> in strict mode, but run fine in a normal context, creating a global variable:</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>do -&gt;
+  "use strict"
+  class @Spine
+</code></pre>
+
+<p>The reason behind this disparity is that in strict mode <code>this</code> is <code>undefined</code>, whereas normally it refers to the <code>window</code> object. The solution to this is to explicitly set global variables on the <code>window</code> object.</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>do -&gt;
+  "use strict"
+  class window.Spine
+</code></pre>
+
+<p>Whilst I recommend enabling strict mode, but it's worth noting that script mode doesn't enable any new features that aren't ready possible in JavaScript, and will actually slow down your code a bit by having the VM do more checks at runtime. You may want to develop with strict mode, and deploy to production without it.</p>
+
+<h2>JavaScript Lint</h2>
+
+<p><a href="http://www.javascriptlint.com/">JavaScript Lint</a> is a JavaScript code quality tool, and running your programs through it is a great way of improving code quality and best practices. The project was based on a similar tool called <a href="http://www.jslint.com">JSLint</a>. Check out JSLint's site for a <a href="http://www.jslint.com/lint.html">great list</a> of issues that it checks for, including global variables, missing semicolons and weak equality comparisons.</p>
+
+<p>The good news is that CoffeeScript already 'lints' all of its output, so CoffeeScript generated JavaScript is already JavaScript Lint compatible. In fact, the <code>coffee</code> tool has support for a <code>--lint</code> option:</p>
+
+<pre><code>coffee --lint index.coffee
+  index.coffee: 0 error(s), 0 warning(s)
+</code></pre>
+
+  </div>
+</div>
+</body>
+</html>
