@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset=utf-8>
-<title>The Little Book on CoffeeScript - Introduction</title>
+<title>The Little Book on CoffeeScript - 介绍</title>
 <link rel="stylesheet" href="site/site.css" type="text/css" charset="utf-8">
 <link rel="stylesheet" href="site/highlight.css" type="text/css" charset="utf-8">
 <script src="site/jquery.js" type="text/javascript" charset="utf-8"></script>      
@@ -43,13 +43,13 @@
 
 <p>CoffeeScript的用途并不仅限于浏览器，把它用在JavaScript实现的服务端也非常不错，比方说在 <a href="http://nodejs.org/">Node.js</a>上。还有，CoffeeScript越来越广泛，有更多的集成，比方说它已经是Rails3.1的标配。现在正是进入CoffeeScript学习的时机。你现在为学习这门语言付出的时间在以后会以为你节约大量的时间作为回报的。</p>
 
-<h2>初始设置</h2>
+<h2>初始化安装</h2>
 
-<p>One of the easiest ways to initially play around with the library is to use it right inside the browser. Navigate to <a href="http://coffeescript.org">http://coffeescript.org</a> and click on the <em>Try CoffeeScript</em> tab. The site uses a browser version of the CoffeeScript compiler, converting any CoffeeScript typed inside the left panel to JavaScript in the right panel.</p>
+<p>一种尝试这个类库最简单的方式就是直接在浏览器中使用它，访问<a href="http://coffeescript.org">http://coffeescript.org</a>，点击<em>Try CoffeeScript</em>标签。这个网站使用浏览器版的CoffeeScript编译器，把在左边面板任意输入的CoffeeScript代码编译为JavaScriprt后显示在右边的面板中。</p>
 
-<p>You can also convert JavaScript back to CoffeeScript using the <a href="http://js2coffee.org/">js2coffee</a> project, especially useful when migrating JavaScript projects to CoffeeScript.</p>
+<p>你也可以使用<a href="http://coffee2js.org">coffee2js</a>项目把JavaScript转变为CoffeeScirpt。这在把JavaScript项目迁移到CoffeeScript上时尤其有用。</p>
 
-<p>In fact, you can use the browser-based CoffeeScript compiler yourself, by including <a href="http://jashkenas.github.com/coffee-script/extras/coffee-script.js">this script</a> in a page, marking up any CoffeeScript script tags with the correct <code>type</code>.</p>
+<p>实际上，你自己都可以使用基于浏览器的CoffeeScirpt编译器，只需要在页面中包含<a href="http://jashkenas.github.com/coffee-script/extras/coffee-script.js">这个脚本</a>，使用正确类型（type）的标标签记CoffeeScript脚本即可。</p>
 
 <pre><code>&lt;script src="http://jashkenas.github.com/coffee-script/extras/coffee-script.js" type="text/javascript" charset="utf-8"&gt;&lt;/script&gt;
 &lt;script type="text/coffeescript"&gt;
@@ -57,23 +57,23 @@
 &lt;/script&gt;
 </code></pre>
 
-<p>Obviously, in production, you don't want to be interpreting CoffeeScript at runtime as it'll slow things up for your clients. Instead CoffeeScript offers a <a href="http://nodejs.org">Node.js</a> compiler to pre-process CoffeeScript files.</p>
+<p>显然，在生产环境中，由于会减慢客户端的运行，所以没人愿意在运行时解释执行CoffeeScript。作为替代，CoffeeScript提供了一个<a href="http://nodejs.org">Node.js</a>版的编译器来对CoffeeScript文件进行预处理。</p>
 
-<p>To install it, first make sure you have a working copy of the latest stable version of <a href="http://nodejs.org">Node.js</a>, and <a href="http://npmjs.org/">npm</a> (the Node Package Manager). You can then install CoffeeScript with npm:</p>
+<p>要安装该编译器，首先必须保证你已经有了稳定可用的<a href="http://nodejs.org/">Node.js</a>和<a href="http://npmjs.org/">npm</a>（Node程序包管理工具）。然后你就可以使用npm来安装CoffeeScirpt了：</p>
 
 <pre><code>npm install -g coffee-script
 </code></pre>
 
-<p>This will give you a <code>coffee</code> executable. If you execute it without any command line options, it'll give you the CoffeeScript console, which you can use to quickly execute CoffeeScript statements. To pre-process files, pass the <code>--compile</code> option.</p>
+<p>这同时还为你提供了一个<code>coffee</code>的可执行二进制程序，如果不用任何命令行参数而直接运行该程序，它会给你一个CoffeeScript的命令行，这个命令行你可以用来快速的运行一些CoffeeScript语句。要预处理文件的话，使用<code>--compile</code>参数：</p>
 
 <pre><code>coffee --compile my-script.coffee
 </code></pre>
 
-<p>If <code>--output</code> is not specified, CoffeeScript will write to a JavaScript file with the same name, in this case <code>my-script.js</code>. This will overwrite any existing files, so be careful you're not overwriting any JavaScript files unintentionally. For a full list of the command line options available, pass <code>--help</code>.</p>
+<p>如果没有指定<code>--output</code>参数，CoffeeScript会直接将编译后的代码写入到一个同名的JavaScript文件中，本例中就是<code>my-script.js</code>。已存在该文件的话会被复写掉，因此要当心你的JavaScript文件被覆盖。使用<code>--help</code>参数可以看到一个完整的可用命令行参数列表。</p>
 
-<p>As you can see above, the default extension of CoffeeScript files is <code>.coffee</code>. Amongst other things, this will allow text editors like <a href="http://macromates.com/">TextMate</a> to work out which language the file contains, giving it the appropriate syntax highlighting. By default, TextMate doesn't include support for CoffeeScript, but you can easily install the <a href="https://github.com/jashkenas/coffee-script-tmbundle">bundle to do so</a>.</p>
+<p>就如你在之前看到的一样，CoffeeScirpt文件的默认扩展名是<code>.coffee</code>，除去其他原因之外，能让像<a href="http://macromates.com/">TextMate</a>这样的编译器能够辨认出文件中包含的是什么语言的代码从而是用相对应的高亮也是其中之一。TextMate并不包含对CoffeeScript的支持，但是你可以安装这个<a href="https://github.com/jashkenas/coffee-script-tmbundle">包</a>来提供支持。</p>
 
-<p>If all this compilation seems like a bit of an inconvenience and bother, that's because it is. We'll be getting onto ways to solve this by automatically compiling CoffeeScript files, but first lets take a look at the language's syntax.</p>
+<p>编译看起来既不方便又很无聊。没办法，它就是这样。我们将会学习通过自动编译的方法来解决这个问题，不过首先我们先学习一下这门语言的语法。</p>
 
   </div>
 </div>
