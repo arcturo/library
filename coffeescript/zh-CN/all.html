@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset=utf-8>
-<title>The Little Book on CoffeeScript - Syntax</title>
+<title>The Little Book on CoffeeScript - 语法</title>
 <link rel="stylesheet" href="site/site.css" type="text/css" charset="utf-8">
 <link rel="stylesheet" href="site/highlight.css" type="text/css" charset="utf-8">
 <script src="site/jquery.js" type="text/javascript" charset="utf-8"></script>      
@@ -20,25 +20,25 @@
   </header>
   
   <div id="content">
-    <div class="back"><a href="index.html">&laquo; Back to all chapters</a></div>
+    <div class="back"><a href="index.html">&laquo; 返回目录</a></div>
 
 
-<h1>CoffeeScript Syntax</h1>
+<h1>CoffeeScript语法</h1>
 
-<p>Firstly, before we get any further into this section, I want to reiterate that while CoffeeScript's syntax is often identical with JavaScript's, it's not a superset, and therefore some JavaScript keywords, such as <code>function</code> and <code>var</code> aren't permitted, and will throw syntax errors. If you're writing a CoffeeScript file, it needs to be pure CoffeeScript; you can't intermingle the two languages.</p>
+<p>首先，在开始本章之前，我还想重申下尽管很多时候CoffeeScript的语法与JavaScript相似，但是它并不是JavaScript的超集，因此，例如<code>function</code>和<code>var</code>这类JavaScript关键字并不允许在CoffeeScript中使用。如果你正在编写CoffeeScript文件，里面必须完全是纯CoffeeScript代码，你不能把这两种语言揉到一起。</p>
 
-<p>Why isn't CoffeeScript a superset? Well, the very fact that whitespace is significant in CoffeeScript programs prevents it being a superset. And, once that decision's been made, the team decided you might as well go the full hog and deprecate some JavaScript keywords and features in the name of simplicity and in an effort to reduce many commonly occurring bugs.</p>
+<p>为什么CoffeeScript不是超集？阻止其成为超集最直接的原因是在CoffeeScript程序中空格是有意义的。而且，既然已经这么决定了，开发团队也帮你一干到底，以精简的名字代替JavaScript的一些关键字和特性，还为避免很多常见的bug而努力。</p>
 
-<p>What I find mind-blowing, in a meta sort of way, is that the CoffeeScript interpreter itself is actually written in CoffeeScript. It looks like the chicken or egg paradox has finally been solved!</p>
+<p>让我极度兴奋的是，从元的角度上来说，CoffeeScript的解释器实际上就是由CoffeeScript写成的。这看起来似乎解决了先有鸡还是先有蛋的悖论！</p>
 
-<p>Right, so firstly let's tackle the basic stuff. There are no semicolons in CoffeeScript, it'll add them automatically for you upon compilation. Semicolons were the cause of much debate in the JavaScript community, and behind some weird interpreter <a href="http://bonsaiden.github.com/JavaScript-Garden/#core.semicolon">behavior</a>. Anyway, CoffeeScript resolves this problem for you by simply removing semi-colons from its syntax, adding them as needed behind the scenes.</p>
+<p>好了，让我们从最基本的工作开始。CoffeeScript去掉了分号，它会在编译时为你自动添加。分号在JavaScript社区中引起了大量的争论，以及背后的一些解释器怪异的<a href="http://bonsaiden.github.com/JavaScript-Garden/#core.semicolon">行为</a>。总之，CoffeeScript为了帮你解决这个问题，简单地从语法上的移除了分号，然后在幕后更具需要添加。</p>
 
-<p>Comments are in the same format as Ruby comments, starting with a hash character.</p>
+<p>注释格式与Ruby的一致，以一个哈希字符开头。</p>
 
 <pre><code># A comment
 </code></pre>
 
-<p>Multiline comments are also supported, and are brought forward to the generated JavaScript. They're enclosed by three hash characters.</p>
+<p>也支持多行注释，而且还会把多行注释添加到生成的JavaScript中。使用三个哈希字符包裹即可。</p>
 
 <p><span class="csscript"></span></p>
 
@@ -47,22 +47,22 @@
 ###
 </code></pre>
 
-<p>As I briefly alluded to, whitespace is significant in CoffeeScript. In practice, this means that you can replace curly brackets (<code>{}</code>) with a tab. This takes inspiration from Python's syntax, and has the excellent side effect of ensuring that your script is formatted in a sane manner, otherwise it won't even compile!</p>
+<p>正如我简单的提过，CoffeeScript对空格是敏感的。实际说来，就是你可以使用制表符来替换花括号（{}）。这受到了Python语法的影响，而且还能确保你的脚本有一个清晰的格式，否则连编译都通不过。</p>
 
-<h2>Variables &amp; Scope</h2>
+<h2>变量与作用域</h2>
 
-<p>CoffeeScript fixes one of the major bugbears with JavaScript, global variables. In JavaScript, it's all too easy to accidentally declare a global variable by forgetting to include <code>var</code> before the variable assignment. CoffeeScript solves this by simply removing global variables. Behind the scenes, CoffeeScript wraps up scripts with an anonymous function, keeping the local context, and automatically prefixes all variable assignments with <code>var</code>. For example, take this simple variable assignment in CoffeeScript:</p>
+<p>CoffeeScript修复了JavaScript中一个最让人头疼的问题——全局变量。在JavaScript中，一不小心的话，就很容易在定义变量时遗漏<code>var</code>关键字导致产生全局变量。CoffeeScript通过简单的剔除全局变量来解决这个问题。在背后，CoffeeScript使用一个匿名函数把所有脚本都包裹起来，将其限定在局部作用域中，并且为所有的变量赋值前自动添加<code>var</code>。比如，下面是在CoffeeScript中简单的定义一个变量：</p>
 
 <p><span class="csscript"></span></p>
 
 <pre><code>myVariable = "test"
 </code></pre>
 
-<p>Notice the dark grey box in the top right of the code example above. Give that a click, and the code will toggle between CoffeeScript and the compiled JavaScript. This is rendered right inside the page at runtime, so you're assured the compiled output is accurate.</p>
+<p>注意示例代码右上角的深灰色小方块。单击它，代码就会在CoffeeScript和编译后的JavaScript之间来回切换。这是在页面加载是输出的，所以你放心，编译结果是准确的。</p>
 
-<p>As you can see, the variable assignment is kept completely local, it's impossible to accidentally create a global variable. CoffeeScript actually takes this a step further, and makes it difficult to shadow a higher-level variable. This goes a great deal to prevent some of the most common mistakes developers make in JavaScript.</p>
+<p>如你所见的那样，变量赋值被限定在局部作用域中，不小心创建全局变量是不可能的。CoffeeScript还更进了一步，让覆盖一个高一级的变量也很困难。这大量的减少了程序员会在JavaScript中犯的常见的错误。</p>
 
-<p>However, sometimes it's useful to create global variables. You can either do this by directly setting them as properties on the global object (<code>window</code> in browsers), or with the following pattern:</p>
+<p>然而，有时候全局变量还是有用的。你可以通过直接给全局对象（浏览器中的<code>window</code>）赋值来获得全局变量，也可以通过下面这种模式。</p>
 
 <p><span class="csscript"></span></p>
 
@@ -70,22 +70,22 @@
 exports.MyVariable = "foo-bar"
 </code></pre>
 
-<p>In the root context, <code>this</code> is equal to the global object, and by creating a local <code>exports</code> variable you're making it really obvious to anyone reading your code exactly which global variables a script is creating. Additionally, it paves the way for CommonJS modules, which we're going to cover later in the book.</p>
+<p>在顶级作用域中，<code>this</code>就相当于全局对象，你可以创建一个局部变量<code>exports</code>让阅读你代码的人能够分清楚哪个是脚本创建的全局变量。而且，这还能为支持CommonJS模块铺平了道路，这在本书的后面会做介绍。</p>
 
-<h2>Functions</h2>
+<h2>函数</h2>
 
-<p>CoffeeScript removes the rather verbose <code>function</code> statement, and replaces it with a thin arrow: <code>-&gt;</code>. Functions can be one liners or indented on multiple lines. The last expression in the function is implicitly returned. In other words, you don't need to use the <code>return</code> statement unless you want to return earlier inside the function.</p>
+<p>CoffeeScript移除了冗长的<code>function</code>语句，以瘦箭头<code>-&gt;</code>替之。函数可以是一行也可以是多行。函数的最后一个表达式会作为隐式的返回值。换句话说，你不再需要使用<code>return</code>关键字，除非你想早一点从函数中返回。</p>
 
-<p>With that in mind, let's take a look at an example:</p>
+<p>记住这点，让我们看一个例子：</p>
 
 <p><span class="csscript"></span></p>
 
 <pre><code>func = -&gt; "bar"
 </code></pre>
 
-<p>You can see in the resultant compilation, the <code>-&gt;</code> is turned into a <code>function</code> statement, and the <code>"bar"</code> string is automatically returned.</p>
+<p>结合着编译后的JavaScript你会发现，<code>-&gt;</code>被转成了一个<code>function</code>表达式，并且<code>"bar"</code>被自动的返回了。</p>
 
-<p>As mentioned earlier, there's no reason why we can't use multiple lines, as long as we indent the function body properly.</p>
+<p>前面也说了，没有理由阻止我们使用多行的函数，只需要适当地缩进函数体即可：</p>
 
 <p><span class="csscript"></span></p>
 
@@ -94,23 +94,23 @@ exports.MyVariable = "foo-bar"
   "bar"
 </code></pre>
 
-<h3>Function arguments</h3>
+<h3>函数参数</h3>
 
-<p>How about specifying arguments? Well, CoffeeScript lets you do that by specifying arguments in parentheses before the arrow.</p>
+<p>如何指定参数？CoffeeScript允许你通过在箭头前面的括号中指定参数。</p>
 
 <p><span class="csscript"></span></p>
 
 <pre><code>times = (a, b) -&gt; a * b
 </code></pre>
 
-<p>CoffeeScript supports default arguments too, for example:</p>
+<p>CoffeeScript还支持默认参数，例如：</p>
 
 <p><span class="csscript"></span></p>
 
 <pre><code>times = (a = 1, b = 2) -&gt; a * b
 </code></pre>
 
-<p>You can also use splats to accept multiple arguments, denoted by <code>...</code></p>
+<p>你还可以使用参数槽（splats）接收多个参数，使用<code>...</code>表示：</p>
 
 <p><span class="csscript"></span></p>
 
@@ -120,7 +120,7 @@ exports.MyVariable = "foo-bar"
   result
 </code></pre>
 
-<p>In the example above, <code>nums</code> is an array of all the arguments passed to the function. It's not an <code>arguments</code> object, but rather a real array, so you don't need to concern yourself with <code>Array.prototype.splice</code> or <code>jQuery.makeArray()</code> if you want to manipulate it.</p>
+<p>在上面的例子中，<code>nums</code>是一个包含传递给函数全部参数的数组。它不是一个<code>arugments</code>对象，而是一个真实的数组对象，这样的话在你想操作它的时候就不需要先使用<code>Array.prototype.splice</code>或者<code>jQuery.makeArray()</code>了。</p>
 
 <p><span class="csscript"></span></p>
 
@@ -129,9 +129,9 @@ exports.MyVariable = "foo-bar"
   this.constructor.trigger.apply(events)
 </code></pre>
 
-<h3>Function invocation</h3>
+<h3>函数调用</h3>
 
-<p>Functions can be invoked exactly as in JavaScript, with parens <code>()</code>, <code>apply()</code> or <code>call()</code>. However, like Ruby, CoffeeScript will automatically call functions if they are invoked with at least one argument.</p>
+<p>在JavaScript中，可以通过括弧<code>()</code>、<code>apply()</code>和<code>call()</code>来调用函数。然而，像Ruby一样，如果函数被至少一个参数跟着的话，CoffeeScript会自动的调用这个函数。</p>
 
 <p><span class="csscript"></span></p>
 
@@ -146,20 +146,20 @@ alert inspect a
 alert(inspect(a))
 </code></pre>
 
-<p>Although parenthesis is optional, I'd recommend using it if it's not immediately obvious what's being invoked, and with which arguments. In the last example, with <code>inspect</code>, I'd definitely recommend wrapping at least the <code>inspect</code> invocation in parens.</p>
+<p>尽管括号不是必须的，但是在难以分清谁是被调用的函数哪些是参数时，我推荐还是用上括号。上一个<code>inspect</code>的示例中，我真心建议你至少使给<code>inspect</code>的调用加上括号。</p>
 
 <p><span class="csscript"></span></p>
 
 <pre><code>alert inspect(a)
 </code></pre>
 
-<p>If you don't pass any arguments with an invocation, CoffeeScript has no way of working out if you intend to invoke the function, or just treat it like a variable. In this respect, CoffeeScript's behavior differs from Ruby which always invokes references to functions, and is more similar to Python's. This has been the source of a few errors in my CoffeeScript programs, so it's worth keeping an eye out for cases where you intend to call a function without any arguments, and include parenthesis.</p>
+<p>如果在调用一个函数时你没有传递参数，CoffeeScript就没有办法判断出你打算调用这个函数，还是只是把它当作一个变。从这点来看，CoffeeScript的行为与Ruby有些差异，后者总是会调用引用函数的变量，CoffeeScript更像Python。这已经变成了我的CoffeeScript程序中常见的错误。因此，在你打算无参数调用函数时多留个心眼，别忘了加上括号。</p>
 
-<h3>Function context</h3>
+<h3>函数上下文</h3>
 
-<p>Context changes are rife within JavaScript, especially with event callbacks, so CoffeeScript provides a few helpers to manage this. One such helper is a variation on <code>-&gt;</code>, the fat arrow function: <code>=&gt;</code></p>
+<p>在JavaScript上下文会频繁的变化。尤其是在回调函数中，CoffeeScript为此提供了一些辅助。其中之一就是<code>-&gt;</code>的变种胖箭头的函数<code>=&gt;</code></p>
 
-<p>Using the fat arrow instead of the thin arrow ensures that the function context will be bound to the local one. For example:</p>
+<p>使用胖箭头代替普通箭头是为了确保函数的上下文可以绑定为当前的上下文。例如：</p>
 
 <p><span class="csscript"></span></p>
 
@@ -167,13 +167,13 @@ alert(inspect(a))
 element.addEventListener "click", (e) =&gt; this.clickHandler(e)
 </code></pre>
 
-<p>The reason you might want to do this, is that callbacks from <code>addEventListener()</code> are executed in the context of the <code>element</code>, i.e. <code>this</code> equals the element. If you want to keep <code>this</code> equal to the local context, without doing a <code>self = this</code> dance, fat arrows are the way to go.</p>
+<p>你之所以要这样做的原因是，来自<code>addEventListener</code>的回调函数会以<code>element</code>为上下文被调用，也就是说，<code>this</code>就相当于这个元素。如果你想让<code>this</code>等于当前上下文，除了使用<code>self=this</code>，胖箭头也是一种方式。</p>
 
-<p>This binding idea is a similar concept to jQuery's <a href="http://api.jquery.com/jQuery.proxy/"><code>proxy()</code></a> or <a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Function/bind">ES5's</a> <code>bind()</code> functions.</p>
+<p>这中绑定的思想与jQuery的 <a href="http://api.jquery.com/jQuery.proxy/"><code>proxy()</code></a>或者<a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Function/bind">ES5's</a>的<code>bind()</code>函数是类似的概念。</p>
 
-<h2>Object literals &amp; array definition</h2>
+<h2>对象字面量与数组定义</h2>
 
-<p>Object literals can be specified exactly as in JavaScript, with a pair of braces and key/value statements. However, like with function invocation, CoffeeScript makes the braces optional. In fact, you can also use indentation and new lines instead of comma separation.</p>
+<p>就如在JavaScript中一样，可以使用一对大括号以及键/值来明确定义对象字面量。然而，与函数调用类似，CoffeeScript使得可以省略括号。事实上，你还可以使用缩进和换行来代替起分割作用的逗号。</p>
 
 <p><span class="csscript"></span></p>
 
@@ -190,7 +190,7 @@ object3 =
 User.create(name: "John Smith")
 </code></pre>
 
-<p>Likewise, arrays can use whitespace instead of comma separators, although the square brackets (<code>[]</code>) are still required.</p>
+<p>同样的，数组可以使用空格来代替分隔作用的逗号，但是方括号（<code>[]</code>）还是需要的。</p>
 
 <p><span class="csscript"></span></p>
 
@@ -205,11 +205,11 @@ array2 = [
 array3 = [1,2,3,]
 </code></pre>
 
-<p>As you can see in the example above, CoffeeScript has also stripped the trailing comma in <code>array3</code>, another common source of cross-browser errors.</p>
+<p>像你在上例看到的那样，CoffeeScript还能去掉<code>array3</code>末尾多余的逗号，这也是一个常见的跨浏览器错误源。</p>
 
-<h2>Flow control</h2>
+<h2>流程控制</h2>
 
-<p>The convention of optional parentheses continues with CoffeeScript's <code>if</code> and <code>else</code> keywords.</p>
+<p>这种可省略括号的便捷方式延续到了CoffeeScript中的<code>if</code>和<code>else</code>关键字。</p>
 
 <p><span class="csscript"></span></p>
 
@@ -223,23 +223,23 @@ if true != true then "Panic"
 if 1 &gt; 0 then "Ok" else "Y2K!"
 </code></pre>
 
-<p>As you can see above, if the <code>if</code> statement is on one line, you'll need to use the <code>then</code> keyword, so CoffeeScript knows when the block begins. Conditional operators (<code>?:</code>) are not supported, instead you should use a single line <code>if/else</code> statement.</p>
+<p>如你所见，在单行的<code>if</code>语句中，你需要使用<code>then</code>关键字，这样CoffeeScirpt才能明白执行体从什么地方开始。CoffeeScript并不支持条件运算符，作为替代你应该使用单行的<code>if/else</code>语句。</p>
 
-<p>CoffeeScript also includes a Ruby idiom of allowing suffixed <code>if</code> statements.</p>
+<p>CoffeeScript还支持一项Ruby的特性，即运行在<code>if</code>语句前使用前缀表达式。</p>
 
 <p><span class="csscript"></span></p>
 
 <pre><code>alert "It's cold!" if heat &lt; 5
 </code></pre>
 
-<p>Instead of using the exclamation mark (<code>!</code>) for negation, you can also use the <code>not</code> keyword - which can sometimes make your code more readable as exclamation marks can be easy to miss.</p>
+<p>你还可以使用<code>not</code>关键字来代替感叹号（<code>!</code>）来做取反操作。由于很容易错过感叹号，这在某些时候能让你的代码有更强的可读性。</p>
 
 <p><span class="csscript"></span></p>
 
 <pre><code>if not true then "Panic"
 </code></pre>
 
-<p>In the example above, we could also use the CoffeeScript's <code>unless</code> statement, the opposite of <code>if</code>.</p>
+<p>在上面的例子中，我们还可使使用CoffeeScript的<code>unless</code>关键字，即<code>if</code>的否定。</p>
 
 <p><span class="csscript"></span></p>
 
@@ -247,7 +247,7 @@ if 1 &gt; 0 then "Ok" else "Y2K!"
   "Panic"
 </code></pre>
 
-<p>In a similar fashion to <code>not</code>, CoffeeScript also introduces the <code>is</code> statement, which translates to <code>===</code>.</p>
+<p>与<code>not</code>类似的风格，CoffeeScript还为大家提供了<code>is</code>语句，编译过去就是<code>===</code>。</p>
 
 <p><span class="csscript"></span></p>
 
@@ -255,17 +255,17 @@ if 1 &gt; 0 then "Ok" else "Y2K!"
   "Type coercion fail!"
 </code></pre>
 
-<p>As an alternative to <code>is not</code>, you can use <code>isnt</code>.</p>
+<p>你可以使用<code>isnt</code>代替<code>is not</code>。</p>
 
 <pre><code>if true isnt true
   alert "Opposite day!"
 </code></pre>
 
-<p>You may have noticed in the examples above, that CoffeeScript is converting <code>==</code> operators into <code>===</code> and <code>!=</code> into <code>!==</code>. This is one of my favorite features to the language, and yet one of the most simple. What's the reasoning behind this? Well frankly JavaScript's type coercion is a bit odd, and its equality operator coerces types in order to compare them, leading to some confusing behaviors and the source of many bugs. There's a longer discussing on this topic in chapter 7.</p>
+<p>在上面的例子中你可以已经注意到了，CoffeeScript会把<code>==</code>操作符转化为<code>===</code>,把<code>!=</code>转化为<code>!==</code>。这是这门语言中我最喜欢的一个特性，也是最简单的一个。那这背后有什么原因呢？坦白的讲JavaScript强制的类型转换有点奇怪，并且等于操作符为了比较它们会强制类型转换，这会导致很多令人迷惑的行为和很多的bug。在第7章中还是对此有有更多的讨论。</p>
 
-<h2>String interpolation</h2>
+<h2>字符串插值法</h2>
 
-<p>CoffeeScript brings Ruby style string interpolation to JavaScript. Double quotes strings can contain <code>#{}</code> tags, which contain expressions to be interpolated into the string.</p>
+<p>CoffeeScript将Ruby风格的字符串插值法引入到了JavaScript中。在双引号的字符串中可以包含<code>#{}</code>标记，这些标记中可以包含被插入到字符串中的表达式。</p>
 
 <p><span class="csscript"></span></p>
 
@@ -276,11 +276,11 @@ question = "Bridgekeeper: What... is your favourite color?
             "
 </code></pre>
 
-<p>As you can see in the example above, multiline strings are also allowed, without having to prefix each line with a <code>+</code>:</p>
+<p>就上例所示，多行字符串是允许的，不需要在没一行前添加<code>+</code>。</p>
 
-<h2>Loops and Comprehensions</h2>
+<h2>循环和列表解析</h2>
 
-<p>Array iteration in JavaScript has a rather archaic syntax, reminiscent of an older language like C rather than a modern object orientated one. The introduction of ES5 improved that situation somewhat, with the <code>forEach()</code> function, but that still requires a function call every iteration and is therefore much slower. Again, CoffeeScript comes to the rescue, with a beautiful syntax:</p>
+<p>JavaScript中的数组迭代使用一种相当古老的语法，看上去更像一个类似于C之类的老语言，而不是现代的面向对象的语言。ES5引入<code>forEach()</code>函数来稍微改善了下这种情况，但是这样的话每次迭代都需要调用一次函数，因此运行速度会变慢。再一次，CoffeeScript给出一种漂亮的语法拯救了我们：</p>
 
 <p><span class="csscript"></span></p>
 
@@ -288,7 +288,7 @@ question = "Bridgekeeper: What... is your favourite color?
   alert "Release #{name}"
 </code></pre>
 
-<p>If you need the current iteration index, just pass an extra argument:</p>
+<p>如果你需要知道当前迭代索引的话，只需要再多传一个参数：</p>
 
 <p><span class="csscript"></span></p>
 
@@ -296,14 +296,14 @@ question = "Bridgekeeper: What... is your favourite color?
   alert "#{i} - Release #{name}"
 </code></pre>
 
-<p>You can also iterate on one line, using the postfix form.</p>
+<p>使用前缀的形式你可以一行代码完成迭代。</p>
 
 <p><span class="csscript"></span></p>
 
 <pre><code>release prisoner for prisoner in ["Roger", "Roderick", "Brian"]
 </code></pre>
 
-<p>As with Python comprehensions, you can filter them:</p>
+<p>就如Python的推导式一样，你可以过滤它们：</p>
 
 <p><span class="csscript"></span></p>
 
@@ -311,7 +311,7 @@ question = "Bridgekeeper: What... is your favourite color?
 release prisoner for prisoner in prisoners when prisoner[0] is "R" 
 </code></pre>
 
-<p>You can also use comprehensions for iterating over properties in objects. Instead of the <code>in</code> keyword, use <code>of</code>.</p>
+<p>你可以使用推导式来迭代对象的全部属性，不过要使用<code>of</code>代替<code>in</code>关键字。</p>
 
 <p><span class="csscript"></span></p>
 
@@ -319,7 +319,7 @@ release prisoner for prisoner in prisoners when prisoner[0] is "R"
 alert("#{first} #{last}") for first, last of names
 </code></pre>
 
-<p>The only low-level loop that CoffeeScript exposes is the <code>while</code> loop. This has similar behavior to the <code>while</code> loop in pure JavaScript, but has the added advantage that it returns an array of results, i.e. like the <code>Array.prototype.map()</code> function.</p>
+<p>唯一CoffeeScript暴露出来的底层循环语法是<code>while</code>循环。它与原JavaScript中<code>while</code>循环的行为差不多，只是包含了已添加的优点，它能返回一个结果数组。看起来像<code>Array.prototype.map()</code>函数。</p>
 
 <p><span class="csscript"></span></p>
 
@@ -328,23 +328,23 @@ minstrel = while num -= 1
   num + " Brave Sir Robin ran away"
 </code></pre>
 
-<h2>Arrays</h2>
+<h2>数组</h2>
 
-<p>CoffeeScript takes inspiration from Ruby when it comes to array slicing by using ranges. Ranges are created by two numerical values, the first and last positions in the range, separated by <code>..</code> or <code>...</code>. If a range isn't prefixed by anything, CoffeeScript expands it out into an array.</p>
+<p>说到使用区间来分割数组，CoffeeScript是受到了Ruby的影响。使用两个数字来定义区间，分别代表区间的第一个和最后一个位置。这两个数字之间使用<code>..</code>或<code>...</code>来分隔。如果区间之前没有任何东西，CoffeeScript会将其转换为一个数组。</p>
 
 <p><span class="csscript"></span></p>
 
 <pre><code>range = [1..5]
 </code></pre>
 
-<p>If, however, the range is specified immediately after a variable, CoffeeScript converts it into a <code>slice()</code> method call.</p>
+<p>然而，如果区间被指定到一个变量之后，CoffeeScript则会将其转换为一个<code>slice()</code>调用。</p>
 
 <p><span class="csscript"></span></p>
 
 <pre><code>firstTwo = ["one", "two", "three"][0..1]
 </code></pre>
 
-<p>In the example above, the range returns a new array, containing only the first two elements of the original array. You can also use the same syntax for replacing an array segment with another array.</p>
+<p>在上面的例子中，区间会返回一个只包含原始数组的前两个元素的新的字符串。你也可以使用同样的语法来把数组中的某个片段替换为其他的数组。</p>
 
 <p><span class="csscript"></span></p>
 
@@ -352,14 +352,14 @@ minstrel = while num -= 1
 numbers[3..5] = [-3, -4, -5]
 </code></pre>
 
-<p>What's neat, is that JavaScript allows you to call <code>slice()</code> on strings too, so you can use ranges with string to return a new subset of characters.</p>
+<p>更棒的是，JavaScript还能让你在字符串上调用<code>slice()</code>，因此你可以在字符串上使用区间来获得一个新的子字符串。</p>
 
 <p><span class="csscript"></span></p>
 
 <pre><code>my = "my string"[0..2]
 </code></pre>
 
-<p>Checking to see if a value exists inside an array is always a bore in JavaScript, particular as <code>indexOf()</code> doesn't yet have full cross-browser support (IE, I'm talking about you). CoffeeScript solves this with the <code>in</code> operator, for example.</p>
+<p>在JavaScript中检测数组中是否存在某个值是一件麻烦事，特别是<code>indexOf()</code>并不是所有的浏览器都支持（IE，我说的就是你！）。CoffeeScript使用<code>in</code>操作符来解决这个问题，例如：</p>
 
 <p><span class="csscript"></span></p>
 
@@ -367,44 +367,44 @@ numbers[3..5] = [-3, -4, -5]
 alert "Stop wagging me" if "ranks" in words 
 </code></pre>
 
-<h2>Aliases &amp; the Existential Operator</h2>
+<h2>别名和存在操作符</h2>
 
-<p>CoffeeScript includes some useful aliases to save some typing. One of which is <code>@</code>, which is an alias for <code>this</code>.</p>
+<p>CoffeeScript采用了一些有用的别名来减少输入量。其中一个就是<code>@</code>，是<code>this</code>的别名。</p>
 
 <p><span class="csscript"></span></p>
 
 <pre><code>@saviour = true
 </code></pre>
 
-<p>Another is <code>::</code>, which is an alias for <code>prototype</code></p>
+<p>另外一个是<code>::</code>，<code>prototype</code>的别名。</p>
 
 <p><span class="csscript"></span></p>
 
 <pre><code>User::first = -&gt; @records[0]
 </code></pre>
 
-<p>Using <code>if</code> for <code>null</code> checks in JavaScript is common, but has a few pitfalls in that empty strings and zero are both coerced into <code>false</code>, which can catch you out. CoffeeScript existential operator <code>?</code> returns true unless a variable is <code>null</code> or <code>undefined</code>, similar to Ruby's <code>nil?</code>.</p>
+<p>在JavaScript中使用<code>if</code>来做<code>null</code>检查是很常见的，但是其中有几个陷阱，空字符串和零都被强制转化为<code>false</code>，这往往会让你犯错。CoffeeScript存在操作符<code>?</code>只会在变量为<code>null</code>或者<code>undefined</code>的时候会返回真，与Ruby的<code>nil?</code>类似。</p>
 
 <p><span class="csscript"></span></p>
 
 <pre><code>praise if brian?
 </code></pre>
 
-<p>You can also use it in place of the <code>||</code> operator:</p>
+<p>你还能用它来替换<code>||</code>操作符：</p>
 
 <p><span class="csscript"></span></p>
 
 <pre><code>velocity = southern ? 40
 </code></pre>
 
-<p>If you're using a <code>null</code> check before accessing a property, you can skip that by placing the existential operator right before it. This is similar to Active Support's <a href="http://guides.rubyonrails.org/active_support_core_extensions.html#try"><code>try</code></a> method.</p>
+<p>如果你在访问属性之前进行<code>null</code>检查，你可以把存在操作符放在它左边来跳过检查。这与Actice Support的<a href="http://guides.rubyonrails.org/active_support_core_extensions.html#try">try</a>方法比较类似。</p>
 
 <p><span class="csscript"></span></p>
 
 <pre><code>blackKnight.getLegs()?.kick()
 </code></pre>
 
-<p>Similarly you can check that a property is actually a function, and callable, by placing the existential operator right before the parens. If the property doesn't exist, or isn't a function, it simply won't get called.</p>
+<p>你能够用同样的方法检查一个属性是否是函数，是否可以调用，把存在操作符放在括号之前就行。如果属性不存在，或者不是一个函数，则就不会被调用。</p>
 
 <p><span class="csscript"></span></p>
 
