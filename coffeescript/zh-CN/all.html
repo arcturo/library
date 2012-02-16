@@ -418,258 +418,6 @@ alert "Stop wagging me" if "ranks" in words
 <html>
 <head>
 <meta charset=utf-8>
-<title>The Little Book on CoffeeScript - Classes</title>
-<link rel="stylesheet" href="site/site.css" type="text/css" charset="utf-8">
-<link rel="stylesheet" href="site/highlight.css" type="text/css" charset="utf-8">
-<script src="site/jquery.js" type="text/javascript" charset="utf-8"></script>      
-<script src="site/highlight.js" type="text/javascript" charset="utf-8"></script>
-<script src="site/coffee-script.js" type="text/javascript" charset="utf-8"></script>
-<script src="site/preview.js" type="text/javascript" charset="utf-8"></script>
-<script type="text/javascript" charset="utf-8">
-  hljs.initHighlightingOnLoad();
-</script>
-</head>
-<body>
-<div id="container">
-  <header>
-    <h1><a href="index.html">The Little Book on CoffeeScript</a></h1>
-  </header>
-  
-  <div id="content">
-    <div class="back"><a href="index.html">&laquo; Back to all chapters</a></div>
-
-
-<h1>Classes</h1>
-
-<p>Classes in JavaScript seem to have the kind of effect that cloves of garlic have to Dracula for some purists; although, let's be honest, if you're that way inclined, you're unlikely to be reading a book on CoffeeScript. However, it turns out that classes are just as damn useful in JavaScript as they are in other languages and CoffeeScript provides a great abstraction.</p>
-
-<p>Behind the scenes, CoffeeScript is using JavaScript's native prototype to create classes; adding a bit of syntactic sugar for static property inheritance and context persistence. As a developer all that's exposed to you is the <code>class</code> keyword.</p>
-
-<p><span class="csscript"></span></p>
-
-<pre><code>class Animal
-</code></pre>
-
-<p>In the example above, <code>Animal</code> is the name of the class, and also the name of the resultant variable that you can use to create instances. Behind the scenes CoffeeScript is using constructor functions, which means you can instantiate classes using the <code>new</code> operator.</p>
-
-<p><span class="csscript"></span></p>
-
-<pre><code>animal = new Animal
-</code></pre>
-
-<p>Defining constructors (functions that get invoked upon instantiation) is simple, just use a function named <code>constructor</code>. This is akin to using Ruby's <code>initialize</code> or Python's <code>__init__</code>.</p>
-
-<p><span class="csscript"></span></p>
-
-<pre><code>class Animal
-  constructor: (name) -&gt;
-    @name = name
-</code></pre>
-
-<p>In fact, CoffeeScript provides a shorthand for the common pattern of setting instance properties. By prefixing argument's with <code>@</code>, CoffeeScript will automatically set the arguments as instance properties in the constructor. Indeed, this shorthand will also work for normal functions outside classes. The example below is equivalent to the last example, where we set the instance properties manually.</p>
-
-<p><span class="csscript"></span></p>
-
-<pre><code>class Animal
-  constructor: (@name) -&gt;
-</code></pre>
-
-<p>As you'd expect, any arguments passed on instantiation are proxied to the constructor function.</p>
-
-<p><span class="csscript"></span></p>
-
-<pre><code>animal = new Animal("Parrot")
-alert "Animal is a #{animal.name}"
-</code></pre>
-
-<h2>Instance properties</h2>
-
-<p>Adding additional instance properties to a class is very straightforward, it's exactly the syntax as adding properties onto an object. Just make sure properties are indented correctly inside the class body.</p>
-
-<p><span class="csscript"></span></p>
-
-<pre><code>class Animal
-  price: 5
-
-  sell: (customer) -&gt;
-
-animal = new Animal
-animal.sell(new Customer)
-</code></pre>
-
-<p>Context changes are rife within JavaScript, and earlier in the Syntax chapter we talked about how CoffeeScript can lock the value of <code>this</code> to a particular context using a fat arrow function: <code>=&gt;</code>. This ensures that whatever context a function is called under, it'll always execute inside the context it was created in. CoffeeScript has extended support for fat arrows to classes, so by using a fat arrow for an instance method you'll ensure that it's invoked in the correct context, and that <code>this</code> is always equal to the current instance.</p>
-
-<p><span class="csscript"></span></p>
-
-<pre><code>class Animal
-  price: 5
-
-  sell: =&gt;
-    alert "Give me #{@price} shillings!"
-
-animal = new Animal
-$("#sell").click(animal.sell)
-</code></pre>
-
-<p>As demonstrated in the example above, this is especially useful in event callbacks. Normally the <code>sell()</code> function would be invoked in the context of the <code>#sell</code> element. However, by using fat arrows for <code>sell()</code>, we're ensuring the correct context is being maintained, and that <code>this.price</code> equals <code>5</code>.</p>
-
-<h2>Static properties</h2>
-
-<p>How about defining class (i.e. static) properties? Well, it turns out that inside a class definition, <code>this</code> refers to the class object. In other words you can set class properties by setting them directly on <code>this</code>.</p>
-
-<p><span class="csscript"></span></p>
-
-<pre><code>class Animal
-  this.find = (name) -&gt;      
-
-Animal.find("Parrot")
-</code></pre>
-
-<p>In fact, as you may remember, CoffeeScript aliases <code>this</code> to <code>@</code>, which lets you write static properties even more succinctly:</p>
-
-<p><span class="csscript"></span></p>
-
-<pre><code>class Animal
-  @find: (name) -&gt;
-
-Animal.find("Parrot")
-</code></pre>
-
-<h2>Inheritance &amp; Super</h2>
-
-<p>It wouldn't be a proper class implementation without some form of inheritance, and CoffeeScript doesn't disappoint. You can inherit from another class by using the <code>extends</code> keyword. In the example below, <code>Parrot</code> extends from <code>Animal</code>, inheriting all of its instance properties, such as <code>alive()</code></p>
-
-<p><span class="csscript"></span></p>
-
-<pre><code>class Animal
-  constructor: (@name) -&gt;
-
-  alive: -&gt;
-    false
-
-class Parrot extends Animal
-  constructor: -&gt;
-    super("Parrot")
-
-  dead: -&gt;
-    not @alive()
-</code></pre>
-
-<p>You'll notice that in the example above, we're using the <code>super()</code> keyword. Behind the scenes, this is translated into a function call on the class' parent prototype, invoked in the current context. In this case, it'll be <code>Parrot.__super__.constructor.call(this, "Parrot");</code>. In practice, this will have exactly the same effect as invoking <code>super</code> in Ruby or Python, invoking the overridden inherited function.</p>
-
-<p>Unless you override the <code>constructor</code>, by default CoffeeScript will invoke the parent's constructor when instances are created.</p>
-
-<p>CoffeeScript uses prototypal inheritance to automatically inherit all of a class's instance properties. This ensures that classes are dynamic; even if you add properties to a parent class after a child has been created, the property will still be propagated to all of its inherited children.</p>
-
-<p><span class="csscript"></span></p>
-
-<pre><code>class Animal
-  constructor: (@name) -&gt;
-
-class Parrot extends Animal
-
-Animal::rip = true
-
-parrot = new Parrot("Macaw")
-alert("This parrot is no more") if parrot.rip
-</code></pre>
-
-<p>It's worth pointing out though that static properties are copied to subclasses, rather than inherited using prototype as instance properties are. This is due to implementation details with JavaScript's prototypal architecture, and is a difficult problem to work around.</p>
-
-<h2>Mixins</h2>
-
-<p><a href="http://en.wikipedia.org/wiki/Mixin">Mixins</a> are not something supported natively by CoffeeScript, for the good reason that they can be trivially implemented yourself. For example, here's two functions, <code>extend()</code> and <code>include()</code> that'll add class and instance properties respectively to a class.</p>
-
-<p><span class="csscript"></span></p>
-
-<pre><code>extend = (obj, mixin) -&gt;
-  obj[name] = method for name, method of mixin        
-  obj
-
-include = (klass, mixin) -&gt;
-  extend klass.prototype, mixin
-
-# Usage
-include Parrot,
-  isDeceased: true
-
-(new Parrot).isDeceased
-</code></pre>
-
-<p>Mixins are a great pattern for sharing common logic between modules when inheritance is not suited. The advantage of mixins, is that you can include multiple ones, compared to inheritance where only one class can be inherited from.</p>
-
-<h2>Extending classes</h2>
-
-<p>Mixins are pretty neat, but they're not very object orientated. Instead, let's integrate mixins into CoffeeScript's classes. We're going to define a class called <code>Module</code> that we can inherit from for mixin support. <code>Module</code> will have two static functions, <code>@extend()</code> and <code>@include()</code> which we can use for extending the class with static and instance properties respectively.</p>
-
-<p><span class="csscript"></span></p>
-
-<pre><code>moduleKeywords = ['extended', 'included']
-
-class Module
-  @extend: (obj) -&gt;
-    for key, value of obj when key not in moduleKeywords
-      @[key] = value
-
-    obj.extended?.apply(@)
-    this
-
-  @include: (obj) -&gt;
-    for key, value of obj when key not in moduleKeywords
-      # Assign properties to the prototype
-      @::[key] = value
-
-    obj.included?.apply(@)
-    this
-</code></pre>
-
-<p>The little dance around the <code>moduleKeywords</code> variable is to ensure we have callback support when mixins extend a class. Let's take a look at our <code>Module</code> class in action:</p>
-
-<p><span class="csscript"></span></p>
-
-<pre><code>classProperties = 
-  find: (id) -&gt;
-  create: (attrs) -&gt;
-
-instanceProperties =
-  save: -&gt; 
-
-class User extends Module
-  @extend classProperties
-  @include instanceProperties
-
-# Usage:
-user = User.find(1)
-
-user = new User
-user.save()
-</code></pre>
-
-<p>As you can see, we've added some static properties, <code>find()</code> and <code>create()</code> to the <code>User</code> class, as well as some instance properties, <code>save()</code>.
-Since we've got callbacks whenever modules are extended, we can shortcut the process of applying both static and instance properties:</p>
-
-<p><span class="csscript"></span></p>
-
-<pre><code>ORM = 
-  find: (id) -&gt;
-  create: (attrs) -&gt;
-  extended: -&gt;
-    @include
-      save: -&gt; 
-
-class User extends Module
-  @extend ORM
-</code></pre>
-
-<p>Super simple and elegant!</p>
-
-  </div>
-</div>
-</body>
-</html><!DOCTYPE html>
-<html>
-<head>
-<meta charset=utf-8>
 <title>The Little Book on CoffeeScript - Compiling</title>
 <link rel="stylesheet" href="site/site.css" type="text/css" charset="utf-8">
 <link rel="stylesheet" href="site/highlight.css" type="text/css" charset="utf-8">
@@ -874,6 +622,259 @@ task 'build', 'Build lib/ from src/', -&gt;
 <p>就如你在之前看到的一样，CoffeeScirpt文件的默认扩展名是<code>.coffee</code>，除去其他原因之外，能让像<a href="http://macromates.com/">TextMate</a>这样的编译器能够辨认出文件中包含的是什么语言的代码从而是用相对应的高亮也是其中之一。TextMate并不包含对CoffeeScript的支持，但是你可以安装这个<a href="https://github.com/jashkenas/coffee-script-tmbundle">包</a>来提供支持。</p>
 
 <p>编译看起来既不方便又很无聊。没办法，它就是这样。我们将会学习通过自动编译的方法来解决这个问题，不过首先我们先学习一下这门语言的语法。</p>
+
+  </div>
+</div>
+</body>
+</html><!DOCTYPE html>
+<html>
+<head>
+<meta charset=utf-8>
+<title>The Little Book on CoffeeScript - 类</title>
+<link rel="stylesheet" href="site/site.css" type="text/css" charset="utf-8">
+<link rel="stylesheet" href="site/highlight.css" type="text/css" charset="utf-8">
+<script src="site/jquery.js" type="text/javascript" charset="utf-8"></script>      
+<script src="site/highlight.js" type="text/javascript" charset="utf-8"></script>
+<script src="site/coffee-script.js" type="text/javascript" charset="utf-8"></script>
+<script src="site/preview.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript" charset="utf-8">
+  hljs.initHighlightingOnLoad();
+</script>
+</head>
+<body>
+<div id="container">
+  <header>
+    <h1><a href="index.html">The Little Book on CoffeeScript</a></h1>
+  </header>
+  
+  <div id="content">
+    <div class="back"><a href="index.html">&laquo; 返回目录</a></div>
+
+
+<h1>类</h1>
+
+<p>JavaScript中的类对于纯粹主义者来说有点像大蒜对Dracula的感觉，诚实点吧，如果你喜欢那样的方式，那你应该不会想读这本关于CoffeeScript的书。可事实是类在JavaScript中就如在其他语言中一样地有用。因此，CoffeeScript为此提供了一个很棒的抽象。</p>
+
+<p>在背后，CoffeeScript使用JavaScript原生的原型来产生类，为静态变量继承以及上下文持久化添加了一点语法糖，而暴露给开发者的全部只有一个<code>class</code>关键字。</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>class Animal
+</code></pre>
+
+<p>在上例中，<code>Animal</code>是类的名字，而且也是你可以用来创建实例的合成的变量的名字。CoffeeScript在背后使用了一个构造函数，这意味着你可以使用<code>new</code>关键字来实例化变量。</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>animal = new Animal
+</code></pre>
+
+<p>定义构造函数（在实例化前调用的函数）很简单，使用名为<code>constructor</code>的函数即可。这与Ruby的<code>initialize</code>或者Python的<code>__init__</code>类似。</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>class Animal
+  constructor: (name) -&gt;
+    @name = name
+</code></pre>
+
+<p>实际上，CoffeeScript为设置实例属性值的常见模式提供了一种简写的方式。如果在参数前加一个<code>@</code>，CoffeeScript就会在构造函数中自动地把参数设置为实例的属性。而且，这中简写对于类之外的普通函数同样适用。下面的例子与我们手动设置实例属性的上一例子等价。</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>class Animal
+  constructor: (@name) -&gt;
+</code></pre>
+
+<p>如你所愿，每个实例化传入的参数都被代理给了构造函数。</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>animal = new Animal("Parrot")
+alert "Animal is a #{animal.name}"
+</code></pre>
+
+<h2>实例属性</h2>
+
+<p>可以非常直接地为类添加实例属性，与为对象添加属性的语法一样。只需要在类体内对属性采用合理的缩进即可。</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>class Animal
+  price: 5
+
+  sell: (customer) -&gt;
+
+animal = new Animal
+animal.sell(new Customer)
+</code></pre>
+
+<p>在JavaScript中上下文变化很频繁，在上一章<em>语法</em>中我们讨论过CoffeeScript如何通过胖箭头函数（<code>=&gt;</code>）来让<code>this</code>值锁定到某个特定的上下文中。这样无论这个函数在什么上下文中被调用，都保证该函数总是在其创建时的上下文中执行。CoffeeScript把胖箭头语法扩展到类中，因此在实例方法上使用胖箭头你就能确保方法能在正确的上下文中执行——<code>this</code>总是等于当前的实例对象。</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>class Animal
+  price: 5
+
+  sell: =&gt;
+    alert "Give me #{@price} shillings!"
+
+animal = new Animal
+$("#sell").click(animal.sell)
+</code></pre>
+
+<p>如上例所示，这在事件回调是尤其有用。正常情况下<code>sell()</code>函数会以<code>#sell</code>元素为上下文调用。然而，通过使用胖箭头来定义<code>sell()</code>，我们能保证能保持正确的上下文，所以<code>this.price</code>等于<code>5</code>。</p>
+
+<h2>静态变量</h2>
+
+<p>可以定义类（静态）变量吗？当然，事实证明在类的定义中，<code>this</code>引用的就是类。也就是说你可以通过直接在这个<code>this</code>上设置类属性。</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>class Animal
+  this.find = (name) -&gt;      
+
+Animal.find("Parrot")
+</code></pre>
+
+<p>实际上，如你所知，CoffeeScript使用<code>@</code>作为<code>this</code>的别名，这能让你更加便捷的定义静态属性：</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>class Animal
+  @find: (name) -&gt;
+
+Animal.find("Parrot")
+</code></pre>
+
+<h2>继承与Super</h2>
+
+<p>不支持继承不能算是一个完整的类实现。当然CoffeeScript不会让你失望，你可以使用<code>extends</code>关键字来使用继承。在下面的例子中，<code>Parrot</code>扩展自<code>Animal</code>，继承它的实例的所有属性，比方说<code>alive()</code>方法。</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>class Animal
+  constructor: (@name) -&gt;
+
+  alive: -&gt;
+    false
+
+class Parrot extends Animal
+  constructor: -&gt;
+    super("Parrot")
+
+  dead: -&gt;
+    not @alive()
+</code></pre>
+
+<p>在上例中，你注意到我们使用了<code>super()</code>关键字。在背后这会编译为对父类原型的一次函数调用，不过是以当前为上下文的。在本例中，就相当于<code>Parrot.__super__.constructor.call(this, "Parrot");</code>。实际上，这与Ruby或者Python中调用<code>super</code>的效果相同——调用被重写了的父类函数。</p>
+
+<p>除非你重写了<code>contructor</code>，默认情况下，在一个实例被创建时CoffeeScript会调用其父类的构造器。</p>
+
+<p>CoffeeSript使用原型继承来自动的从类实例上继承所有的属性，这保证了类的动态性。就算你给一个已经被子类继承了的父类添加属性，这些属性仍然可以被其子类继承过来。</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>class Animal
+  constructor: (@name) -&gt;
+
+class Parrot extends Animal
+
+Animal::rip = true
+
+parrot = new Parrot("Macaw")
+alert("This parrot is no more") if parrot.rip
+</code></pre>
+
+<p>值得一提的是，静态变量是直接拷贝给子类的，而不是像实例属性那样通过原型来实现。这都是JavaScript原型架构的实现细节所致，而且这是一个比较难解决的问题。</p>
+
+<h2>Mixins</h2>
+
+<p>CoffeeScript并不直接提供对<a href="http://en.wikipedia.org/wiki/Mixin">Mixins</a>的支持，理由是你自己完全可以很容易的实现。例如，下面有两个函数，<code>extend()</code>和<code>include()</code>分别会把类属性和实例属性添加到一个类中。</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>extend = (obj, mixin) -&gt;
+  obj[name] = method for name, method of mixin        
+  obj
+
+include = (klass, mixin) -&gt;
+  extend klass.prototype, mixin
+
+# Usage
+include Parrot,
+  isDeceased: true
+
+(new Parrot).isDeceased
+</code></pre>
+
+<p>在继承不合适时Mixins是一种不错的在模块间共享通用逻辑的的模式。较之于继承只能实现从单一的父类继承，Mixins的优势是能够实现多个继承。</p>
+
+<h2>扩展类</h2>
+
+<p>Mixins很棒，只是看起来并不那么地面向对象。让我们把Mixins集成到CoffeeScript的类中吧。我们将会定义一个名为<code>Module</code>的类，然后可以继承这个类来获得对Mixins的支持。<code>Module</code>会有两个静态方法，<code>@extend()</code>和<code>@include()</code>，可以用它们来实现对类的静态属性和实例属性的扩展。</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>moduleKeywords = ['extended', 'included']
+
+class Module
+  @extend: (obj) -&gt;
+    for key, value of obj when key not in moduleKeywords
+      @[key] = value
+
+    obj.extended?.apply(@)
+    this
+
+  @include: (obj) -&gt;
+    for key, value of obj when key not in moduleKeywords
+      # Assign properties to the prototype
+      @::[key] = value
+
+    obj.included?.apply(@)
+    this
+</code></pre>
+
+<p>这里有个小技巧，当使用Mixins来扩展一个类时，<code>moduleKeywords</code>变量能为我们提供了回调支持。让我们实际看一下<code>Module</code>是如何工作的：</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>classProperties = 
+  find: (id) -&gt;
+  create: (attrs) -&gt;
+
+instanceProperties =
+  save: -&gt; 
+
+class User extends Module
+  @extend classProperties
+  @include instanceProperties
+
+# Usage:
+user = User.find(1)
+
+user = new User
+user.save()
+</code></pre>
+
+<p>如你所见，我们为<code>User</code>类添加了<code>find()</code>和<code>create()</code>静态属性，还添加了<code>save()</code>实例属性。</p>
+
+<p>既然在扩展模块后我们还可以使用回调函数，于是可以快捷地处理类属性和实例属性。</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>ORM = 
+  find: (id) -&gt;
+  create: (attrs) -&gt;
+  extended: -&gt;
+    @include
+      save: -&gt; 
+
+class User extends Module
+  @extend ORM
+</code></pre>
+
+<p>超简单也超优雅，有没有！</p>
 
   </div>
 </div>
