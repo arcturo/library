@@ -418,6 +418,291 @@ alert "Stop wagging me" if "ranks" in words
 <html>
 <head>
 <meta charset=utf-8>
+<title>The Little Book on CoffeeScript - 惯用法</title>
+<link rel="stylesheet" href="site/site.css" type="text/css" charset="utf-8">
+<link rel="stylesheet" href="site/highlight.css" type="text/css" charset="utf-8">
+<script src="site/jquery.js" type="text/javascript" charset="utf-8"></script>      
+<script src="site/highlight.js" type="text/javascript" charset="utf-8"></script>
+<script src="site/coffee-script.js" type="text/javascript" charset="utf-8"></script>
+<script src="site/preview.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript" charset="utf-8">
+  hljs.initHighlightingOnLoad();
+</script>
+</head>
+<body>
+<div id="container">
+  <header>
+    <h1><a href="index.html">The Little Book on CoffeeScript</a></h1>
+  </header>
+  
+  <div id="content">
+    <div class="back"><a href="index.html">&laquo; 返回目录</a></div>
+
+
+<h1>CoffeeScript惯用法</h1>
+
+<p>每个语言都有自己的惯用法和最佳实践，CoffeeScript也不例外。本章将为你揭示这些常规的东西，并且为你指出一些JavaScript到CoffeeScript的变化，以便你对这门语言有个感性的认识。</p>
+
+<h2>Each</h2>
+
+<p>在JavaScript中我们既可以使用新加入的<a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/array/foreach"><code>forEach()</code></a>也可以使用老的C语言风格的<code>for</code>循环来迭代一个数组。如果你打算使用一些在ECMAScript 5 提到的JavaScript新特性的话，我推荐你把这个 <a href="https://github.com/kriskowal/es5-shim">shim</a> （薄层）来模拟这些特性以便支持老的浏览器。</p>
+
+<pre><code>for (var i=0; i &lt; array.length; i++)
+  myFunction(array[i]);
+
+array.forEach(function(item, i){
+  myFunction(item)
+});
+</code></pre>
+
+<p>尽管<code>forEach()</code>语法非常简洁易读，但有个缺点是在每次数组迭代时都需要调用回调函数，因此它比等价的<code>for</code>循环要慢。让我看一下这CoffeeScirpt中又是什么样子。</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>myFunction(item) for item in array
+</code></pre>
+
+<p>这种语法易读简洁（我想你也这么认为），而且更棒的是这在背后会被编译为<code>for</code>循环。换句话说CoffeeScript的语法提供了<code>forEach()</code>的便捷，但是没有性能的损耗，也不需要shim的辅助。</p>
+
+<h2>Map</h2>
+
+<p>与<code>forEach()</code>相同，ES5包含了一个比经典<code>for</code>循环在语法上更加简洁的函数，名为 <a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array/map"><code>map()</code></a>。不过它与<code>forEach()</code>有一样需要注意的地方，其运行速度仍会受到函数调用的拖累。</p>
+
+<pre><code>var result = []
+for (var i=0; i &lt; array.length; i++)
+  result.push(array[i].name)
+
+var result = array.map(function(item, i){
+  return item.name;
+});
+</code></pre>
+
+<p>如我们在<em>语法</em>这一章所说，可以使用列表解析获得与<code>map()</code>同样的行为。注意最好使用括号把列表解析包裹起来，以便能够<strong>完全地</strong>确保列表解析返回你所想要的东西——映射后的数组。</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>result = (item.name for item in array)
+</code></pre>
+
+<h2>筛选</h2>
+
+<p>ES5还提供了工具函数 <a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/array/filter"><code>filter()</code></a> 来过滤数组：</p>
+
+<pre><code>var result = []
+for (var i=0; i &lt; array.length; i++)
+  if (array[i].name == "test")
+    result.push(array[i])
+
+result = array.filter(function(item, i){
+  return item.name == "test"
+});
+</code></pre>
+
+<p>CoffeeScript的基础语法使用<code>when</code>关键字通过一个比较来过滤数组项。在背后会产生一个<code>for</code>循环，整个运行过程都包裹在一个匿名函数中，以防止作用域泄漏或变量冲突。</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>result = (item for item in array when item.name is "test")
+</code></pre>
+
+<p>别忘了使用括号，否则<code>result</code>是数组的最后一项。<br/>
+CoffeeScript的列表解析是如此的灵活，允许你如下例这样做出强大地选择：</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>passed = []
+failed = []
+(if score &gt; 60 then passed else failed).push score for score in [49, 58, 76, 82, 88, 90]
+
+# Or
+passed = (score for score in scores when score &gt; 60)
+</code></pre>
+
+<p>如果列表解析太长，你可以将它们分割成多行。</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>passed = []
+failed = []
+for score in [49, 58, 76, 82, 88, 90]
+  (if score &gt; 60 then passed else failed).push score
+</code></pre>
+
+<h2>包含</h2>
+
+<p>通常使用<code>indexOf()</code>来测试一个数组中是否包含某个值。不过真让人惊讶, Internet Explorer并没有实现该函数，这还要做一些兼容。</p>
+
+<pre><code>var included = (array.indexOf("test") != -1)
+</code></pre>
+
+<p>于此CoffeeScript有一个非常给力的替代方法，Python程序员一定很熟悉，名叫<code>in</code>。</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>included = "test" in array
+</code></pre>
+
+<p>在背后，CoffeeScript使用的是 <code>Array.prototype.indexOf()</code>，必要的话提供shim方法来检测数组中是否有某个特定值，不幸的的是同样的<code>in</code>语法并不能在字符串中工作。我们退回去使用<code>indexOf()</code>函数，查看其返回值是否是负值：</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>included = "a long test string".indexOf("test") isnt -1
+</code></pre>
+
+<p>或者更好一点，借助于位操作符我们就不用与<code>-1</code>进行比较了。</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>string   = "a long test string"
+included = !!~ string.indexOf "test"
+</code></pre>
+
+<h2>属性迭代</h2>
+
+<p>在JavaScript中，你应该使用<code>in</code>操作符来迭代属性集，例如：</p>
+
+<pre><code>var object = {one: 1, two: 2}
+for(var key in object) alert(key + " = " + object[key])
+</code></pre>
+
+<p>然而，如你在上一小节所知，CoffeeScript已把<code>in</code>关键字留给了数组用。作为替代，该操作符更名为<code>of</code>，可以像下面这样用：</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>object = {one: 1, two: 2}
+alert("#{key} = #{value}") for key, value of object
+</code></pre>
+
+<p>如你所见，你可以同时指定属性名和属性值，非常方便。</p>
+
+<h2>Min/Max</h2>
+
+<p>这个技巧虽然不是CoffeeScript的专利，但是我觉得它非常有用，值得一提。<code>Math.max</code> 和<code>Math.min</code>接受多个参数，因此你可以简单的地使用<code>...</code>来向它们传递数组，从中检索出最大值和最小值。</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>Math.max [14, 35, -7, 46, 98]... # 98
+Math.min [14, 35, -7, 46, 98]... # -7
+</code></pre>
+
+<p>请注意，这个技巧对于超大的数组也会失败，因为浏览器对传递个函数的参数数量有限制。</p>
+
+<h2>多个参数</h2>
+
+<p>在上面的<code>Math.max</code>示例中，我们使用<code>...</code>来结构数组作为多个参数传递给<code>max</code>方法。在背后，CoffeeScript将其转化为一个使用<code>appply()</code>的函数调用，以确保数组能够作为多个参数传递给<code>max</code>。在别的地方也可以使用这个特性，比方说代理函数：</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>Log =
+  log: -&gt;
+    console?.log(arguments...)
+</code></pre>
+
+<p>或者在参数继续传递下去之前，修改参数：</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>Log =
+  logPrefix: "(App)"
+
+  log: (args...) -&gt;
+    args.unshift(@logPrefix) if @logPrefix
+    console?.log(args...)
+</code></pre>
+
+<p>不过请记住，CoffeeScript会自动把函数的调用上下文设置为调用它的对象。在上例中，就是<code>console</code>对象，如果你想设置特殊的上下文，那你需要手动的调用<code>apply()</code>方法。</p>
+
+<h2>And/or</h2>
+
+<p>CoffeeScript编程风格推荐使用<code>or</code>代替<code>||</code>，使用<code>and</code>代替<code>&amp;&amp;</code>。我知道为什么，因为前者看起来更直观。不过，这两种编程风格产生的结果都一样。</p>
+
+<p>偏爱英语风格的代码的话，也可以使用<code>is</code>代替<code>==</code>，<code>isnt</code>代替<code>!=</code>。</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>string = "migrating coconuts"
+string == string # true
+string is string # true
+</code></pre>
+
+<p>CoffeeScript还有另外一个非常好的扩展，Ruby程序员可将其看作像是<code>||=</code>这样的模式：</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>hash or= {}
+</code></pre>
+
+<p>如果<code>hash</code>求值为<code>false</code>，则把它设置为一个空对象。在这里需要注意，表达式<code>0</code>、<code>""</code>和<code>null</code>都会被当作<code>false</code>。如果这并不是你想要的，那你应该使用CoffeeScript的存在操作符，这样只有<code>hash</code>是<code>undefined</code>或者<code>null</code>时才会触发。</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>hash ?= {}
+</code></pre>
+
+<h2>解构赋值</h2>
+
+<p>解构赋值对任意深度嵌套的数组或对象都适用，方便从嵌套的属性中抽取值。</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>someObject = { a: 'value for a', b: 'value for b' }
+{ a, b } = someObject
+console.log "a is '#{a}', b is '#{b}'"
+</code></pre>
+
+<p>这在Node程序中引入模块时尤其有用：</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>{join, resolve} = require('path')
+
+join('/Users', 'Alex')
+</code></pre>
+
+<h2>其他类库</h2>
+
+<p>既然所有的东西都会编译为JavaScript，那么使用其他类库与调用CoffeeScript类库的函数并没有什么差别。在CoffeeScript中使用 <a href="http://jquery.com">jQuery</a>显得非常优雅，因为jQuery的API中有很多回调函数。</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code># Use local alias
+$ = jQuery
+
+$ -&gt;
+  # DOMContentLoaded
+  $(".el").click -&gt;
+    alert("Clicked!")
+</code></pre>
+
+<p>既然CoffeeScript编译输出的所有代码都被包裹在一个匿名函数中，因此我们可以使用一个局部变量<code>$</code>来代替<code>jQuery</code>。就算在jQuery的<code>no confict</code>模式或者<code>$</code>被重定义的情况下，我们的脚本能按预想的一样正常工作。</p>
+
+<h2>私有变量</h2>
+
+<p>CoffeeScript中的<code>do</code>关键字能够让我们立即运行函数，这是一种非常有效的包装作用域和受保护变量的方式。在下面的例子中，我在被<code>do</code>立刻调用的匿名函数的上下文中定义了一个变量<code>classToType</code>。该匿名函数返回了另外一个匿名函数，它才是<code>type</code>最终的值。既然<code>classType</code>是在一个不保存引用的上下文中，因此在外部作用域中不可访问。</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code># Execute function immediately
+type = do -&gt;
+  classToType = {}
+  for name in "Boolean Number String Function Array Date RegExp Undefined Null".split(" ")
+    classToType["[object " + name + "]"] = name.toLowerCase()
+
+  # Return a function
+  (obj) -&gt;
+    strType = Object::toString.call(obj)
+    classToType[strType] or "object"
+</code></pre>
+
+<p>换句话说，<code>classToType</code>是完全私有的，并且在匿名函数执行完毕之后就不能在外面作用域中引用它了。这是一种非常好的包装作用域和变量的办法。</p>
+
+  </div>
+</div>
+</body>
+</html><!DOCTYPE html>
+<html>
+<head>
+<meta charset=utf-8>
 <title>The Little Book on CoffeeScript - Compiling</title>
 <link rel="stylesheet" href="site/site.css" type="text/css" charset="utf-8">
 <link rel="stylesheet" href="site/highlight.css" type="text/css" charset="utf-8">
@@ -1679,291 +1964,6 @@ parseInt('010', 10) is 10
 <pre><code>coffee --lint index.coffee
   index.coffee: 0 error(s), 0 warning(s)
 </code></pre>
-
-  </div>
-</div>
-</body>
-</html><!DOCTYPE html>
-<html>
-<head>
-<meta charset=utf-8>
-<title>The Little Book on CoffeeScript - Idioms</title>
-<link rel="stylesheet" href="site/site.css" type="text/css" charset="utf-8">
-<link rel="stylesheet" href="site/highlight.css" type="text/css" charset="utf-8">
-<script src="site/jquery.js" type="text/javascript" charset="utf-8"></script>      
-<script src="site/highlight.js" type="text/javascript" charset="utf-8"></script>
-<script src="site/coffee-script.js" type="text/javascript" charset="utf-8"></script>
-<script src="site/preview.js" type="text/javascript" charset="utf-8"></script>
-<script type="text/javascript" charset="utf-8">
-  hljs.initHighlightingOnLoad();
-</script>
-</head>
-<body>
-<div id="container">
-  <header>
-    <h1><a href="index.html">The Little Book on CoffeeScript</a></h1>
-  </header>
-  
-  <div id="content">
-    <div class="back"><a href="index.html">&laquo; Back to all chapters</a></div>
-
-
-<h1>Common CoffeeScript idioms</h1>
-
-<p>Every language has a set of idioms and practices, and CoffeeScript is no exception. This chapter will explore those conventions, and show you some JavaScript to CoffeeScript comparisons so you can get a practical sense of the language.</p>
-
-<h2>Each</h2>
-
-<p>In JavaScript to iterate over every item in an array, we could either use the newly added <a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/array/foreach"><code>forEach()</code></a> function, or an old C style <code>for</code> loop. If you're planning to use some of JavaScript's latest features introduced in ECMAScript 5, I advise you also include a <a href="https://github.com/kriskowal/es5-shim">shim</a> in the page to emulate support in older browsers.</p>
-
-<pre><code>for (var i=0; i &lt; array.length; i++)
-  myFunction(array[i]);
-
-array.forEach(function(item, i){
-  myFunction(item)
-});
-</code></pre>
-
-<p>Although the <code>forEach()</code> syntax is much more succinct and readable, it suffers from the drawback that the callback function will be invoked every iteration of the array, and is therefore much slower than the equivalent <code>for</code> loop. Let's see how it looks in CoffeeScript.</p>
-
-<p><span class="csscript"></span></p>
-
-<pre><code>myFunction(item) for item in array
-</code></pre>
-
-<p>It's a readable and concise syntax, I'm sure you'll agree, and what's great is that it compiles to a <code>for</code> loop behind the scenes. In other words CoffeeScript's syntax offers the same expressiveness as <code>forEach()</code>, but without the speed and shimming caveats.</p>
-
-<h2>Map</h2>
-
-<p>As with <code>forEach()</code>, ES5 also includes a native map function that has a much more succinct syntax than the classic <code>for</code> loop, namely <a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array/map"><code>map()</code></a>. Unfortunately it suffers from much the same caveats that <code>forEach()</code> does, its speed is greatly reduced due to the function calls.</p>
-
-<pre><code>var result = []
-for (var i=0; i &lt; array.length; i++)
-  result.push(array[i].name)
-
-var result = array.map(function(item, i){
-  return item.name;
-});
-</code></pre>
-
-<p>As we covered in the syntax chapter, CoffeeScript's comprehensions can be used to get the same behavior as <code>map()</code>. Notice we're surrounding the comprehension with parens, which is <strong>absolutely critical</strong> in ensuring the comprehension returns what you'd expect, the mapped array.</p>
-
-<p><span class="csscript"></span></p>
-
-<pre><code>result = (item.name for item in array)
-</code></pre>
-
-<h2>Select</h2>
-
-<p>Again, ES5 has a utility function <a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/array/filter"><code>filter()</code></a> for reducing arrays:</p>
-
-<pre><code>var result = []
-for (var i=0; i &lt; array.length; i++)
-  if (array[i].name == "test")
-    result.push(array[i])
-
-result = array.filter(function(item, i){
-  return item.name == "test"
-});
-</code></pre>
-
-<p>CoffeeScript's basic syntax uses the <code>when</code> keyword to filter items with a comparison. Behind the scenes a <code>for</code> loop is generated. The whole execution is performed in an anonymous function to ward against scope leakage and variable conflict.</p>
-
-<p><span class="csscript"></span></p>
-
-<pre><code>result = (item for item in array when item.name is "test")
-</code></pre>
-
-<p>Don't forgot to include the parens, as otherwise <code>result</code> will be the last item in the array.
-CoffeeScript's comprehensions are so flexible that they allow you to do powerful selections as in the following example:</p>
-
-<p><span class="csscript"></span></p>
-
-<pre><code>passed = []
-failed = []
-(if score &gt; 60 then passed else failed).push score for score in [49, 58, 76, 82, 88, 90]
-
-# Or
-passed = (score for score in scores when score &gt; 60)
-</code></pre>
-
-<p>If comprehensions get too long, you can split them onto multiple lines.</p>
-
-<p><span class="csscript"></span></p>
-
-<pre><code>passed = []
-failed = []
-for score in [49, 58, 76, 82, 88, 90]
-  (if score &gt; 60 then passed else failed).push score
-</code></pre>
-
-<h2>Includes</h2>
-
-<p>Checking to see if a value is inside an array is typically done with <code>indexOf()</code>, which rather mind-bogglingly still requires a shim, as Internet Explorer hasn't implemented it.</p>
-
-<pre><code>var included = (array.indexOf("test") != -1)
-</code></pre>
-
-<p>CoffeeScript has a neat alternative to this which Pythonists may recognize, namely <code>in</code>.</p>
-
-<p><span class="csscript"></span></p>
-
-<pre><code>included = "test" in array
-</code></pre>
-
-<p>Behind the scenes, CoffeeScript is using <code>Array.prototype.indexOf()</code>, and shimming if necessary, to detect if the value is inside the array. Unfortunately this  means the same <code>in</code> syntax won't work for strings. We need to revert back to using <code>indexOf()</code> and testing if the result is negative:</p>
-
-<p><span class="csscript"></span></p>
-
-<pre><code>included = "a long test string".indexOf("test") isnt -1
-</code></pre>
-
-<p>Or even better, hijack the bitwise operator so we don't have to do a <code>-1</code> comparison.</p>
-
-<p><span class="csscript"></span></p>
-
-<pre><code>string   = "a long test string"
-included = !!~ string.indexOf "test"
-</code></pre>
-
-<h2>Property iteration</h2>
-
-<p>To iterate over a bunch of properties in JavaScript, you'd use the <code>in</code> operator, for example:</p>
-
-<pre><code>var object = {one: 1, two: 2}
-for(var key in object) alert(key + " = " + object[key])
-</code></pre>
-
-<p>However, as you've seen in the previous section, CoffeeScript has already reserved <code>in</code> for use with arrays. Instead, the operator has been renamed <code>of</code>, and can be used like thus:</p>
-
-<p><span class="csscript"></span></p>
-
-<pre><code>object = {one: 1, two: 2}
-alert("#{key} = #{value}") for key, value of object
-</code></pre>
-
-<p>As you can see, you can specify variables for both the property name, and its value; rather convenient.</p>
-
-<h2>Min/Max</h2>
-
-<p>This technique is not specific to CoffeeScript, but I thought it useful to demonstrate anyway. <code>Math.max</code> and <code>Math.min</code> take multiple arguments, so you can easily use <code>...</code> to pass an array to them, retrieving the maximum and minimum values in the array.</p>
-
-<p><span class="csscript"></span></p>
-
-<pre><code>Math.max [14, 35, -7, 46, 98]... # 98
-Math.min [14, 35, -7, 46, 98]... # -7
-</code></pre>
-
-<p>It's worth noting that this trick will fail with really large arrays as browsers have a limitation on the amount of arguments you can pass to functions.</p>
-
-<h2>Multiple arguments</h2>
-
-<p>In the <code>Math.max</code> example above, we're  using <code>...</code> to de-structure the array and passing it as multiple arguments to <code>max</code>. Behind the scenes, CoffeeScript is converting the function call to use <code>apply()</code>, ensuring the array is passed as multiple arguments to <code>max</code>. We can use this feature in other ways too, such as proxying function calls:</p>
-
-<p><span class="csscript"></span></p>
-
-<pre><code>Log =
-  log: -&gt;
-    console?.log(arguments...)
-</code></pre>
-
-<p>Or you can alter the arguments before they're passed onwards:</p>
-
-<p><span class="csscript"></span></p>
-
-<pre><code>Log =
-  logPrefix: "(App)"
-
-  log: (args...) -&gt;
-    args.unshift(@logPrefix) if @logPrefix
-    console?.log(args...)
-</code></pre>
-
-<p>Bear in mind though, that CoffeeScript will automatically set the function invocation context to the object the function is being invoked on. In the example above, that would be <code>console</code>. If you want to set the context specifically, then you'll need to call <code>apply()</code> manually.</p>
-
-<h2>And/or</h2>
-
-<p>CoffeeScript style guides indicates that <code>or</code> is preferred over <code>||</code>, and <code>and</code> is preferred over <code>&amp;&amp;</code>. I can see why, as the former is somewhat more readable. Nevertheless, the two styles have identical results.</p>
-
-<p>This preference over more English style code also applies to using <code>is</code> over <code>==</code> and <code>isnt</code> over <code>!=</code>.</p>
-
-<p><span class="csscript"></span></p>
-
-<pre><code>string = "migrating coconuts"
-string == string # true
-string is string # true
-</code></pre>
-
-<p>One extremely nice addition to CoffeeScript is the 'or equals', which is a pattern Rubyists may recognize as <code>||=</code>:</p>
-
-<p><span class="csscript"></span></p>
-
-<pre><code>hash or= {}
-</code></pre>
-
-<p>If hash evaluates to <code>false</code>, then it's set to an empty object. It's important to note here that this expression also recognizes <code>0</code>, <code>""</code> and <code>null</code> as false. If that isn't your intention, you'll need to use CoffeeScript's existential operator, which only gets activated if <code>hash</code> is <code>undefined</code> or <code>null</code>:</p>
-
-<p><span class="csscript"></span></p>
-
-<pre><code>hash ?= {}
-</code></pre>
-
-<h2>Destructuring assignments</h2>
-
-<p>Destructuring assignments can be used with any depth of array and object nesting, to help pull out deeply nested properties.</p>
-
-<p><span class="csscript"></span></p>
-
-<pre><code>someObject = { a: 'value for a', b: 'value for b' }
-{ a, b } = someObject
-console.log "a is '#{a}', b is '#{b}'"
-</code></pre>
-
-<p>This is especially useful in Node applications when requiring modules:</p>
-
-<p><span class="csscript"></span></p>
-
-<pre><code>{join, resolve} = require('path')
-
-join('/Users', 'Alex')
-</code></pre>
-
-<h2>External libraries</h2>
-
-<p>Using external libraries is exactly the same as calling functions on CoffeeScript libraries; since at the end of the day everything is compiled down to JavaScript. Using CoffeeScript with <a href="http://jquery.com">jQuery</a> is especially elegant, due to the amount of callbacks in jQuery's API.</p>
-
-<p><span class="csscript"></span></p>
-
-<pre><code># Use local alias
-$ = jQuery
-
-$ -&gt;
-  # DOMContentLoaded
-  $(".el").click -&gt;
-    alert("Clicked!")
-</code></pre>
-
-<p>Since all of CoffeeScript's output is wrapped in an anonymous function, we can set a local <code>$</code> alias for <code>jQuery</code>. This will make sure that even if jQuery's no conflict mode is enabled and the <code>$</code> re-defined, our script will still function as intended.</p>
-
-<h2>Private variables</h2>
-
-<p>The <code>do</code> keyword in CoffeeScript lets us execute functions immediately, a great way of encapsulating scope &amp; protecting variables. In the example below, we're defining a variable <code>classToType</code> in the context of an anonymous function which's immediately called by <code>do</code>. That anonymous function returns a second anonymous function, which will be ultimate value of <code>type</code>. Since <code>classToType</code> is defined in a context that no reference is kept to, it can't be accessed outside that scope.</p>
-
-<p><span class="csscript"></span></p>
-
-<pre><code># Execute function immediately
-type = do -&gt;
-  classToType = {}
-  for name in "Boolean Number String Function Array Date RegExp Undefined Null".split(" ")
-    classToType["[object " + name + "]"] = name.toLowerCase()
-
-  # Return a function
-  (obj) -&gt;
-    strType = Object::toString.call(obj)
-    classToType[strType] or "object"
-</code></pre>
-
-<p>In other words, <code>classToType</code> is completely private, and can never again be referenced outside the executing anonymous function. This pattern is a great way of encapsulating scope and hiding variables.</p>
 
   </div>
 </div>
