@@ -160,7 +160,7 @@ Bear in mind though, that CoffeeScript will automatically set the function invoc
 
 CoffeeScript style guides indicates that `or` is preferred over `||`, and `and` is preferred over `&&`. I can see why, as the former is somewhat more readable. Nevertheless, the two styles have identical results.  
 
-This preference over more English style code also applies to using `is` over `==` and `isnt` over `!=`.
+This preference over more English style code also applies to using `is` over `===` and `isnt` over `!==`.
     
 <span class="csscript"></span>
 
@@ -222,9 +222,9 @@ The `do` keyword in CoffeeScript lets us execute functions immediately, a great 
 
     # Execute function immediately
     type = do ->
-      classToType = {}
-      for name in "Boolean Number String Function Array Date RegExp Undefined Null".split(" ")
-        classToType["[object " + name + "]"] = name.toLowerCase()
+        classToType = {}
+        "Boolean Number String Function Array Date RegExp Undefined Null".replace /[^ ]+/g, (name) ->
+            classToType["[object #{name}]"] = name.toLowerCase()
       
       # Return a function
       (obj) ->
