@@ -1332,514 +1332,6 @@ class User extends Module
 <html>
 <head>
 <meta charset=utf-8>
-<title>The Little Book on CoffeeScript - The Bad Parts</title>
-<link rel="stylesheet" href="site/site.css" type="text/css" charset="utf-8">
-<link rel="stylesheet" href="site/highlight.css" type="text/css" charset="utf-8">
-<script src="site/jquery.js" type="text/javascript" charset="utf-8"></script>      
-<script src="site/highlight.js" type="text/javascript" charset="utf-8"></script>
-<script src="site/coffee-script.js" type="text/javascript" charset="utf-8"></script>
-<script src="site/preview.js" type="text/javascript" charset="utf-8"></script>
-<script type="text/javascript" charset="utf-8">
-  hljs.initHighlightingOnLoad();
-</script>
-</head>
-<body>
-<div id="container">
-  <header>
-    <h1><a href="index.html">The Little Book on CoffeeScript</a></h1>
-  </header>
-  
-  <div id="content">
-    <div class="back"><a href="index.html">&laquo; Back to all chapters</a></div>
-
-
-<h1>The Bad Parts</h1>
-
-<p>JavaScript is a tricky beast, and knowing the parts that you should avoid is just as important as knowing about the parts you should use. As Sun Tzu says, "know your enemy", and that's exactly what we're going to do in the chapter, exploring the dark side of JavaScript and revealing all the lurking monsters ready to pounce on the unsuspecting developer.</p>
-
-<p>As I mentioned in the introduction, CoffeeScript's awesomeness lies not only in it's syntax, but in it's ability to fix some of JavaScript's warts. However, due to the fact that CoffeeScript statements have a direct translation into JavaScript, and don't run in a virtual machine or interpreter, the language is not a silver bullet to all of JavaScript's bugbears and there's still some issues you need to be aware about.</p>
-
-<p>First, let's talk about what things the language does solve.</p>
-
-<h2>A JavaScript Subset</h2>
-
-<p>CoffeeScript's syntax only covers a subset of JavaScript's, the famous <em>Good Parts</em>, so already there's less to fix. Let's take the <code>with</code> statement for example. This statement has for a long time been "considered harmful", and should be avoided. <code>with</code> was intended to provide a shorthand for writing recurring property lookups on objects. For example, instead of writing:</p>
-
-<pre><code>dataObj.users.alex.email = "info@eribium.org";
-</code></pre>
-
-<p>You could write:</p>
-
-<pre><code>with(dataObj.users.alex) {
-  email = "info@eribium.org";
-}
-</code></pre>
-
-<p>Setting aside the fact that we shouldn't have such a deep object in the first place, the syntax is quite clean. Except for one thing. It's damn confusing to the JavaScript interpreter - it doesn't know exactly what you're going to do in the <code>with</code> context, and forces the specified object to be searched first for all name lookups.</p>
-
-<p>This really hurts performance and means the interpreter has to turn off all sorts of JIT optimizations. Additionally <code>with</code> statements can't be minified using tools like <a href="https://github.com/mishoo/UglifyJS">uglify-js</a>. They're also deprecated and removed from future JavaScript versions. All things considered, it's much better just to avoid using them, and CoffeeScript takes this a step further by eliminating them from it's syntax. In other words, using <code>with</code> in CoffeeScript will throw a syntax error.</p>
-
-<h2>Global variables</h2>
-
-<p>By default, your JavaScript programs run in a global scope, and by default any variables created are in that global scope. If you want to create a variable in the local scope, JavaScript requires explicitly indicating that fact using the <code>var</code> keyword.</p>
-
-<pre><code>usersCount = 1;        // Global
-var groupsCount = 2;   // Global
-
-(function(){              
-  pagesCount = 3;      // Global
-  var postsCount = 4;  // Local
-})()
-</code></pre>
-
-<p>This is a bit of an odd decision since the vast majority of the time you'll be creating local variables not global, so why not make that the default? As it stands, developers have to remember to put <code>var</code> statements before any variables they're initializing, or face weird bugs when variables accidentally conflict and overwrite each other.</p>
-
-<p>Luckily CoffeeScript comes to your rescue here by eliminating implicit global variable assignment entirely. In other words, the <code>var</code> keyword is reserved in CoffeeScript, and will trigger a syntax error if used. Local variables are created implicitly by default, and it's very difficult to create global variables without explicitly assigning them as properties on <code>window</code>.</p>
-
-<p>Let's have a look at an example of CoffeeScript's variable assignment:</p>
-
-<p><span class="csscript"></span></p>
-
-<pre><code>outerScope = true
-do -&gt;
-  innerScope = true
-</code></pre>
-
-<p>Compiles down to:</p>
-
-<pre><code>var outerScope;
-outerScope = true;
-(function() {
-  var innerScope;
-  return innerScope = true;
-})();
-</code></pre>
-
-<p>Notice how CoffeeScript initializes variables (using <code>var</code>) automatically in the context their first used. Whilst it's impossible to shadow outer variables, you can still refer to and access them. You need to watch out for this, be careful that you're not reusing the name of an external variable accidentally if you're writing a deeply nested function or class. For example, here we're accidentally overwriting the <code>package</code> variable in a Class function:</p>
-
-<p><span class="csscript"></span></p>
-
-<pre><code>package = require('./package')
-
-class Hem
-  build: -&gt;
-    # Overwrites outer variable!
-    package = @hemPackage.compile()
-
-  hemPackage: -&gt;
-    package.create()
-</code></pre>
-
-<p>Global variables are needed from time to time, and to create those you need to set them as properties on <code>window</code>:</p>
-
-<p><span class="csscript"></span></p>
-
-<pre><code>  class window.Asset
-    constructor: -&gt;
-</code></pre>
-
-<p>By ensuring global variables are explicit, rather than implicit, CoffeeScript removes one of the major sources of bugs in JavaScript programs.</p>
-
-<h2>Semicolons</h2>
-
-<p>JavaScript does not enforce the use of semicolons in source code, so it's possible to omit them. However, behind the scenes the JavaScript compiler still needs them, so the parser automatically inserts them whenever it encounters a parse error due to a missing semicolon. In other words, it'll try to evaluate a statement without semicolons and, if that fails, tries again using semicolons.</p>
-
-<p>Unfortunately this is a tremendously bad idea, and can actually change the behavior of your code. Take the following example, seems valid JavaScript, right?</p>
-
-<pre><code>function() {}
-(window.options || {}).property
-</code></pre>
-
-<p>Wrong, well at least according to the parser; it raises a syntax error. In case of a leading parenthesis, the parser will not insert a semicolon. The code gets transformed onto one line:</p>
-
-<pre><code>function() {}(window.options || {}).property
-</code></pre>
-
-<p>Now you can see the issue, and why the parser is complaining. When you're writing JavaScript, you should always include semicolons after statements. Fortunately CoffeeScript gets round all this hassle by not having semicolons in its syntax. Rather the semicolons are inserted automatically (at the right places) when the CoffeeScript is compiled down to JavaScript.</p>
-
-<h2>Reserved words</h2>
-
-<p>Certain keywords in JavaScript are reserved for future versions of JavaScript, such as <code>const</code>, <code>enum</code> and <code>class</code>. Using these as variable names in your JavaScript programs can unpredictable results; some browsers will cope with them just fine, and others will choke. CoffeeScript neatly sidesteps this issue, by detecting if you're using a reserved keyword, and escaping it if necessary.</p>
-
-<p>For example, let's say you were to use the reserved keyword <code>class</code> as a property on an object, your CoffeeScript might look like this:</p>
-
-<p><span class="csscript"></span></p>
-
-<pre><code>myObj = {
-  delete: "I am a keyword!"
-}
-myObj.class = -&gt;
-</code></pre>
-
-<p>The CoffeeScript parser notices you're using a reserved keyword, and quotes it for you:</p>
-
-<pre><code>var myObj;
-myObj = {
-  "delete": "I am a keyword!"
-};
-myObj["class"] = function() {};
-</code></pre>
-
-<h2>Equality comparisons</h2>
-
-<p>The weak equality comparison in JavaScript has some confusing behavior and is often the source of confusing bugs. The example below is taken from <a href="http://bonsaiden.github.com/JavaScript-Garden/#types.equality">JavaScript Garden's equality section</a> which delves into the issue in some depth.</p>
-
-<p><span class="csscript"></span></p>
-
-<pre><code>""           ==   "0"           // false
-0            ==   ""            // true
-0            ==   "0"           // true
-false        ==   "false"       // false
-false        ==   "0"           // true
-false        ==   undefined     // false
-false        ==   null          // false
-null         ==   undefined     // true
-" \t\r\n"    ==   0             // true
-</code></pre>
-
-<p>The reason behind this behavior is that the weak equality coerces types automatically. I'm sure you'll agree this is all pretty ambiguous, and can lead to unexpected results and bugs.</p>
-
-<p>The solution is to instead use the strict equality operator, which consists of three equal signs: <code>===</code>. It works exactly like the normal equality operator, but without any type coercion. It's recommended to always use the strict equality operator, and explicitly convert types if needs be.</p>
-
-<p>CoffeeScript solves this by simply replacing all weak comparisons with strict ones, in other words converting all <code>==</code> comparators into <code>===</code>. You can't do a a weak equality comparison in CoffeeScript, and you should explicitly convert types before comparing them if necessary.</p>
-
-<p>This doesn't mean you can ignore type coercion in CoffeeScript completely though, especially when it comes to checking the 'truthfulness' of variables during flow control. Blank strings, <code>null</code>, <code>undefined</code> and the number <code>0</code> are all coerced to <code>false</code></p>
-
-<p><span class="csscript"></span></p>
-
-<pre><code>alert("Empty Array")  unless [].length
-alert("Empty String") unless ""
-alert("Number 0")     unless 0
-</code></pre>
-
-<p>If you want to explicitly check for <code>null</code> and <code>undefined</code>, then you can use CoffeeScript's existential operator:</p>
-
-<p><span class="csscript"></span></p>
-
-<pre><code>alert("This is not called") unless ""?
-</code></pre>
-
-<p>The <code>alert()</code> in the previous example won't be called, as the empty string isn't equal to <code>null</code>.</p>
-
-<h2>Function definition</h2>
-
-<p>Oddly enough in JavaScript, functions can be defined after they're used. For example, the following runs absolutely fine, even though <code>wem</code> is defined after it's called:</p>
-
-<pre><code>wem();
-function wem() {}
-</code></pre>
-
-<p>The is because of function scope. Functions get hoisted before the programs execution and as such are available everywhere in the scope they were defined in, even if called before the actual definition in the source. The trouble is, hoisting behavior differs between browser; for example:</p>
-
-<pre><code>if (true) {
-  function declaration() {
-    return "first";
-  }
-} else {
-  function declaration() {
-    return "second";
-  }
-}
-declaration();
-</code></pre>
-
-<p>In some browsers such as Firefox, <code>declaration()</code> will return <code>"first"</code>, and in other browsers like Chrome it'll return <code>"second"</code>, even though it looks like the <code>else</code> statement is never run.</p>
-
-<p>If you want to know more about declarative functions, then you should read <a href="http://kangax.github.com/nfe/">Juriy Zaytsev's guide</a>, where he delves into the specifics. Suffice to say, they have fairly ambiguous behavior, and can lead to problems later down the road. All things considered, It's best to steer clear of them by using function expressions instead:</p>
-
-<pre><code>var wem = function(){};
-wem();
-</code></pre>
-
-<p>CoffeeScript's approach to this is to remove declarative functions entirely, using only function expressions.</p>
-
-<h2>Number property lookups</h2>
-
-<p>A flaw in JavaScript's parser means that the <em>dot notation</em> on numbers is interpreted as a floating point literal, rather than a property lookup. For example, the following JavaScript will cause a syntax error:</p>
-
-<pre><code>5.toString();
-</code></pre>
-
-<p>JavaScript's parser is looking for another Number after the dot, and so raises an <code>Unexpected token</code> error when it encounters <code>toString()</code>. The solution to this is to either use parenthesis, or add an additional dot.</p>
-
-<pre><code>(5).toString();
-5..toString();
-</code></pre>
-
-<p>Fortunately CoffeeScript's parsers is clever enough to deal with this issue by using double dot notations automatically (as in the example above) whenever you access properties on Numbers.</p>
-
-<h1>The un-fixed parts</h1>
-
-<p>Whilst CoffeeScript goes some length to solving some of JavaScript's design flaws, it can only go so far. As I mentioned previously, CoffeeScript's strictly limited to static analysis by design, and doesn't do any runtime checking for performance reasons. CoffeeScript uses a straight source-to-source compiler, the idea being that every CoffeeScript statement results in a equivalent JavaScript statement. CoffeeScript doesn't provide an abstraction over any of JavaScript's keywords, such as <code>typeof</code>, and as such some design flaws in JavaScript's design also apply to CoffeeScript.</p>
-
-<p>In the previous sections we covered some design flaws in JavaScript that CoffeeScript fixes. Now let's talk about some of JavaScript's flaws that CoffeeScript can't fix.</p>
-
-<h2>Using eval</h2>
-
-<p>Whilst CoffeeScript removes some of JavaScript's foibles, other features are a necessary evil, you just need to be aware of their shortcomings. A case in point, is the <code>eval()</code> function. Whilst undoubtedly it has its uses, you should know about its drawbacks, and avoid it if possible. The <code>eval()</code> function will execute a string of JavaScript code in the local scope, and functions like <code>setTimeout()</code> and <code>setInterval()</code> can also both take a string as their first argument to be evaluated.</p>
-
-<p>However, like <code>with</code>, <code>eval()</code> throws the compiler off track, and is a major performance hog. As the compiler has no idea what's inside until runtime, it can't perform any optimizations like inlining. Another concern is with security. If you give it dirty input, <code>eval</code> can easily open up your code for injection attacks. 99% of the time when you're using <code>eval</code>, there are better &amp; safer alternatives (such as square brackets).</p>
-
-<p><span class="csscript"></span></p>
-
-<pre><code># Don't do this
-model = eval(modelName)
-
-# Use square brackets instead
-model = window[modelName]
-</code></pre>
-
-<h2>Using typeof</h2>
-
-<p>The <code>typeof</code> operator is probably the biggest design flaw of JavaScript, simply because it's basically completely broken. In fact, it really has only one use, checking to see if a value is <code>undefined</code>.</p>
-
-<p><span class="csscript"></span></p>
-
-<pre><code>typeof undefinedVar is "undefined"
-</code></pre>
-
-<p>For all other types of type checking, <code>typeof</code> fails rather miserably, returning inconsistent results depending on the browser and how instances were instantiated. This isn't something that CoffeeScript can help you either, since the language uses static analysis and has no runtime type checking. You're on your own here.</p>
-
-<p>To illustrate the problem, here's a table taken from <a href="http://bonsaiden.github.com/JavaScript-Garden/">JavaScript Garden</a> which shows some of the major inconstancies in the keyword's type checking.</p>
-
-<pre><code>Value               Class      Type
--------------------------------------
-"foo"               String     string
-new String("foo")   String     object
-1.2                 Number     number
-new Number(1.2)     Number     object
-true                Boolean    boolean
-new Boolean(true)   Boolean    object
-new Date()          Date       object
-new Error()         Error      object
-[1,2,3]             Array      object
-new Array(1, 2, 3)  Array      object
-new Function("")    Function   function
-/abc/g              RegExp     object
-new RegExp("meow")  RegExp     object
-{}                  Object     object
-new Object()        Object     object
-</code></pre>
-
-<p>As you can see, depending on if you define a string with quotes or with the <code>String</code> class affects the result of <code>typeof</code>. Logically <code>typeof</code> should return <code>"string"</code> for both checks, but for the latter it returns <code>"object"</code>. Unfortunately the inconstancies only get worse from there.</p>
-
-<p>So what can we use for type checking in JavaScript? Well, luckily <code>Object.prototype.toString()</code> comes to the rescue here. If we invoke that function in the context of a particular object, it'll return the correct type. All we need to do is massage the string it returns, so we end up with the sort of string <code>typeof</code> should be returning. Here's an example implementation ported from jQuery's <code>$.type</code>:</p>
-
-<p><span class="csscript"></span></p>
-
-<pre><code>type = do -&gt;
-  classToType = {}
-  for name in "Boolean Number String Function Array Date RegExp Undefined Null".split(" ")
-    classToType["[object " + name + "]"] = name.toLowerCase()
-
-  (obj) -&gt;
-    strType = Object::toString.call(obj)
-    classToType[strType] or "object"
-
-# Returns the sort of types we'd expect:
-type("")         # "string"
-type(new String) # "string"
-type([])         # "array"
-type(/\d/)       # "regexp"
-type(new Date)   # "date"
-type(true)       # "boolean"
-type(null)       # "null"
-type({})         # "object"
-</code></pre>
-
-<p>If you're checking to see if an variable has been defined, you'll still need to use <code>typeof</code> otherwise you'll get a <code>ReferenceError</code>.</p>
-
-<p><span class="csscript"></span></p>
-
-<pre><code>if typeof aVar isnt "undefined"
-  objectType = type(aVar)
-</code></pre>
-
-<p>Or more succinctly with the existential operator:</p>
-
-<pre><code>objectType = type(aVar?)
-</code></pre>
-
-<p>As an alternative to type checking, you can often use duck typing and the CoffeeScript existential operator together to eliminating the need to resolve an object's type. For example, let's say we're pushing a value onto an array. We could say that, as long as the 'array like' object implements <code>push()</code>, we should treat it like an array:</p>
-
-<p><span class="csscript"></span></p>
-
-<pre><code>anArray?.push? aValue
-</code></pre>
-
-<p>If <code>anArray</code> is an object other than an array than the existential operator will ensure that <code>push()</code> is never called.</p>
-
-<h2>Using instanceof</h2>
-
-<p>JavaScript's <code>instanceof</code> keyword is nearly as broken as <code>typeof</code>. Ideally <code>instanceof</code> would compare the constructor of two object, returning a boolean if one was an instance of the other. However, in reality <code>instanceof</code> only works when comparing custom made objects. When it comes to comparing built-in types, it's as useless as <code>typeof</code>.</p>
-
-<p><span class="csscript"></span></p>
-
-<pre><code>new String("foo") instanceof String # true
-"foo" instanceof String             # false
-</code></pre>
-
-<p>Additionally, <code>instanceof</code> also doesn't work when comparing object from different frames in the browser. In fact, <code>instanceof</code> only returns a correct result for custom made objects, such as CoffeeScript classes.</p>
-
-<p><span class="csscript"></span></p>
-
-<pre><code>class Parent
-class Child extends Parent
-
-child = new Child
-child instanceof Child  # true
-child instanceof Parent # true
-</code></pre>
-
-<p>Make sure you only use it for your own objects or, even better, stick clear of it.</p>
-
-<h2>Using delete</h2>
-
-<p>The <code>delete</code> keyword can only safely be used for removing properties inside objects.</p>
-
-<p><span class="csscript"></span></p>
-
-<pre><code>anObject = {one: 1, two: 2}
-delete anObject.one
-anObject.hasOwnProperty("one") # false
-</code></pre>
-
-<p>Any other use, such as deleting variables or function's won't work.</p>
-
-<p><span class="csscript"></span></p>
-
-<pre><code>aVar = 1
-delete aVar
-typeof Var # "integer"
-</code></pre>
-
-<p>It's rather peculiar behavior, but there you have it. If you want to remove a reference to a variable, just assign it to <code>null</code> instead.</p>
-
-<p><span class="csscript"></span></p>
-
-<pre><code>aVar = 1
-aVar = null
-</code></pre>
-
-<h2>Using parseInt</h2>
-
-<p>JavaScript's <code>parseInt()</code> function can return unexpected results if you pass a string to it without informing it of the proper base. For example:</p>
-
-<pre><code># Returns 8, not 10!
-parseInt('010') is 8
-</code></pre>
-
-<p>Always pass a base to the function to make it work correctly:</p>
-
-<pre><code># Use base 10 for the correct result
-parseInt('010', 10) is 10
-</code></pre>
-
-<p>This isn't something CoffeeScript can do for you; you'll just have to remember to always specify a base when using <code>parseInt()</code>.</p>
-
-<h2>Strict mode</h2>
-
-<p>Strict mode is a new feature of ECMAScript 5 that allows you to run a JavaScript program or function in a <em>strict</em> context. This strict context throws more exceptions and warnings than the normal context, giving developers some indication when they're straying from best practices, writing un-optimizable code or making common mistakes. In other words, strict mode reduces bugs, increases security, improves performance and eliminates some difficult to use language features. What's not to like?</p>
-
-<p>Strict mode is currently supported in the following browsers:</p>
-
-<ul>
-<li>Chrome >= 13.0</li>
-<li>Safari >= 5.0</li>
-<li>Opera >= 12.0</li>
-<li>Firefox >= 4.0</li>
-<li>IE >= 10.0</li>
-</ul>
-
-
-<p>Having said that, strict mode is completely backwards compatible with older browsers. Programs using it should run fine in either a strict or normal context.</p>
-
-<h3>Strict mode changes</h3>
-
-<p>Most of the changes strict mode introduces pertain to JavaScript's syntax:</p>
-
-<ul>
-<li>Errors on duplicate property and function argument names</li>
-<li>Errors on incorrect use of the <code>delete</code> operator</li>
-<li>Access to <code>arguments.caller</code> &amp; <code>arguments.callee</code> throws an error (for performance reasons)</li>
-<li>Using the <code>with</code> operator will raise a syntax error</li>
-<li>Certain variables such as <code>undefined</code> are no longer writeable</li>
-<li>Introduces additional reserved keywords, such as <code>implements</code>, <code>interface</code>, <code>let</code>, <code>package</code>, <code>private</code>, <code>protected</code>, <code>public</code>, <code>static</code>, and <code>yield</code></li>
-</ul>
-
-
-<p>However, strict mode also changes some runtime behavior:</p>
-
-<ul>
-<li>Global variables are explicit (<code>var</code> always required). The global value of <code>this</code> is <code>undefined</code>.</li>
-<li><code>eval</code> can't introduce new variables into the local context</li>
-<li>Function statements have to be defined before they're used (previously functions could be <a href="http://whereswalden.com/2011/01/24/new-es5-strict-mode-requirement-function-statements-not-at-top-level-of-a-program-or-function-are-prohibited/">defined anywhere</a>).</li>
-<li><code>arguments</code> is immutable</li>
-</ul>
-
-
-<p>CoffeeScript already abides by a lot of strict mode's requirements, such as always using <code>var</code> when defining variables, but it's still very useful to enable strict mode in your CoffeeScript programs. Indeed, CoffeeScript is taking this a step further and in <a href="https://github.com/jashkenas/coffee-script/issues/1547">future versions</a> will check a program's compliance to strict mode at compile time.</p>
-
-<h3>Strict mode usage</h3>
-
-<p>All you need to do to enable strict checking is start your script or function with the following string:</p>
-
-<p><span class="csscript"></span></p>
-
-<pre><code>-&gt;
-  "use strict"
-
-  # ... your code ...
-</code></pre>
-
-<p>That's it, just the <code>'use strict'</code> string. Couldn't be simpler and it's completely backwards compatible. Let's take a look at strict mode in action. The following function will raise a syntax error in strict mode, but run fine in the usual mode:</p>
-
-<p><span class="csscript"></span></p>
-
-<pre><code>do -&gt;
-  "use strict"
-  console.log(arguments.callee)
-</code></pre>
-
-<p>Strict mode has removed access to <code>arguments.caller</code> &amp; <code>arguments.callee</code> as they're major performance hogs, and is now throwing syntax errors whenever they're used.</p>
-
-<p>There's a particular gotcha you should look out for when using strict mode, namely creating global variables with <code>this</code>. The following example will throw a <code>TypeError</code> in strict mode, but run fine in a normal context, creating a global variable:</p>
-
-<p><span class="csscript"></span></p>
-
-<pre><code>do -&gt;
-  "use strict"
-  class @Spine
-</code></pre>
-
-<p>The reason behind this disparity is that in strict mode <code>this</code> is <code>undefined</code>, whereas normally it refers to the <code>window</code> object. The solution to this is to explicitly set global variables on the <code>window</code> object.</p>
-
-<p><span class="csscript"></span></p>
-
-<pre><code>do -&gt;
-  "use strict"
-  class window.Spine
-</code></pre>
-
-<p>Whilst I recommend enabling strict mode, but it's worth noting that strict mode doesn't enable any new features that aren't ready possible in JavaScript, and will actually slow down your code a bit by having the VM do more checks at runtime. You may want to develop with strict mode, and deploy to production without it.</p>
-
-<h2>JavaScript Lint</h2>
-
-<p><a href="http://www.javascriptlint.com/">JavaScript Lint</a> is a JavaScript code quality tool, and running your programs through it is a great way of improving code quality and best practices. The project was based on a similar tool called <a href="http://www.jslint.com">JSLint</a>. Check out JSLint's site for a <a href="http://www.jslint.com/lint.html">great list</a> of issues that it checks for, including global variables, missing semicolons and weak equality comparisons.</p>
-
-<p>The good news is that CoffeeScript already 'lints' all of its output, so CoffeeScript generated JavaScript is already JavaScript Lint compatible. In fact, the <code>coffee</code> tool has support for a <code>--lint</code> option:</p>
-
-<pre><code>coffee --lint index.coffee
-  index.coffee: 0 error(s), 0 warning(s)
-</code></pre>
-
-  </div>
-</div>
-</body>
-</html><!DOCTYPE html>
-<html>
-<head>
-<meta charset=utf-8>
 <title>The Little Book on CoffeeScript - 编译</title>
 <link rel="stylesheet" href="site/site.css" type="text/css" charset="utf-8">
 <link rel="stylesheet" href="site/highlight.css" type="text/css" charset="utf-8">
@@ -1967,6 +1459,514 @@ task 'build', 'Build lib/ from src/', -&gt;
 <p>Django通过特殊的模板标签也能<a href="http://pypi.python.org/pypi/django-coffeescript/">支持CoffeeScript</a>。而且同时支持行内代码或者外联文件。</p>
 
 <p>当需要编译CoffeeScript时，Ruby和Python在后台都是通过管道将其输出到Node和CoffeeScript库中，因此你在开发时需要事先安装好这些类库。如果你直接使用Node为你的站点开发后端程序，就非常容易集成CoffeeScript了，而且你还可以同时使用它来开发的前后台的代码。我们将在下一章介绍更多相关的东西，使用<a href="https://github.com/sstephenson/stitch">Stitch</a>来为我们的客户端CoffeeScript提供服务。</p>
+
+  </div>
+</div>
+</body>
+</html><!DOCTYPE html>
+<html>
+<head>
+<meta charset=utf-8>
+<title>The Little Book on CoffeeScript - 糟粕</title>
+<link rel="stylesheet" href="site/site.css" type="text/css" charset="utf-8">
+<link rel="stylesheet" href="site/highlight.css" type="text/css" charset="utf-8">
+<script src="site/jquery.js" type="text/javascript" charset="utf-8"></script>      
+<script src="site/highlight.js" type="text/javascript" charset="utf-8"></script>
+<script src="site/coffee-script.js" type="text/javascript" charset="utf-8"></script>
+<script src="site/preview.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript" charset="utf-8">
+  hljs.initHighlightingOnLoad();
+</script>
+</head>
+<body>
+<div id="container">
+  <header>
+    <h1><a href="index.html">The Little Book on CoffeeScript</a></h1>
+  </header>
+  
+  <div id="content">
+    <div class="back"><a href="index.html">&laquo; 返回目录</a></div>
+
+
+<h1>糟粕</h1>
+
+<p>JavaScript是一个让人头疼的怪物，知道你不能用什么和应该用什么同样重要。孙武有言：“知己知彼，百战百胜”，这就是本章的目的，探索JavaScript不好的一面，揭示所有暗伏着准备偷袭毫无防备的开发者的怪兽。</p>
+
+<p>在第一章介绍中说过，CoffeeScript的优秀不单单在于语法上的改进，还在于弥补JavaScript缺点的能力。然而，实际上CoffeeScript语句是直接翻译为JavaScript的，而不是运行在一个虚拟机或者解析器中，它不是解决所有JavaScript怪癖的银弹，还有一些地方需要你小心的处理。</p>
+
+<p>首先，让我们讨论下这个语言解决的问题。</p>
+
+<h2>JavaScript的子集</h2>
+
+<p>CoffeeScript的语法只包含了JavaScript的一个子集，众所周知的<em>精华部分</em>，因此这样就减少了需要处理的问题。让我们用<code>with</code>作为例子来看看。<code>with</code>被“看作有害的”好久了，应该避免使用它。<code>with</code>提供了一个频繁读写对象的快捷方式。例如，像下面这样写：</p>
+
+<pre><code>dataObj.users.alex.email = "info@eribium.org";
+</code></pre>
+
+<p>你可以这样写：</p>
+
+<pre><code>with(dataObj.users.alex) {
+  email = "info@eribium.org";
+}
+</code></pre>
+
+<p>首先撇开我们不应该使用如此深的对象不说，这个语法非常漂亮。但必须除掉这一点。这会让JavaScript非常迷惑，它不知道你在<code>with</code>的上下文中到底要干嘛，使得它会强迫自己在任何变量查找时总是从这个特殊的对象开始。</p>
+
+<p>这对性能损耗很大，而且意味着解析器必须关闭掉全部的JIT（运行时编译执行的技术）优化。还有，<code>with</code>语句并不能被像 <a href="https://github.com/mishoo/UglifyJS">uglify-js</a>这样的压缩工具压缩掉。因此它在将来的JavaScript的版本中会被弃用和移除。综合考虑，避免使用它为妙，CoffeeScript更进一步，将其从自己的语法中拿掉了。换句话说，在CoffeeScript中使用<code>with</code>语句会报错。</p>
+
+<h2>全局变量</h2>
+
+<p>默认情况下，你的JavaScript程序是在全局作用域下运行的，并且任何创建出来的变量默认的也会都在全局作用域中。如果你想创建一个局部变量的话，JavaScript要求使用<code>var</code>关键字来显式的指明。</p>
+
+<pre><code>usersCount = 1;        // Global
+var groupsCount = 2;   // Global
+
+(function(){              
+  pagesCount = 3;      // Global
+  var postsCount = 4;  // Local
+})()
+</code></pre>
+
+<p>这是一个比较奇怪的决定，既然大部分情况下你创建的是局部而不是全局变量，那么为什么要让它成为默认的呢？事实就是这样，开发者必须记住在定义变量之前加上<code>var</code>关键字，否则会造成冲突复写了彼此的变量，引起怪异的bug。</p>
+
+<p>幸运的是，CoffeeScirpt通过彻底地剔除默认赋值给全局变量来解救你。换句话说，在CoffeeScript中<code>var</code>是保留关键字，一旦使用就会触发语法错误。默认地，会隐式地产生局部变量，而且不通过显示地给<code>window</code>的属性赋值的话，没法创建全局变量。</p>
+
+<p>让我们看一个CoffeeScript变量赋值的例子：</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>outerScope = true
+do -&gt;
+  innerScope = true
+</code></pre>
+
+<p>编译过来就是：</p>
+
+<pre><code>var outerScope;
+outerScope = true;
+(function() {
+  var innerScope;
+  return innerScope = true;
+})();
+</code></pre>
+
+<p>注意CoffeeScript是如何自动的在上下文中第一次使用时自动的初始化变量（使用<code>var</code>）的。同时，我们无法覆盖外层作用域的变量，你仍然可以引用和访问它们。这你就要当心了，在你编译一个嵌套比较深的函数或者类时你就要当心不要意外的重用某个外层变量的名字。例如，这样我们就不小心在一个类函数中复写掉了<code>package</code>变量。</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>package = require('./package')
+
+class Hem
+  build: -&gt;
+    # Overwrites outer variable!
+    package = @hemPackage.compile()
+
+  hemPackage: -&gt;
+    package.create()
+</code></pre>
+
+<p>偶尔需要使用全局变量时，你需要将它们设置为<code>window</code>的属性才行：</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>  class window.Asset
+    constructor: -&gt;
+</code></pre>
+
+<p>通过保证显式的全局变量而不是隐式的，CoffeeScript移除了JavaScript程序中主要的bug源之一。</p>
+
+<h2>分号</h2>
+
+<p>JavaScript并没有强制要求在源码中使用分号，因此可以省略分号。但是，在后台JavaScript还是需要分号的，因此当遇到由缺少分号造成的错误时解析器会自动的插入分号。换句话说，解析器首先对一个无分号的语句进行求值，如果失败的话，加上分号再试一次。</p>
+
+<p>很不幸，这是一个非常糟糕的想法，这有可能完全改变代码的行为。看下面这个例子，这段JavaScript没有问题，对吗？</p>
+
+<pre><code>function() {}
+(window.options || {}).property
+</code></pre>
+
+<p>不对，至少对解析器来说是这样，这会导致一个语法错误。如果以一个括号开头的话，解析器就不会插入一个分号。代码会被转化成一行：</p>
+
+<pre><code>function() {}(window.options || {}).property
+</code></pre>
+
+<p>现在你可以看到问题在哪里，知道为什么解析器会抱怨了。当你写JavaScript的时候，你因该在语句后面加上分号。CoffeeScript通过在其语法中不使用分号来绕靠了这些麻烦。相反会在CoffeeScript编译为JavaScript时在把分号自动的插入到正确的位置上。</p>
+
+<h2>保留字</h2>
+
+<p>某些关键字被JavaScript保留下来，以便将来新版本的JavaScript使用。比如说<code>const</code>、<code>enum</code>和<code>class</code>等。在你的JavaScript程序中使用这些保留字作为变量可能会导致不可预料的错误。有些浏览器可以很好的处理它们，而其他浏览器就会卡壳。CoffeeScript通过检测你使用的是否是保留字，在需要的时候将其转义，巧妙的绕过了这个问题。</p>
+
+<p>例如，让我们把<code>class</code>保留字用作对象的属性，CoffeeScript代码可能是像下面这样：</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>myObj = {
+  delete: "I am a keyword!"
+}
+myObj.class = -&gt;
+</code></pre>
+
+<p>CoffeeScript解析器会注意到你使用了保留字，而为你加上引号：</p>
+
+<pre><code>var myObj;
+myObj = {
+  "delete": "I am a keyword!"
+};
+myObj["class"] = function() {};
+</code></pre>
+
+<h2>相等比较</h2>
+
+<p>JavaScript的非严格等于比较会产生一些莫名其妙的行为，往往能引起bug。下面这个例子来自<a href="http://bonsaiden.github.com/JavaScript-Garden/#types.equality">JavaScript Garden's equality section</a> ，对这个问题进行过深入的研究。</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>""           ==   "0"           // false
+0            ==   ""            // true
+0            ==   "0"           // true
+false        ==   "false"       // false
+false        ==   "0"           // true
+false        ==   undefined     // false
+false        ==   null          // false
+null         ==   undefined     // true
+" \t\r\n"    ==   0             // true
+</code></pre>
+
+<p>这些行为背后的原因是非严格等于会自动的强制类型转换。我相信你也同意这中方式是多么的模糊不清，而且会导致不可预料的结果和bug。</p>
+
+<p>解决方案就是使用严格等于操作符来替换之，它由三个等号构成<code>===</code>。其行为与正常的等于操作符一样，但是不会进行任何的类型转换。推荐使用严格等于操作符，在需要的时候在显式地进行类型转换。</p>
+
+<p>CoffeeScript通过简单的将非严格的比较替换为严格的来解决这个问题，也就是把所有的<code>==</code>比较转换为<code>===</code>。在CoffeeScript中无法使用非严格的比较，如果需要的话你应该事先显式地进行类型转换。</p>
+
+<p>这并不意味着在你可以忽略CoffeeScript中所有的类型转换，尤其是在流程控制检测变量是否为“真值”时。空字符串、<code>null</code>、<code>undefined</code>和数字<code>0</code>都将转换为<code>false</code>。</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>alert("Empty Array")  unless [].length
+alert("Empty String") unless ""
+alert("Number 0")     unless 0
+</code></pre>
+
+<p>如果你想显式的检查<code>null</code>和<code>undefined</code>的话，你可以使用CoffeeScript的存在操作符：</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>alert("This is not called") unless ""?
+</code></pre>
+
+<p>在上例中，由于空字符串不等于<code>null</code>，所以<code>alert()</code>不会被调用。</p>
+
+<h2>函数定义</h2>
+
+<p>在JavaScript有一点非常奇怪，函数可以在定义之前调用。例如，下面的代码能够正常运行，尽管<code>wem</code>实在被调用之后才被定义的：</p>
+
+<pre><code>wem();
+function wem() {}
+</code></pre>
+
+<p>这与函数的作用域有关。在程序运行之前函数会被提升，这样的话函数在被定义的作用域的任何地方都可用，就算在源码中也可以在明确的定义之前调用它们。可问题在于，这中提升行为在浏览器上表现不一，例如：</p>
+
+<pre><code>if (true) {
+  function declaration() {
+    return "first";
+  }
+} else {
+  function declaration() {
+    return "second";
+  }
+}
+declaration();
+</code></pre>
+
+<p>在像Firefox这类浏览器中，<code>declaration()</code>会返回<code>"first"</code>，而在其他类似于Chrome这类浏览器上会返回<code>"second"</code>，尽管看起来<code>else</code>语句永远不会被执行。</p>
+
+<p>如果你想更加深入的了解函数定义式的话，你可以访问 <a href="http://kangax.github.com/nfe/">Juriy Zaytsev的指南</a>，他对标准进行了深入的研究。但我只想说，它们有怪异的行为，在后面的代码中就会引起问题。综合考虑下来，使用函数表达式是避免这些问题的最佳方法。</p>
+
+<pre><code>var wem = function(){};
+wem();
+</code></pre>
+
+<p>CoffeeScript通过彻底地移除函数定义式而只是用函数表达式来解决此问题。</p>
+
+<h2>读取数值对象的属性</h2>
+
+<p>JavaScript解释器的一个瑕疵是数值对象的<em>点表示法</em>会被解释为一个浮点数，而不是一个属性的查找。比如，下面的JavaScript会产生一个语法错误：</p>
+
+<pre><code>5.toString();
+</code></pre>
+
+<p>JavaScript解释器会在点后面查找数字，但是当它碰到的是<code>toString()</code>的话就会产生一个<code>Unexpected token</code>错误。既可以使用括号也可以多加一个点来解决这个问题。</p>
+
+<pre><code>(5).toString();
+5..toString();
+</code></pre>
+
+<p>还好CoffeeScript解析器非常聪明，当你访问一个数字的属性时，自动地使用两个点标记来处理这个问题（如上面的例子所示）。</p>
+
+<h1>没有修正的部分</h1>
+
+<p>CoffeeScript竭尽全力解决了JavaScript设计上的一些缺陷，但是也就到这一步了。如前所述，出于性能的考虑，CoffeeScript仅严格地限于静态的分析，在运行时不做任何的检查。CoffeeScript使用一个直接的源到源的编译器，其思想就是每句CoffeeScript代码都编译为等价的JavaScript语句。CoffeeScript并不针对JavaScript的关键字提供一层抽象，比方说<code>typeof</code>,因此JavaScript设计中的一些缺陷同样被带到了CoffeeScirpt中。</p>
+
+<p>在上一部分中，我们看了一些CoffeeScirpt修复的JavaScript的设计缺陷，现在我们再来讨论一些CoffeeScript没能修正的JavaScript缺陷。</p>
+
+<h2>使用eval</h2>
+
+<p>虽然CoffeeScript移除了一些JavaScript的缺陷，但是还有一些恶魔般必要的特性，你需要知道它们的短处。一个合理的例子就是<code>eval()</code>函数。毋庸置疑，这个函数自有其用武之地，但你需要知道它的阴暗面，而且需要尽量避免这些阴暗面。<code>eval()</code>函数会在局部作用域中执行JavaScript代码字符串，而且像<code>setTimeout()</code>和<code>setInterval()</code>也可以接受一个字符串作为第一个参数，对该参数求值。</p>
+
+<p>然而，像<code>with</code>或<code>eval()</code>会逃脱编译器的跟踪，是一个主要的性能盲点。由于编译器不到运行的时候对其内部毫不知情，如嵌入的JavaScript代码一样，编译器不能对其做任何的优化。如果你给你的输入有误，<code>eval</code>很容易为你打开代码注入攻击之门。在你使用<code>eval</code>中的99%的时间中，应该有更好更安全的替代方式（比方说方括号）。</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code># Don't do this
+model = eval(modelName)
+
+# Use square brackets instead
+model = window[modelName]
+</code></pre>
+
+<h2>使用typeof</h2>
+
+<p><code>typeof</code>操作符是JavaScript最坑爹的设计，因为它完全就是鸡肋。事实上，它只有一个用途，就是检测一个值是否是<code>undefined</code>。</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>typeof undefinedVar is "undefined"
+</code></pre>
+
+<p>对于其他所有的类型检测，<code>typeof</code>非常失败。依赖于浏览器和实例初始化方式不同会返回不一致的结果。于此CoffeeScript也无能为力，因为这语言用的是静态检查没有运行时的类型判断。你只能自食其力了。</p>
+
+<p>为了说明问题所在，这是从<a href="http://bonsaiden.github.com/JavaScript-Garden/">JavaScript Garden</a>拿来的表格，该表格展示了这个类型检测的关键字主要不稳定的地方。</p>
+
+<pre><code>Value               Class      Type
+-------------------------------------
+"foo"               String     string
+new String("foo")   String     object
+1.2                 Number     number
+new Number(1.2)     Number     object
+true                Boolean    boolean
+new Boolean(true)   Boolean    object
+new Date()          Date       object
+new Error()         Error      object
+[1,2,3]             Array      object
+new Array(1, 2, 3)  Array      object
+new Function("")    Function   function
+/abc/g              RegExp     object
+new RegExp("meow")  RegExp     object
+{}                  Object     object
+new Object()        Object     object
+</code></pre>
+
+<p>你会发现，使用引号还是<code>String</code>类来定义一个字符串会影响<code>typeof</code>的结果。<code>typeof</code>应该都返回<code>"string"</code>才符合逻辑，但是对于后者它返回的却是<code>"object"</code>。很不幸，这样的不一致性只会让事情变得更糟糕。</p>
+
+<p>那在JavaScript中我们如何做类型检查呢？还好有<code>Object.prototype.toString()</code>来解围。如果我们以某个特别的对象为上下文来调用该函数，它会返回正确的类型。我们所需要做的就是手动处理其返回的字符串，这样最终我们就能获得<code>typeof</code>返回的那种字符串。下面是从jQuery的<code>$.type</code>移植过来的例子：</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>type = do -&gt;
+  classToType = {}
+  for name in "Boolean Number String Function Array Date RegExp Undefined Null".split(" ")
+    classToType["[object " + name + "]"] = name.toLowerCase()
+
+  (obj) -&gt;
+    strType = Object::toString.call(obj)
+    classToType[strType] or "object"
+
+# Returns the sort of types we'd expect:
+type("")         # "string"
+type(new String) # "string"
+type([])         # "array"
+type(/\d/)       # "regexp"
+type(new Date)   # "date"
+type(true)       # "boolean"
+type(null)       # "null"
+type({})         # "object"
+</code></pre>
+
+<p>如果你想检查某个变量是否被定义，你仍然需要使用<code>typeof</code>，否则你会得到一个<code>ReferenceError</code>的错误。</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>if typeof aVar isnt "undefined"
+  objectType = type(aVar)
+</code></pre>
+
+<p>或者使用更加简洁的存在操作符：</p>
+
+<pre><code>objectType = type(aVar?)
+</code></pre>
+
+<p>作为类型检测的替代，你通常还可以使用鸭子类型检测结合CoffeeScript的存在操作符来避免确定一个对象的类型。例如，假设我们将向一个数组中加入一个值。我们可以这么说，既然这个<code>类数组</code>对象实现了<code>push()</code>方法，我们应该把它当作一个数组：</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>anArray?.push? aValue
+</code></pre>
+
+<p>如果<code>anArray</code>是一个对象而不是一个数组，那么存在操作符会保证<code>push()</code>绝不会被调用。</p>
+
+<h2>使用instanceof</h2>
+
+<p>JavaScript的<code>instanceof</code>关键字几乎就和<code>typeof</code>一样不给力。理想的<code>instanceof</code>将比较两个对象的构造器，看其中一个是否另外一个的实例而返回真假值。实际上<code>instanceof</code>只在比较自定义的对象上工作正常。如果用来比较内置类型时，就像<code>typeof</code>一样废。</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>new String("foo") instanceof String # true
+"foo" instanceof String             # false
+</code></pre>
+
+<p>而且，<code>instanceof</code>当比较不用浏览器里不同frame中的对象时也不能正常工作。实际上，<code>instanceof</code>对于自定义的对象才会返回正确的值，比方说CoffeeScript的类型。</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>class Parent
+class Child extends Parent
+
+child = new Child
+child instanceof Child  # true
+child instanceof Parent # true
+</code></pre>
+
+<p>确定你只在比较你自己的对象时使用它，或者坚决不用更好。</p>
+
+<h2>使用delete</h2>
+
+<p><code>delete</code>关键字只能用来移除对象内部的属性。</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>anObject = {one: 1, two: 2}
+delete anObject.one
+anObject.hasOwnProperty("one") # false
+</code></pre>
+
+<p>用于其他地方，比方说删除一个变量或者函数，就完全不行。</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>aVar = 1
+delete aVar
+typeof Var # "integer"
+</code></pre>
+
+<p>这种行为非常古怪，但是你已经知道了。如果你想移除一个变量的引用，将其赋值为<code>null</code>即可。</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>aVar = 1
+aVar = null
+</code></pre>
+
+<h2>使用parseInt</h2>
+
+<p>如果你给JavaScript的<code>parseInt()</code>函数传递一个字符串而没有指明基数的话它会返回一个让你意外的值，例如：</p>
+
+<pre><code># Returns 8, not 10!
+parseInt('010') is 8
+</code></pre>
+
+<p>给该函数传递一个基数让它能够正常工作：</p>
+
+<pre><code># Use base 10 for the correct result
+parseInt('010', 10) is 10
+</code></pre>
+
+<p>这些用法CoffeeScript并不能为你做，每次当你使用<code>parseInt()</code>函数的时候别忘了给它传递一个基数。</p>
+
+<h2>Strict模式</h2>
+
+<p>Strict模式是ECMAScript5的一个新特性，它能够让你在一种<em>严格</em>的上下文中运行JavaScript程序或者函数。比起普通上下文，严格上下文会抛出更多的异常和警告，当开发者不遵循最佳实践，写无优化的代码或者犯常见错误时，它能给他们一些提示。换句话说，严格模式能够减少bug，提高安全性，提升性能以及消除比较难于驾驭的语言特性。这难道不好么？</p>
+
+<p>到目前为止，下面这些浏览器支持Strict模式：</p>
+
+<ul>
+<li>Chrome >= 13.0</li>
+<li>Safari >= 5.0</li>
+<li>Opera >= 12.0</li>
+<li>Firefox >= 4.0</li>
+<li>IE >= 10.0</li>
+</ul>
+
+
+<p>话说回来，严格模式能完全兼容较老的浏览器。使用它的程序在严格或者普通模式下都能正常工作。</p>
+
+<h3>Strict模式的不同</h3>
+
+<p>严格模式的大部分改变都是与Javascript语法相关的：</p>
+
+<ul>
+<li>重复属性和重复函数参数会报错</li>
+<li>不合理使用<code>delete</code>会报错</li>
+<li>访问<code>arguments.caller</code> 或<code>arguments.callee</code> 报错（与性能有关）</li>
+<li>使用<code>with</code>的话会抛出语法错误</li>
+<li><code>undefined</code>等之类的确定的变量不再可写</li>
+<li>引入更多的保留关键字，比方说 <code>implements</code>、<code>interface</code>、<code>let</code>、<code>package</code>、<code>private</code>、<code>protected</code>、<code>public</code>、<code>static</code>和<code>yield</code></li>
+</ul>
+
+
+<p>而且，严格模式还改变了一些运行时的行为：</p>
+
+<ul>
+<li>全局变量必须显式申明（必须使用<code>var</code>）。全局<code>this</code>的值是<code>undefined</code></li>
+<li><code>eval</code>无法在局部作用域中引入新变量</li>
+<li>函数必须在它们被使用前定义（先前的函数可以<a href="http://whereswalden.com/2011/01/24/new-es5-strict-mode-requirement-function-statements-not-at-top-level-of-a-program-or-function-are-prohibited/">定义在任何地方</a>）</li>
+<li><code>arguments</code>不可变</li>
+</ul>
+
+
+<p>CoffeeScript已经遵循了许多严格模式的要求，比方说在定义变量时一定会用<code>var</code>，但是在你的CoffeeScript程序中开启严格模式还是很有用的。实际上，在未来的版的CoffeeScript中在编译时会检查程序是否遵循严格模式。</p>
+
+<h3>使用Strict模式</h3>
+
+<p>为了开启严格的检查，你只需要在你的脚本或者函数中添加像下面这样的字符串即可：</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>-&gt;
+  "use strict"
+
+  # ... your code ...
+</code></pre>
+
+<p>就是这样，直接使用<code>'use strict'</code>字符串。没有比这更简单的了，而且它完全向后兼容。让我们实际试试严格模式。下面的代码在严格模式下会引起一个语法错误，而在普通模式下就没问题：</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>do -&gt;
+  "use strict"
+  console.log(arguments.callee)
+</code></pre>
+
+<p>在Strict模式下，对<code>arguments.caller</code>和<code>arguments.callee</code>的访问已经被移除了，因为它们是性能损耗的要点。现在只要使用它们就会抛出语法错误。</p>
+
+<p>在使用严格模式的时候，有个地方你需要额外小心。即使用<code>this</code>来创建全局变量。下面的例子在严格模式下会抛出一个<code>TypeError</code>的错误，但是在普通模式下能正常运行，产生一个全局变量：</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>do -&gt;
+  "use strict"
+  class @Spine
+</code></pre>
+
+<p>这背后的原因是不一致性，即在严格模式下<code>this</code>是<code>undefined</code>的，而在普通模式下它指向<code>window</code>对象。解决办法就是像这样显式的在<code>window</code>对象上设置全局变量。</p>
+
+<p><span class="csscript"></span></p>
+
+<pre><code>do -&gt;
+  "use strict"
+  class window.Spine
+</code></pre>
+
+<p>虽然我推荐使用严格模式，但是并不值得这么做，一是严格模式并不会引入JavaScript中还没有完全准备好的特性，再者由于VM（虚拟机）在运行时会进行更多的检查从而让你的代码变慢。你应该在开发时使用严格模式，而发布时去掉它。</p>
+
+<h2>JavaScript Lint</h2>
+
+<p><a href="http://www.javascriptlint.com/">JavaScript Lint</a>是一个JavaScript代码质量检测工具，通过它运行你的代码是一种提高代码质量和最佳实践的非常好的方式。该项目基于另外一个类似的名为<a href="http://www.jslint.com">JSLint</a>的工具。到JSLint的网站上查看一个<a href="http://www.jslint.com/lint.html">非常棒的列表</a>，该列表包含了所有它会检查的问题。包括全局变量、丢失的括号以及非严格相等比较。</p>
+
+<p>好消息是CoffeeScript已经对编译输出进行过<code>lints</code>检查，因此CoffeeScript产生的JavaScript已经是与JavaScript Lint兼容的代码了。事实上，<code>coffee</code>命令工具支持<code>--lint</code>参数：</p>
+
+<pre><code>coffee --lint index.coffee
+  index.coffee: 0 error(s), 0 warning(s)
+</code></pre>
 
   </div>
 </div>
