@@ -16,13 +16,9 @@
   
   <div id="content">
     <ol class="pages">
-      <li><a href="02_syntax.html">Syntax</a></li>
-      <li><a href="03_classes.html">Classes</a></li>
-      <li><a href="05_compiling.html">Compiling</a></li>
-      <li><a href="06_applications.html">Applications</a></li>
-      <li><a href="07_the_bad_parts.html">The Bad Parts</a></li>
-      <li><a href="04_idioms.html">Idioms</a></li>
-      <li><a href="01_introduction.html">Introduction</a></li>
+    {{#pages}}
+      <li><a href="{{href}}">{{name}}</a></li>
+    {{/pages}}
     </ol>
   </div>
 </div>
