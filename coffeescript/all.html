@@ -47,7 +47,7 @@
 
 <p>One of the easiest ways to initially play around with the library is to use it right inside the browser. Navigate to <a href="http://coffeescript.org">http://coffeescript.org</a> and click on the <em>Try CoffeeScript</em> tab. The site uses a browser version of the CoffeeScript compiler, converting any CoffeeScript typed inside the left panel to JavaScript in the right panel.</p>
 
-<p>You can also convert JavaScript back to CoffeeScript using the <a href="http://js2coffee.org/">js2coffee</a> project, especially useful when migration JavaScript projects to CoffeeScript.</p>
+<p>You can also convert JavaScript back to CoffeeScript using the <a href="http://js2coffee.org/">js2coffee</a> project, especially useful when migrating JavaScript projects to CoffeeScript.</p>
 
 <p>In fact, you can use the browser-based CoffeeScript compiler yourself, by including <a href="http://jashkenas.github.com/coffee-script/extras/coffee-script.js">this script</a> in a page, marking up any CoffeeScript script tags with the correct <code>type</code>.</p>
 
@@ -1252,7 +1252,7 @@ stitch  = require("stitch")
 express = require("express")
 argv    = process.argv.slice(2)
 
-package = stitch.createPackage(
+pckg = stitch.createPackage(
   # Specify the paths you want Stitch to automatically bundle up
   paths: [ __dirname + "/app" ]
 
@@ -1267,7 +1267,7 @@ app.configure -&gt;
   app.set "views", __dirname + "/views"
   app.use app.router
   app.use express.static(__dirname + "/public")
-  app.get "/application.js", package.createServer()
+  app.get "/application.js", pckg.createServer()
 
 port = argv[0] or process.env.PORT or 9294
 console.log "Starting server on port: #{port}"
@@ -1546,7 +1546,7 @@ outerScope = true;
 })();
 </code></pre>
 
-<p>Notice how CoffeeScript initializes variables (using <code>var</code>) automatically in the context their first used. Whilst it's impossible to shadow outer variables, you can still refer to and access them. You need to watch out for this, be careful that you're not reusing the name of an external variable accidentally if you're writing a deeply nested function or class. For example, here we're accidentally overwriting the <code>package</code> variable in a Class function:</p>
+<p>Notice how CoffeeScript initializes variables (using <code>var</code>) automatically in the context they're first used. Whilst it's impossible to shadow outer variables, you can still refer to and access them. You need to watch out for this, be careful that you're not reusing the name of an external variable accidentally if you're writing a deeply nested function or class. For example, here we're accidentally overwriting the <code>package</code> variable in a Class function:</p>
 
 <p><span class="csscript"></span></p>
 
@@ -1952,7 +1952,7 @@ parseInt('010', 10) is 10
   class window.Spine
 </code></pre>
 
-<p>Whilst I recommend enabling strict mode, but it's worth noting that script mode doesn't enable any new features that aren't ready possible in JavaScript, and will actually slow down your code a bit by having the VM do more checks at runtime. You may want to develop with strict mode, and deploy to production without it.</p>
+<p>Whilst I recommend enabling strict mode, but it's worth noting that strict mode doesn't enable any new features that aren't ready possible in JavaScript, and will actually slow down your code a bit by having the VM do more checks at runtime. You may want to develop with strict mode, and deploy to production without it.</p>
 
 <h2>JavaScript Lint</h2>
 
