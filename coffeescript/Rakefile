@@ -5,8 +5,8 @@ require "fileutils"
 
 def generate(page, template = "site/page.ms")
   Mustache.render(
-    File.read(template), 
-    page.merge(:content => RDiscount.new(File.read(page[:src])).to_html),
+    File.read(template),
+    page.merge(:content => RDiscount.new(File.read(page[:src])).to_html)
   )
 end
 
@@ -20,20 +20,20 @@ task :generate do
     })
     array
   end
-  
+
   pages.each do |page|
     File.open(page[:static], "w+") do |f|
       f.write generate(page)
     end
   end
-  
+
   File.open("index.html", "w+") do |f|
     f.write(Mustache.render(
-      File.read("site/index.ms"), 
+      File.read("site/index.ms"),
       :pages => pages
     ))
   end
-  
+
   File.open("all.html", "w+") do |f|
     pages.each do |page|
       f.write generate(page)
