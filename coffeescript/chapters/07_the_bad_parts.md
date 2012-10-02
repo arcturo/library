@@ -84,11 +84,11 @@ By ensuring global variables are explicit, rather than implicit, CoffeeScript re
 
 JavaScript does not enforce the use of semicolons in source code, so it's possible to omit them. However, behind the scenes the JavaScript compiler still needs them, so the parser automatically inserts them whenever it encounters a parse error due to a missing semicolon. In other words, it'll try to evaluate a statement without semicolons and, if that fails, tries again using semicolons.
 
-Unfortunately this is a tremendously bad idea, and can actually change the behavior of your code. Take the following example, seems valid JavaScript, right?
+Unfortunately this is a tremendously bad idea, and can actually change the behavior of your code. Take the following example, looks like JavaScript, right?
 
     function() {}
     (window.options || {}).property
-    
+
 Wrong, well at least according to the parser; it raises a syntax error. In case of a leading parenthesis, the parser will not insert a semicolon. The code gets transformed onto one line:
 
     function() {}(window.options || {}).property
@@ -97,7 +97,7 @@ Now you can see the issue, and why the parser is complaining. When you're writin
 
 ##Reserved words
 
-Certain keywords in JavaScript are reserved for future versions of JavaScript, such as `const`, `enum` and `class`. Using these as variable names in your JavaScript programs can unpredictable results; some browsers will cope with them just fine, and others will choke. CoffeeScript neatly sidesteps this issue, by detecting if you're using a reserved keyword, and escaping it if necessary.
+Certain keywords in JavaScript are reserved for future versions of JavaScript, such as `const`, `enum` and `class`. Using these as variable names in your JavaScript programs can produce unpredictable results; some browsers will cope with them just fine, and others will choke. CoffeeScript neatly sidesteps this issue, by detecting if you're using a reserved keyword, and escaping it if necessary.
 
 For example, let's say you were to use the reserved keyword `class` as a property on an object, your CoffeeScript might look like this:
 
@@ -107,7 +107,7 @@ For example, let's say you were to use the reserved keyword `class` as a propert
       delete: "I am a keyword!"
     }
     myObj.class = ->
-    
+
 
 The CoffeeScript parser notices you're using a reserved keyword, and quotes it for you:
 
@@ -116,7 +116,7 @@ The CoffeeScript parser notices you're using a reserved keyword, and quotes it f
       "delete": "I am a keyword!"
     };
     myObj["class"] = function() {};
-    
+
 ##Equality comparisons
 
 The weak equality comparison in JavaScript has some confusing behavior and is often the source of confusing bugs. The example below is taken from [JavaScript Garden's equality section](http://bonsaiden.github.com/JavaScript-Garden/#types.equality) which delves into the issue in some depth. 
@@ -177,7 +177,7 @@ The is because of function scope. Functions get hoisted before the programs exec
     
 In some browsers such as Firefox, `declaration()` will return `"first"`, and in other browsers like Chrome it'll return `"second"`, even though it looks like the `else` statement is never run.
 
-If you want to know more about declarative functions, then you should read [Juriy Zaytsev's guide](http://kangax.github.com/nfe/), where he delves into the specifics. Suffice to say, they have fairly ambiguous behavior, and can lead to problems later down the road. All things considered, It's best to steer clear of them by using function expressions instead:
+If you want to know more about declarative functions, then you should read [Juriy Zaytsev's guide](http://kangax.github.com/nfe/), where he delves into the specifics. Suffice to say, they have fairly ambiguous behavior, and can lead to problems later down the road. All things considered, it's best to steer clear of them by using function expressions instead:
 
     var wem = function(){};
     wem();
@@ -225,9 +225,9 @@ The `typeof` operator is probably the biggest design flaw of JavaScript, simply 
 
     typeof undefinedVar is "undefined"
 
-For all other types of type checking, `typeof` fails rather miserably, returning inconsistent results depending on the browser and how instances were instantiated. This isn't something that CoffeeScript can help you either, since the language uses static analysis and has no runtime type checking. You're on your own here.
+For all other types of type checking, `typeof` fails rather miserably, returning inconsistent results depending on the browser and how instances were instantiated. This isn't something that CoffeeScript can help you with either, since the language uses static analysis and has no runtime type checking. You're on your own here.
+To illustrate the problem, here's a table taken from [JavaScript Garden](http://bonsaiden.github.com/JavaScript-Garden/) which shows some of the major inconsistencies in the keyword's type checking.
 
-To illustrate the problem, here's a table taken from [JavaScript Garden](http://bonsaiden.github.com/JavaScript-Garden/) which shows some of the major inconstancies in the keyword's type checking. 
   
     Value               Class      Type
     -------------------------------------

@@ -85,7 +85,7 @@ outerScope = true;
 })();
 </code></pre>
 
-<p>Notice how CoffeeScript initializes variables (using <code>var</code>) automatically in the context their first used. Whilst it's impossible to shadow outer variables, you can still refer to and access them. You need to watch out for this, be careful that you're not reusing the name of an external variable accidentally if you're writing a deeply nested function or class. For example, here we're accidentally overwriting the <code>package</code> variable in a Class function:</p>
+<p>Notice how CoffeeScript initializes variables (using <code>var</code>) automatically in the context they're first used. Whilst it's impossible to shadow outer variables, you can still refer to and access them. You need to watch out for this, be careful that you're not reusing the name of an external variable accidentally if you're writing a deeply nested function or class. For example, here we're accidentally overwriting the <code>package</code> variable in a Class function:</p>
 
 <p><span class="csscript"></span></p>
 
@@ -114,7 +114,7 @@ class Hem
 
 <p>JavaScript does not enforce the use of semicolons in source code, so it's possible to omit them. However, behind the scenes the JavaScript compiler still needs them, so the parser automatically inserts them whenever it encounters a parse error due to a missing semicolon. In other words, it'll try to evaluate a statement without semicolons and, if that fails, tries again using semicolons.</p>
 
-<p>Unfortunately this is a tremendously bad idea, and can actually change the behavior of your code. Take the following example, seems valid JavaScript, right?</p>
+<p>Unfortunately this is a tremendously bad idea, and can actually change the behavior of your code. Take the following example: looks like valid JavaScript, right?</p>
 
 <pre><code>function() {}
 (window.options || {}).property
@@ -129,7 +129,7 @@ class Hem
 
 <h2>Reserved words</h2>
 
-<p>Certain keywords in JavaScript are reserved for future versions of JavaScript, such as <code>const</code>, <code>enum</code> and <code>class</code>. Using these as variable names in your JavaScript programs can unpredictable results; some browsers will cope with them just fine, and others will choke. CoffeeScript neatly sidesteps this issue, by detecting if you're using a reserved keyword, and escaping it if necessary.</p>
+<p>Certain keywords in JavaScript are reserved for future versions of JavaScript, such as <code>const</code>, <code>enum</code> and <code>class</code>. Using these as variable names in your JavaScript programs can produce unpredictable results; some browsers will cope with them just fine, and others will choke. CoffeeScript neatly sidesteps this issue, by detecting if you're using a reserved keyword, and escaping it if necessary.</p>
 
 <p>For example, let's say you were to use the reserved keyword <code>class</code> as a property on an object, your CoffeeScript might look like this:</p>
 
@@ -215,7 +215,7 @@ declaration();
 
 <p>In some browsers such as Firefox, <code>declaration()</code> will return <code>"first"</code>, and in other browsers like Chrome it'll return <code>"second"</code>, even though it looks like the <code>else</code> statement is never run.</p>
 
-<p>If you want to know more about declarative functions, then you should read <a href="http://kangax.github.com/nfe/">Juriy Zaytsev's guide</a>, where he delves into the specifics. Suffice to say, they have fairly ambiguous behavior, and can lead to problems later down the road. All things considered, It's best to steer clear of them by using function expressions instead:</p>
+<p>If you want to know more about declarative functions, then you should read <a href="http://kangax.github.com/nfe/">Juriy Zaytsev's guide</a>, where he delves into the specifics. Suffice to say, they have fairly ambiguous behavior, and can lead to problems later down the road. All things considered, it's best to steer clear of them by using function expressions instead:</p>
 
 <pre><code>var wem = function(){};
 wem();
@@ -268,9 +268,9 @@ model = window[modelName]
 <pre><code>typeof undefinedVar is "undefined"
 </code></pre>
 
-<p>For all other types of type checking, <code>typeof</code> fails rather miserably, returning inconsistent results depending on the browser and how instances were instantiated. This isn't something that CoffeeScript can help you either, since the language uses static analysis and has no runtime type checking. You're on your own here.</p>
+<p>For all other types of type checking, <code>typeof</code> fails rather miserably, returning inconsistent results depending on the browser and how instances were instantiated. This isn't something that CoffeeScript can help you with either, since the language uses static analysis and has no runtime type checking. You're on your own here.</p>
 
-<p>To illustrate the problem, here's a table taken from <a href="http://bonsaiden.github.com/JavaScript-Garden/">JavaScript Garden</a> which shows some of the major inconstancies in the keyword's type checking.</p>
+<p>To illustrate the problem, here's a table taken from <a href="http://bonsaiden.github.com/JavaScript-Garden/">JavaScript Garden</a> which shows some of the major inconsistencies in the keyword's type checking.</p>
 
 <pre><code>Value               Class      Type
 -------------------------------------
