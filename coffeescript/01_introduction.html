@@ -35,7 +35,7 @@
 
 <p>More importantly though, JavaScript has a lot of <a href="http://bonsaiden.github.com/JavaScript-Garden/">skeletons in its closet</a> which can often trip up inexperienced developers. CoffeeScript neatly sidesteps these by only exposing a curated selection of JavaScript features, fixing many of the language's oddities.</p>
 
-<p>CoffeeScript is <em>not</em> a superset of JavaScript, so although you can use external JavaScript libraries from inside CoffeeScript, you'll get syntax errors if you compile JavaScript as-is, without converting it. The compiler converts CoffeeScript code into its counterpart JavaScript, there's no interpretation at runtime.</p>
+<p>CoffeeScript is <em>not</em> a superset of JavaScript, so although you can use external JavaScript libraries from inside CoffeeScript, you'll get syntax errors if you attempt to execute it as-is, without first compiling it. The CoffeeScript compiler translates CoffeeScript code into JavaScript; there's no interpretation at runtime.</p>
 
 <p>First to get some common fallacies out the way. You will need to know JavaScript in order to write CoffeeScript, as runtime errors require JavaScript knowledge. However, having said that, runtime errors are usually pretty obvious, and so far I haven't found mapping JavaScript back to CoffeeScript to be an issue. The second problem I've often heard associated with CoffeeScript is speed; i.e. the code produced by the CoffeeScript compiler would run slower than its equivalent written in pure JavaScript. In practice though, it turns out this isn't a problem either. CoffeeScript tends to run as fast, or faster than hand-written JavaScript.</p>
 
