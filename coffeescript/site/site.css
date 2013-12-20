@@ -96,6 +96,16 @@ header h1 a {
   margin: 10px 5px 0 0;
 }
 
+.previous_chapter {
+  float: left;
+  margin: 10px 5px 0 0;
+}
+
+.next_chapter {
+  float: right;
+  margin: 10px 5px 0 0;  
+}
+
 #content .wrap {
   width: 625px;
   position: relative;
