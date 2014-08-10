@@ -423,7 +423,7 @@ The reason behind this disparity is that in strict mode `this` is `undefined`, w
       "use strict"
       class window.Spine
       
-Whilst I recommend enabling strict mode, but it's worth noting that strict mode doesn't enable any new features that aren't ready possible in JavaScript, and will actually slow down your code a bit by having the VM do more checks at runtime. You may want to develop with strict mode, and deploy to production without it.
+Whilst I recommend enabling strict mode, it's worth noting that strict mode doesn't enable any new features that aren't already possible in JavaScript, and will actually slow down your code a bit by having the VM do more checks at runtime. You may want to develop with strict mode, and deploy to production without it.
 
 ##JavaScript Lint
 
