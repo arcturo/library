@@ -240,7 +240,7 @@ wem();
 
 <h1>The un-fixed parts</h1>
 
-<p>Whilst CoffeeScript goes some length to solving some of JavaScript's design flaws, it can only go so far. As I mentioned previously, CoffeeScript's strictly limited to static analysis by design, and doesn't do any runtime checking for performance reasons. CoffeeScript uses a straight source-to-source compiler, the idea being that every CoffeeScript statement results in a equivalent JavaScript statement. CoffeeScript doesn't provide an abstraction over any of JavaScript's keywords, such as <code>typeof</code>, and as such some design flaws in JavaScript's design also apply to CoffeeScript.</p>
+<p>Whilst CoffeeScript goes some length to solving some of JavaScript's design flaws, it can only go so far. As I mentioned previously, CoffeeScript's strictly limited to static analysis by design, and doesn't do any runtime checking for performance reasons. CoffeeScript uses a straight source-to-source compiler, the idea being that every CoffeeScript statement results in an equivalent JavaScript statement. CoffeeScript doesn't provide an abstraction over any of JavaScript's keywords, such as <code>typeof</code>, and as such some design flaws in JavaScript's design also apply to CoffeeScript.</p>
 
 <p>In the previous sections we covered some design flaws in JavaScript that CoffeeScript fixes. Now let's talk about some of JavaScript's flaws that CoffeeScript can't fix.</p>
 
@@ -291,7 +291,7 @@ new RegExp("meow")  RegExp     object
 new Object()        Object     object
 </code></pre>
 
-<p>As you can see, depending on if you define a string with quotes or with the <code>String</code> class affects the result of <code>typeof</code>. Logically <code>typeof</code> should return <code>"string"</code> for both checks, but for the latter it returns <code>"object"</code>. Unfortunately the inconstancies only get worse from there.</p>
+<p>As you can see, depending on if you define a string with quotes or with the <code>String</code> class affects the result of <code>typeof</code>. Logically <code>typeof</code> should return <code>"string"</code> for both checks, but for the latter it returns <code>"object"</code>. Unfortunately the inconsistencies only get worse from there.</p>
 
 <p>So what can we use for type checking in JavaScript? Well, luckily <code>Object.prototype.toString()</code> comes to the rescue here. If we invoke that function in the context of a particular object, it'll return the correct type. All we need to do is massage the string it returns, so we end up with the sort of string <code>typeof</code> should be returning. Here's an example implementation ported from jQuery's <code>$.type</code>:</p>
 
@@ -317,7 +317,7 @@ type(null)       # "null"
 type({})         # "object"
 </code></pre>
 
-<p>If you're checking to see if an variable has been defined, you'll still need to use <code>typeof</code> otherwise you'll get a <code>ReferenceError</code>.</p>
+<p>If you're checking to see if a variable has been defined, you'll still need to use <code>typeof</code> otherwise you'll get a <code>ReferenceError</code>.</p>
 
 <p><span class="csscript"></span></p>
 
@@ -491,7 +491,7 @@ parseInt('010', 10) is 10
   class window.Spine
 </code></pre>
 
-<p>Whilst I recommend enabling strict mode, but it's worth noting that script mode doesn't enable any new features that aren't ready possible in JavaScript, and will actually slow down your code a bit by having the VM do more checks at runtime. You may want to develop with strict mode, and deploy to production without it.</p>
+<p>Whilst I recommend enabling strict mode, it's worth noting that strict mode doesn't enable any new features that aren't already possible in JavaScript, and will actually slow down your code a bit by having the VM do more checks at runtime. You may want to develop with strict mode, and deploy to production without it.</p>
 
 <h2>JavaScript Lint</h2>
 
