@@ -10,8 +10,6 @@ TODO:
 
 * "As you can see above, if the if statement is on one line, you'll need to use the then keyword" ... the "then" keyword can actually be in any place where you'd otherwise put an indented block, throughout the language.
 
-* The Max/Min trick is great, but will fail for really large arrays, which is worth mentioning. (Functions can only take so many arguments in certain browsers).
-
 
 Extras:
 
