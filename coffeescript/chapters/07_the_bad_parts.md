@@ -199,7 +199,7 @@ Fortunately CoffeeScript's parsers is clever enough to deal with this issue by u
 
 #The un-fixed parts
 
-Whilst CoffeeScript goes some length to solving some of JavaScript's design flaws, it can only go so far. As I mentioned previously, CoffeeScript's strictly limited to static analysis by design, and doesn't do any runtime checking for performance reasons. CoffeeScript uses a straight source-to-source compiler, the idea being that every CoffeeScript statement results in a equivalent JavaScript statement. CoffeeScript doesn't provide an abstraction over any of JavaScript's keywords, such as `typeof`, and as such some design flaws in JavaScript's design also apply to CoffeeScript.
+Whilst CoffeeScript goes some length to solving some of JavaScript's design flaws, it can only go so far. As I mentioned previously, CoffeeScript's strictly limited to static analysis by design, and doesn't do any runtime checking for performance reasons. CoffeeScript uses a straight source-to-source compiler, the idea being that every CoffeeScript statement results in an equivalent JavaScript statement. CoffeeScript doesn't provide an abstraction over any of JavaScript's keywords, such as `typeof`, and as such some design flaws in JavaScript's design also apply to CoffeeScript.
 
 In the previous sections we covered some design flaws in JavaScript that CoffeeScript fixes. Now let's talk about some of JavaScript's flaws that CoffeeScript can't fix.
 
@@ -247,7 +247,7 @@ To illustrate the problem, here's a table taken from [JavaScript Garden](http://
     {}                  Object     object
     new Object()        Object     object
     
-As you can see, depending on if you define a string with quotes or with the `String` class affects the result of `typeof`. Logically `typeof` should return `"string"` for both checks, but for the latter it returns `"object"`. Unfortunately the inconstancies only get worse from there. 
+As you can see, depending on if you define a string with quotes or with the `String` class affects the result of `typeof`. Logically `typeof` should return `"string"` for both checks, but for the latter it returns `"object"`. Unfortunately the inconsistencies only get worse from there.
 
 So what can we use for type checking in JavaScript? Well, luckily `Object.prototype.toString()` comes to the rescue here. If we invoke that function in the context of a particular object, it'll return the correct type. All we need to do is massage the string it returns, so we end up with the sort of string `typeof` should be returning. Here's an example implementation ported from jQuery's `$.type`:
 
@@ -272,7 +272,7 @@ So what can we use for type checking in JavaScript? Well, luckily `Object.protot
     type(null)       # "null"
     type({})         # "object"
     
-If you're checking to see if an variable has been defined, you'll still need to use `typeof` otherwise you'll get a `ReferenceError`.
+If you're checking to see if a variable has been defined, you'll still need to use `typeof` otherwise you'll get a `ReferenceError`.
 
 <span class="csscript"></span>
 
@@ -423,7 +423,7 @@ The reason behind this disparity is that in strict mode `this` is `undefined`, w
       "use strict"
       class window.Spine
       
-Whilst I recommend enabling strict mode, but it's worth noting that strict mode doesn't enable any new features that aren't ready possible in JavaScript, and will actually slow down your code a bit by having the VM do more checks at runtime. You may want to develop with strict mode, and deploy to production without it.
+Whilst I recommend enabling strict mode, it's worth noting that strict mode doesn't enable any new features that aren't already possible in JavaScript, and will actually slow down your code a bit by having the VM do more checks at runtime. You may want to develop with strict mode, and deploy to production without it.
 
 ##JavaScript Lint
 
