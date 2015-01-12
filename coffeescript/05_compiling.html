@@ -102,7 +102,7 @@ task 'build', 'Build lib/ from src/', -&gt;
 
 <pre><code>option '-o', '--output [DIR]', 'output dir'
 
-task 'build', 'Build lib/ from src/', -&gt;
+task 'build', 'Build lib/ from src/', (options) -&gt;
   # Now we have access to a `options` object
   coffee = spawn 'coffee', ['-c', '-o', options.output or 'lib', 'src']
   coffee.stderr.on 'data', (data) -&gt;
