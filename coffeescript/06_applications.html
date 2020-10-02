@@ -29,7 +29,7 @@
 
 <p>For some reason, when developers are building client side JavaScript applications, tried and tested patterns and conventions often fly out the window, and the end result is a spaghetti mess of un-maintainable coupled JavaScript. I can't stress enough how important application architecture is; if you're writing any JavaScript/CoffeeScript beyond simple form validation you should implement a form of application structure, such as <a href="http://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller">MVC</a>.</p>
 
-<p>The secret to building maintainable large applications is not to build large applications. In other words, build a series of modular de-coupled components. Keep application logic as generic as possible, abstracting it out as appropriate. Lastly separate out your logic into views, models and controllers (MVC). Implementing MVC is beyond the scope of this chapter, for that I recommend you check out my book on <a href="http://oreilly.com/catalog/9781449307530/">JavaScript Web Applications</a> and use a framework like <a href="http://documentcloud.github.com/backbone/">Backbone</a> or <a href="https://github.com/maccman/spine">Spine</a>. Rather than that, here we're going to cover structuring applications using CommonJS modules.</p>
+<p>The secret to building maintainable large applications is not to build large applications. In other words, build a series of modular de-coupled components. Keep application logic as generic as possible, abstracting it out as appropriate. Lastly separate out your logic into views, models and controllers (MVC). Implementing MVC is beyond the scope of this chapter, for that I recommend you check out my book on <a href="http://oreilly.com/catalog/9781449307530/">JavaScript Web Applications</a> and use a framework like <a href="http://documentcloud.github.com/backbone/">Backbone</a> or <a href="https://github.com/spine/spine">Spine</a>. Rather than that, here we're going to cover structuring applications using CommonJS modules.</p>
 
 <h2>Structure &amp; CommonJS</h2>
 
@@ -66,7 +66,7 @@ module.exports.myFineProperty = -&gt;
 
 <p>First things first, you'll need to install <a href="http://nodejs.org/">Node.js</a> and <a href="http://npmjs.org/">npm</a> if you haven't already, we'll be using those throughout this chapter.</p>
 
-<p>Now let's create our application structure. If you're using <a href="https://github.com/maccman/spine">Spine</a>, you can automate this with <a href="http://github.com/maccman/spine.app">Spine.App</a>, otherwise it's something you'll need to do manually. I usually have an <code>app</code> folder for all the application specific code, and a <code>lib</code> folder for general libraries. Then anything else, including static assets, goes in the <code>public</code> directory.</p>
+<p>Now let's create our application structure. If you're using <a href="https://github.com/spine/spine">Spine</a>, you can automate this with <a href="http://github.com/maccman/spine.app">Spine.App</a>, otherwise it's something you'll need to do manually. I usually have an <code>app</code> folder for all the application specific code, and a <code>lib</code> folder for general libraries. Then anything else, including static assets, goes in the <code>public</code> directory.</p>
 
 <pre><code>app
 app/controllers

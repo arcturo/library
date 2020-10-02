@@ -162,7 +162,7 @@ Oddly enough in JavaScript, functions can be defined after they're used. For exa
     wem();
     function wem() {}
 
-The is because of function scope. Functions get hoisted before the programs execution and as such are available everywhere in the scope they were defined in, even if called before the actual definition in the source. The trouble is, hoisting behavior differs between browser; for example:
+This is because of function scope. Functions get hoisted before the programs execution and as such are available everywhere in the scope they were defined in, even if called before the actual definition in the source. The trouble is, hoisting behavior differs between browser; for example:
     
     if (true) {
       function declaration() {
